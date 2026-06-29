@@ -6,12 +6,11 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   const links = [
-    { href: '#hakkimizda', key: 'about' },
-    { href: '#egitimler', key: 'lessons' },
-    { href: '#hizmetler', key: 'services' },
-    { href: '#sss', key: 'faq' },
-    { href: '#rezervasyon', key: 'booking' },
-  ] as const;
+    { href: '#egitimler', label: nav('lessons') },
+    { href: '#hizmetler', label: nav('services') },
+    { href: '#sss',       label: nav('faq') },
+    { href: '#rezervasyon', label: nav('contact') },
+  ];
 
   return (
     <footer style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(48px,6vw,80px) clamp(20px,5vw,72px) 32px' }}>
@@ -40,9 +39,9 @@ export default function Footer() {
               {t('school')}
             </div>
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {links.map(({ href, key }) => (
-                <a key={key} href={href} className="footer-nav-link">
-                  {nav(key)}
+              {links.map(({ href, label }) => (
+                <a key={href} href={href} className="footer-nav-link">
+                  {label}
                 </a>
               ))}
             </nav>

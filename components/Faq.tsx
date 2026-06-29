@@ -2,12 +2,17 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import type { FaqRow } from '@/lib/queries';
 
-interface FaqItem { q: string; a: string }
+interface Props {
+  faq?: FaqRow[] | null;
+}
 
-export default function Faq() {
+export default function Faq({ faq }: Props) {
   const t = useTranslations('faq');
-  const items = t.raw('items') as FaqItem[];
+
+  type FaqItem = { q: string; a: string };
+  const items: FaqItem[] = faq ?? (t.raw('items') as FaqItem[]);
   const [open, setOpen] = useState<number | null>(null);
 
   return (
