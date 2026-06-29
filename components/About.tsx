@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export default function About() {
   const t = useTranslations('about');
@@ -15,9 +16,17 @@ export default function About() {
           </h2>
           <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#3a5563', marginBottom: '18px' }}>{t('body1')}</p>
           <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#3a5563', marginBottom: '30px' }}>{t('body2')}</p>
-          <a href="#rezervasyon" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontWeight: 800, color: '#07283b', borderBottom: '3px solid #ff6a3d', paddingBottom: '4px', textDecoration: 'none' }}>
-            {t('link')} →
-          </a>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
+            <a href="#rezervasyon" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontWeight: 800, color: '#07283b', borderBottom: '3px solid #ff6a3d', paddingBottom: '4px', textDecoration: 'none' }}>
+              {t('link')} →
+            </a>
+            <Link
+              href="/hakkimizda"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 800, color: '#07283b', borderBottom: '3px solid rgba(7,40,59,.25)', paddingBottom: '4px', textDecoration: 'none', opacity: 0.75 }}
+            >
+              {t('read_more')}
+            </Link>
+          </div>
         </div>
 
         {/* Photo placeholder */}

@@ -42,6 +42,7 @@
   "about": {
     "kicker": "BİZ KİMİZ?",
     "title": "HAYATIMIZI RÜZGARA VE SUYA ADADIK",
+    "read_more": "Hakkımızda →",
     "body1": "Herşeyi geride bırakıp cittaslow Gökçeada'da kitesurf eğitimi alabileceğiniz Volkite Kiteboard Okulunu kurduk. 21 senelik uçurtma sörfü tecrübemizle Kefaloz koyundayız.",
     "body2": "Yerimiz, bir kiteboardcunun tüm ihtiyaçlarını adım atma mesafesinde karşılamak üzere tasarlandı. İngilizce, İspanyolca, Arapça, Fransızca ve İtalyanca eğitim verebiliyoruz.",
     "link": "Eğitime başla",
@@ -52,6 +53,7 @@
     "kicker": "EĞİTİMLER",
     "title": "SENİN İÇİN DOĞRU PROGRAM",
     "sub": "TYF onaylı KB5/KB4 sertifikalı eğitmenlerle; ister sıfırdan başla ister ilerle. Tüm paketlerde ekipman ve telsiz dahil.",
+    "read_more": "Tüm programlar ve müfredat →",
     "levels": [
       {
         "tag": "Başlangıç",
@@ -142,6 +144,7 @@
   "services": {
     "kicker": "HİZMETLER",
     "title": "OKULDAKİ HER ŞEY BİR ARADA",
+    "read_more": "Tüm hizmetler →",
     "items": [
       {
         "no": "01",
@@ -198,6 +201,7 @@
   "spot": {
     "kicker": "SPOT & RÜZGAR",
     "title": "İŞTE BURASI SENİN OYUN ALANIN",
+    "read_more": "Spot detayları →",
     "features": [
       {
         "num": "300",
@@ -265,6 +269,7 @@
   "kitchen": {
     "kicker": "CAFE ON SHORE",
     "title": "KITEBOARD ÖNCESİ & SONRASI",
+    "read_more": "Cafe menüsü →",
     "body": "Dünya mutfağından seçilmiş lezzetleri taze ve kaliteli bir menüyle sunuyoruz. Doğumgünü, barbekü ve grup partileri için size özel menü tasarlıyoruz.",
     "link": "Masa ayırt",
     "items": [
@@ -347,5 +352,119 @@
   "meta": {
     "title": "Volkite Kitesurf Okulu | Gökçeada",
     "description": "Gökçeada'nın en köklü kitesurf okulu. 21 yıllık deneyim, IKO sertifikalı eğitmenler, Kefaloz Koyunda profesyonel eğitim."
+  },
+  "lessons_page": {
+    "h1": "EĞİTİM PROGRAMLARI",
+    "kicker": "PROGRAMLAR",
+    "subtitle": "TYF KB5/KB4 sertifikalı eğitmenler · BB Talkin telsiz · onshore rüzgâr",
+    "advantages_title": "NEDEN VOLKITE?",
+    "advantages": ["TYF üst seviye KB5/KB4 sertifikalı eğitmenler", "BB Talkin' telsiz kask — sürerken eğitmenle konuş", "Onshore rüzgâr — kite düşse de açığa sürüklenmezsin", "4 km trafiksiz koy, 600 m özel eğitim alanı"],
+    "price_note": "Tüm eğitimlerde ekipman, kask ve telsiz dahil. Öğrenci sadece kişisel eşya + güneş gözlüğü getirir.",
+    "group_note": "Arkadaşınızla birlikte başlayabilirsiniz; seviyeniz açıldıkça ayrı ders almanızı öneririz.",
+    "cta": "Rezervasyon Yap",
+    "back": "← Ana Sayfa",
+    "read_more": "Tüm Programlar →"
+  },
+  "services_page": {
+    "h1": "HİZMETLER",
+    "kicker": "HİZMETLER",
+    "subtitle": "Okulda ihtiyacın olan her şey bir arada",
+    "rental_title": "KİRALAMA & DEPOLAMA",
+    "rental_items": [
+      { "name": "Tam Set Kiralama", "desc": "Kite + board + harness", "price": "80€/gün" },
+      { "name": "Ekipman Depolama", "desc": "Güvenli, kolay erişimli depo", "price": "5€/gün" },
+      { "name": "Tesis Kullanımı", "desc": "Otopark, sıcak duş, wifi, deck, şarj, kompresör, beachvolley", "price": "10€/gün*" }
+    ],
+    "rental_note": "* Öğrencilik günlerinde bedelsiz.",
+    "massage_title": "MASAJ TERAPİ",
+    "massage_items": [
+      { "name": "Klasik Masaj", "prices": [{ "label": "1 saat", "price": "40€" }, { "label": "30 dk", "price": "25€" }] },
+      { "name": "Spor Masajı", "prices": [{ "label": "1 saat", "price": "40€" }, { "label": "30 dk", "price": "25€" }] },
+      { "name": "İç Organ (Chi Nei Tsang)", "prices": [{ "label": "45 dk", "price": "65€" }] },
+      { "name": "Duygu Boşaltım", "prices": [{ "label": "1 saat", "price": "70€" }] },
+      { "name": "Thai Masaj", "prices": [{ "label": "1 saat", "price": "50€" }] },
+      { "name": "Yüz Lifting", "prices": [{ "label": "20 dk", "price": "25€" }] },
+      { "name": "Ayak Masajı", "prices": [{ "label": "30 dk", "price": "30€" }] }
+    ],
+    "cta": "İletişime Geç",
+    "back": "← Ana Sayfa",
+    "read_more": "Tüm Hizmetler →"
+  },
+  "spot_page": {
+    "h1": "SPOT & RÜZGÂR",
+    "kicker": "SPOT",
+    "subtitle": "Gökçeada Kefaloz Koyu — Türkiye'nin En İyi Kitesurf Spotu",
+    "wind_title": "RÜZGÂR",
+    "wind_direction": "Kuzeydoğu (Poyraz)",
+    "wind_type": "Onshore — 24 saat karaya eser",
+    "wind_season": "Nisan – Kasım",
+    "wind_high": "Temmuz – Ekim (yüksek sezon)",
+    "wind_avg": "Sezon boyu 15–25 knot",
+    "wind_strong": "+30 knot sabah: dersler durur",
+    "wind_pattern_title": "GÜNLÜK PATERN",
+    "wind_pattern": [
+      { "time": "~11:00", "desc": "18–22 kn — ders saati" },
+      { "time": "13:00–15:00", "desc": "~10 kn (1 saat molası)" },
+      { "time": "15:00+", "desc": "15+ kn — devam" },
+      { "time": "19:00+", "desc": "20+ kn — akşam sürüşü" }
+    ],
+    "spot_title": "EĞİTİM ALANI",
+    "spot_features": [
+      "4 km trafiksiz koy, sadece kitesurf",
+      "50 m sığ deniz · 100 m kumsal",
+      "600 m şamandıralı özel eğitim alanı",
+      "Zodiac kurtarma botu hazır",
+      "Parktan 30 m yürüme"
+    ],
+    "island_title": "GÖKÇEADA",
+    "island_desc": "Eski adı İmroz — 'rüzgârlı ada'. Cittaslow kenti, doğal parklar, Rum köyleri, flamingolar, gelincik tarlaları, sunset ve samanyolu. Kite dışı: yoga, kafe kahvaltısı, Milli Park dalış, özgür hayvanlar.",
+    "live_wind_cta": "Canlı Rüzgâr →",
+    "back": "← Ana Sayfa",
+    "read_more": "Spot Detayları →"
+  },
+  "about_page": {
+    "h1": "HAKKIMIZDA",
+    "kicker": "VOLKITE",
+    "slogan": "Hayatımızı rüzgâra ve suya adadık.",
+    "story_title": "HİKÂYEMİZ",
+    "story": "Volkite, 2000 yılında İstanbul Burç Beach'te yelken, katamaran, wakeboard ve kiteboard okulu olarak başladı. 2008'de Gökçeada'yı keşfettik, 2010'da tamamen Kefaloz koyuna taşındık. Türkiye'nin en köklü kiteboard okulu — 21 yıl, onlarca eğitmen, binlerce öğrenci.",
+    "history_title": "TARİHÇE",
+    "history": [
+      { "year": "2000", "text": "İstanbul Burç Beach — windsurf, katamaran, wakeboard ve kiteboard." },
+      { "year": "2005", "text": "İlk kiteboard eğitimleri. Kartalkaya/Kartepe snowboard eğitimleri." },
+      { "year": "2007–10", "text": "Uludağ Snowkite Okulu & Snowpark." },
+      { "year": "2008", "text": "Gökçeada keşfedildi, yeni lokasyon açıldı, ilk öğrenciler." },
+      { "year": "2010", "text": "Poyraz nedeniyle tam taşınma. 'Progression is Everything' kampı." },
+      { "year": "2013–16", "text": "Çamlıca Kitesurf Challenge I–II–III (120+ sporcu)." },
+      { "year": "2021+", "text": "Onlarca eğitmen, binlerce öğrenci. TYF KB5 & KB4 sertifikalı." }
+    ],
+    "team_title": "EKİP",
+    "founder_name": "Volkan Günel",
+    "founder_role": "Kurucu & KB5 Eğitmen",
+    "founder_desc": "1977 İstanbul doğumlu. Snowboard, yelken, kitesurf — hepsini kendi kendine öğrendi. 2007–2008 Dünya Kiteboard Şampiyonası. Extreme yaşam, doğa, eğitim ve paylaşım insanı.",
+    "team": [
+      { "name": "Volkan Günel", "role": "Kurucu & KB5 Eğitmen", "langs": "TR, EN" },
+      { "name": "Burçak Doğan", "role": "KB4 Eğitmen", "langs": "TR, FR, EN" },
+      { "name": "Emin Ufuk", "role": "KB4 Eğitmen", "langs": "TR, EN" },
+      { "name": "Soydan Cıgsar", "role": "KB4 Eğitmen", "langs": "TR, EN" },
+      { "name": "Enes Günel", "role": "Okul Müdürü", "langs": "" }
+    ],
+    "certifications": "TYF (Türkiye Yelken Federasyonu) KB5/KB4 sertifikalı. Slingshot yetkili bayi.",
+    "back": "← Ana Sayfa",
+    "read_more": "Hakkımızda →"
+  },
+  "kitchen_page": {
+    "h1": "CAFE ON SHORE",
+    "kicker": "MUTFAK",
+    "subtitle": "Kitesurf Okulu Yanı — Kefaloz Koyu",
+    "desc": "Dünya mutfağından seçilmiş, taze, kaliteli, sağlıklı menü. Cheesecake, trileçe, özel ekmekli burger, pizza. Kiteboard öncesi kahvaltıdan akşam günbatımı sürüşü sonrasına kadar yanınızdayız.",
+    "menu_title": "MENÜ SEÇKİSİ",
+    "menu_items": ["Cheesecake", "Trileçe", "Özel Ekmekli Burger", "Pizza", "Sağlıklı Kahvaltı", "Taze Sıkılmış Meyve Suyu"],
+    "events_title": "ÖZEL ETKİNLİKLER",
+    "events_desc": "Doğum günü, barbekü ve grup partileri için özel menü + ateş. Önceden rezervasyon önerilir.",
+    "team_title": "EKİP",
+    "team": ["Deniz Gönül (Big Mama)", "Sezen Pak (Şef)", "Zeynep Halisçelik (Şef)"],
+    "back": "← Ana Sayfa",
+    "read_more": "Cafe Menüsü →"
   }
 }
