@@ -100,3 +100,22 @@ body {
   background: var(--cream);
   color: var(--on-light);
 }
+
+.footer-nav-link {
+  color: #9fc0cf;
+  text-decoration: none;
+  font-size: 15px;
+  transition: color .15s;
+}
+.footer-nav-link:hover {
+  color: #fbf6ec;
+}
+
+.service-card:hover {
+  background: #114057 !important;
+}
+
+.lesson-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(20,184,207,.6) !important;
+}

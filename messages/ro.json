@@ -1,3 +1,351 @@
 {
-  "_note": "RO translation pending — falls back to EN at runtime"
+  "nav": {
+    "lessons": "Lecții",
+    "services": "Servicii",
+    "spot": "Spot & Vânt",
+    "gallery": "Galerie",
+    "kitchen": "Bucătărie",
+    "faq": "Întrebări",
+    "contact": "Contact",
+    "cta": "Rezervare"
+  },
+  "hero": {
+    "kicker": "GÖKÇEADA · GOLFUL KEFALOZ",
+    "title": "PRINDE VÂNTUL",
+    "sub": "Cea mai consacrată școală de kiteboard din Turcia. 21 de ani de experiență, 300 de zile cu vânt pe an și experiența de a fi prima școală din golful Kefaloz. Fă primul pas în apă.",
+    "btn1": "Începe lecția",
+    "btn2": "Vezi filmul",
+    "liveNow": "Acum la Kefaloz"
+  },
+  "stats": [
+    {
+      "num": "21",
+      "label": "Ani experiență"
+    },
+    {
+      "num": "300",
+      "label": "Zile cu vânt"
+    },
+    {
+      "num": "600m",
+      "label": "Zonă de instruire"
+    },
+    {
+      "num": "3km",
+      "label": "Ride liber"
+    },
+    {
+      "num": "5",
+      "label": "Limbi"
+    }
+  ],
+  "about": {
+    "kicker": "CINE SUNTEM?",
+    "title": "NE-AM DEDICAT VIAȚA VÂNTULUI ȘI APEI",
+    "body1": "Am lăsat totul în urmă și am fondat școala Volkite în cittaslow Gökçeada. Cu 21 de ani de experiență în kitesurf, suntem în golful Kefaloz.",
+    "body2": "Baza noastră este creată pentru a acoperi toate nevoile unui kiteboarder la câțiva pași. Predăm în engleză, spaniolă, arabă, franceză și italiană.",
+    "link": "Începe lecția",
+    "years": "Ani",
+    "badge": "Experiență neîntreruptă în kitesurf"
+  },
+  "lessons": {
+    "kicker": "LECȚII",
+    "title": "PROGRAMUL POTRIVIT PENTRU TINE",
+    "sub": "Cu instructori certificați KB5/KB4 (TYF) — începe de la zero sau avansează. Echipamentul și stația radio sunt incluse în fiecare pachet.",
+    "levels": [
+      {
+        "tag": "Începători",
+        "dur": "10 ore",
+        "title": "PROGRAM ÎNCEPĂTORI",
+        "desc": "De la zero la kiteboarder independent cu teorie, siguranță și 5 module. Tot echipamentul inclus.",
+        "rows": [
+          {
+            "label": "Privat",
+            "price": "700€"
+          },
+          {
+            "label": "Grup de 2 / pers.",
+            "price": "600€"
+          },
+          {
+            "label": "Oră extra",
+            "price": "70€"
+          }
+        ],
+        "cta": "Rezervă"
+      },
+      {
+        "tag": "Descoperire",
+        "dur": "4 ore",
+        "title": "DESCOPERIRE & CONTINUARE",
+        "desc": "Se termină într-o zi cu vânt. Începe de la zero sau continuă antrenamentul neterminat.",
+        "rows": [
+          {
+            "label": "Privat",
+            "price": "280€"
+          },
+          {
+            "label": "Grup de 2 / pers.",
+            "price": "240€"
+          },
+          {
+            "label": "Oră extra",
+            "price": "70€"
+          }
+        ],
+        "cta": "Rezervă"
+      },
+      {
+        "tag": "Avansați",
+        "dur": "pe oră",
+        "title": "NIVEL AVANSAT",
+        "desc": "Freeride, freestyle și ride pe valuri. O foaie de parcurs pentru nivelul tău, unu-la-unu prin radio BB Talkin.",
+        "rows": [
+          {
+            "label": "Privat / oră",
+            "price": "80€"
+          },
+          {
+            "label": "Grup de 2 / pers. · oră",
+            "price": "70€"
+          },
+          {
+            "label": "Coaching",
+            "price": "Întreabă-ne"
+          }
+        ],
+        "cta": "Rezervă"
+      }
+    ]
+  },
+  "trust": {
+    "title": "DE CE VOLKITE?",
+    "sub": "Cel mai sigur mod de a învăța — echipament de top, cele mai înalte standarde și comunicare permanentă.",
+    "items": [
+      {
+        "brand": "SLINGSHOT",
+        "title": "Alegerea campionilor",
+        "desc": "Învață pe echipamentul nr.1 din lume, ușor de folosit."
+      },
+      {
+        "brand": "STANDARD TYF",
+        "title": "Standarde înalte",
+        "desc": "Lecțiile noastre respectă standardele Federației de Yachting din Turcia."
+      },
+      {
+        "brand": "BB TALKIN",
+        "title": "Cu un pas înainte",
+        "desc": "Radio în cască pentru comunicare continuă cu instructorul în timpul ride-ului."
+      }
+    ]
+  },
+  "services": {
+    "kicker": "SERVICII",
+    "title": "TOTUL ÎNTR-UN SINGUR LOC",
+    "items": [
+      {
+        "no": "01",
+        "name": "Vânzare echipament",
+        "desc": "Echipament nou și second-hand de la Slingshot și branduri selectate."
+      },
+      {
+        "no": "02",
+        "name": "Închiriere echipament",
+        "desc": "Opțiuni actuale de închiriere kite, placă și ham."
+      },
+      {
+        "no": "03",
+        "name": "Depozitare",
+        "desc": "Lasă-ți echipamentul în siguranță și găsește-l gata de fiecare dată."
+      },
+      {
+        "no": "04",
+        "name": "Reparații kite",
+        "desc": "Service profesional pentru kite-ul și echipamentul tău."
+      },
+      {
+        "no": "05",
+        "name": "Safari kitesurf",
+        "desc": "Safari ghidat pe distanțe lungi pe cele mai bune trasee."
+      },
+      {
+        "no": "06",
+        "name": "Wakeboard",
+        "desc": "Un mod distractiv de a fi în apă chiar și când nu e vânt."
+      },
+      {
+        "no": "07",
+        "name": "Terapie prin masaj",
+        "desc": "Masaj clasic, sportiv și thailandez pentru recuperare după apă."
+      }
+    ]
+  },
+  "gallery": {
+    "kicker": "GALERIE",
+    "title": "CADRE DIN APĂ",
+    "sub": "Momente din lecții, din spot și din viața Volkite.",
+    "items": [
+      "kite jump",
+      "shore & school",
+      "student moment",
+      "sunset ride",
+      "the crew",
+      "cafe on shore",
+      "wakeboard",
+      "gökçeada view"
+    ]
+  },
+  "spot": {
+    "kicker": "SPOT & VÂNT",
+    "title": "ACESTA E TERENUL TĂU DE JOACĂ",
+    "features": [
+      {
+        "num": "300",
+        "label": "zile cu vânt/an"
+      },
+      {
+        "num": "600m",
+        "label": "zonă de instruire"
+      },
+      {
+        "num": "3km",
+        "label": "ride liber"
+      },
+      {
+        "num": "Mică",
+        "label": "apă sigură"
+      }
+    ],
+    "cta": "Vezi vântul live"
+  },
+  "reviews": {
+    "kicker": "RECENZII",
+    "title": "CE SPUN CURSANȚII NOȘTRI?",
+    "rating": "4.9",
+    "count": "120+ recenzii",
+    "items": [
+      {
+        "name": "Elif K.",
+        "place": "Istanbul",
+        "text": "Am început de la zero și după trei zile mergeam singură. Instruirea prin radio schimbă totul."
+      },
+      {
+        "name": "Marco R.",
+        "place": "Italia",
+        "text": "Spotul e incredibil de sigur, iar echipa e foarte profesionistă. Mă întorc în Gökçeada doar pentru asta."
+      },
+      {
+        "name": "Ahmet Y.",
+        "place": "Ankara",
+        "text": "Lecții, cafenea și priveliște la un loc. Vacanță și sport împreună — timp minunat cu familia."
+      }
+    ]
+  },
+  "stay": {
+    "kicker": "CAZARE & TRANSPORT",
+    "title": "CE TREBUIE SĂ ȘTII ÎNAINTE SĂ VII",
+    "items": [
+      {
+        "tag": "Transport",
+        "title": "Cum ajungi pe insulă",
+        "desc": "Cu feribotul Kabatepe din Çanakkale spre Gökçeada, apoi ~20 min până în golful Kefaloz. Te ajutăm să-ți planifici drumul."
+      },
+      {
+        "tag": "Cazare",
+        "title": "Unde stai",
+        "desc": "Pensiuni și hoteluri partenere, plus opțiuni de rulotă și camping. Îți sugerăm cea mai bună variantă la rezervare."
+      },
+      {
+        "tag": "Sezon",
+        "title": "Când să vii",
+        "desc": "Suntem deschiși aprilie–noiembrie cu ~300 de zile cu vânt pe an. Cel mai puternic vânt e vara."
+      }
+    ]
+  },
+  "kitchen": {
+    "kicker": "CAFE ON SHORE",
+    "title": "ÎNAINTE & DUPĂ KITEBOARD",
+    "body": "Servim arome din bucătăria internațională într-un meniu proaspăt și de calitate. Creăm meniuri speciale pentru zile de naștere, grătare și petreceri de grup.",
+    "link": "Rezervă o masă",
+    "items": [
+      "shore cafe",
+      "tres leches",
+      "signature burger",
+      "stone-oven pizza"
+    ]
+  },
+  "faq": {
+    "kicker": "ÎNTREBĂRI",
+    "title": "ÎNTREBĂRI FRECVENTE",
+    "items": [
+      {
+        "q": "Nu am experiență, pot învăța?",
+        "a": "Da! Programul pentru începători e făcut exact pentru începători absoluți. Avansăm pas cu pas cu siguranță și control al kite-ului, tot echipamentul inclus."
+      },
+      {
+        "q": "Când e deschis sezonul?",
+        "a": "Școala e deschisă aprilie–noiembrie, cu aproximativ 300 de zile cu vânt pe an."
+      },
+      {
+        "q": "Trebuie să aduc echipament?",
+        "a": "Nu. Echipamentul Slingshot, hamul și radio-casca sunt incluse. Poți folosi și echipamentul propriu."
+      },
+      {
+        "q": "Ce se întâmplă dacă nu e vânt?",
+        "a": "În zilele fără vânt lecția se reprogramează; păstrăm planul flexibil. Oferim și wakeboard ca alternativă."
+      },
+      {
+        "q": "În ce limbi predați?",
+        "a": "Predăm în turcă, engleză, spaniolă, arabă, franceză și italiană."
+      },
+      {
+        "q": "Oferiți cazare?",
+        "a": "Te îndrumăm către pensiuni, hoteluri și camping partenere. Contactează-ne și îți sugerăm cea mai bună variantă."
+      }
+    ]
+  },
+  "instagram": {
+    "kicker": "INSTAGRAM",
+    "title": "NU RATA MOMENTUL",
+    "handle": "@volkite",
+    "cta": "Urmărește",
+    "items": [
+      "kite session",
+      "sunset",
+      "crew",
+      "spot",
+      "cafe",
+      "jump"
+    ]
+  },
+  "booking": {
+    "kicker": "REZERVARE",
+    "title": "VÂNTUL TE AȘTEAPTĂ",
+    "sub": "Spune-ne datele, restul îl rezolvăm noi. Completează formularul sau sună direct — răspundem în aceeași zi.",
+    "soon": "Rezervarea online vine în curând — deocamdată formular & telefon.",
+    "phone": "TELEFON",
+    "address": "ADRESĂ",
+    "fName": "Prenume",
+    "fSurname": "Nume",
+    "fEmail": "E-mail",
+    "fMsg": "Mesajul tău / datele preferate",
+    "fSend": "Trimite cererea",
+    "thanksTitle": "MULȚUMIM!",
+    "thanksBody": "Am primit cererea ta. Te vom contacta în cel mai scurt timp. Zile cu vânt!"
+  },
+  "footer": {
+    "tag": "Cea mai consacrată școală de kiteboard din Turcia, în paradisul vântului — golful Kefaloz, Gökçeada.",
+    "school": "Școala"
+  },
+  "chat": {
+    "title": "Asistent Volkite",
+    "status": "De obicei răspunde în câteva minute",
+    "launcher": "Întreabă / Rezervă",
+    "placeholder": "Întreabă orice...",
+    "soon": "Asistentul nostru vine în curând! Deocamdată contactează-ne prin telefon sau WhatsApp."
+  },
+  "meta": {
+    "title": "Volkite Şcoala de Kitesurf | Gökçeada",
+    "description": "Cea mai consacrată şcoală de kitesurf din Gökçeada. 21 ani de experienţă, instructori certificaţi IKO, antrenament la Golful Kefalos."
+  }
 }

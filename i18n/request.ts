@@ -8,9 +8,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     ? requested
     : routing.defaultLocale;
 
-  // BG and RO fall back to EN content until translations are ready
-  const messageLocale = locale === 'bg' || locale === 'ro' ? 'en' : locale;
-  const messages = (await import(`../messages/${messageLocale}.json`)).default;
+  const messages = (await import(`../messages/${locale}.json`)).default;
 
   return { locale, messages };
 });
