@@ -4,18 +4,15 @@ import StudentTabs from './StudentTabs';
 
 async function getStudent(id: string) {
   const db = createAdminClient();
-  const [student, lessons, payments, accommodation, equipment] = await Promise.all([
+  const [student, lessons, payments, accommodation, equipment, mediaRes] = await Promise.all([
     db.from('students').select('*').eq('id', id).single(),
-    db
-      .from('lesson_progress')
-      .select('*')
-      .eq('student_id', id)
-      .order('lesson_no'),
+    db.from('lesson_progress').select('*').eq('student_id', id).order('lesson_no'),
     db.from('payments').select('*').eq('student_id', id).order('created_at' as 'paid', { ascending: false }),
     db.from('accommodation').select('*').eq('student_id', id),
     db.from('equipment').select('*').eq('student_id', id),
+    db.from('student_media').select('*').eq('student_id', id).order('created_at', { ascending: false }),
   ]);
-  return { student: student.data, lessons: lessons.data ?? [], payments: payments.data ?? [], accommodation: accommodation.data ?? [], equipment: equipment.data ?? [] };
+  return { student: student.data, lessons: lessons.data ?? [], payments: payments.data ?? [], accommodation: accommodation.data ?? [], equipment: equipment.data ?? [], media: mediaRes.data ?? [] };
 }
 
 export default async function StudentDetailPage({
@@ -37,6 +34,7 @@ export default async function StudentDetailPage({
       </div>
 
       <StudentTabs studentId={id} data={data} />
+
     </div>
   );
 }

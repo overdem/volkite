@@ -148,3 +148,16 @@ export async function updateWindBand(level: string, data: Record<string, unknown
   revalidatePath('/panel/ayarlar');
   return { ok: true };
 }
+
+// ─── Media ────────────────────────────────────────────────────────────────────
+
+export async function toggleMediaDownloadable(
+  mediaId: string,
+  downloadable: boolean,
+  studentId: string
+) {
+  const db = createAdminClient();
+  await db.from('student_media').update({ downloadable }).eq('id', mediaId);
+  revalidatePath(`/panel/ogrenciler/${studentId}`);
+  return { ok: true };
+}

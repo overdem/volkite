@@ -1,20 +1,21 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { updateStudent, updateLesson, addPayment, togglePaymentPaid } from '../../actions';
+import { updateStudent, updateLesson, addPayment, togglePaymentPaid, toggleMediaDownloadable } from '../../actions';
 
 type Student = Record<string, unknown>;
 type Lesson = { id: string; lesson_no: number; title: string | null; status: string; hours: number | null; wind_kn: number | null; instructor_notes: string | null };
 type Payment = { id: string; amount_eur: number | null; type: string | null; method: string | null; paid: boolean; notes: string | null };
 type Accom = Record<string, unknown>;
 type Equip = Record<string, unknown>;
+type Media = { id: string; type: string | null; r2_key: string; thumb_key: string | null; preview_key: string | null; downloadable: boolean; created_at: string };
 
 interface Props {
   studentId: string;
-  data: { student: Student; lessons: Lesson[]; payments: Payment[]; accommodation: Accom[]; equipment: Equip[] };
+  data: { student: Student; lessons: Lesson[]; payments: Payment[]; accommodation: Accom[]; equipment: Equip[]; media: Media[] };
 }
 
-const TABS = ['Profil', 'Dersler', 'Ödemeler', 'Konaklama', 'Ekipman'];
+const TABS = ['Profil', 'Dersler', 'Ödemeler', 'Konaklama', 'Ekipman', 'Medya'];
 
 export default function StudentTabs({ studentId, data }: Props) {
   const [tab, setTab] = useState(0);
@@ -40,6 +41,7 @@ export default function StudentTabs({ studentId, data }: Props) {
       {tab === 2 && <PaymentsTab payments={data.payments} studentId={studentId} />}
       {tab === 3 && <InfoTab title="Konaklama" items={data.accommodation} />}
       {tab === 4 && <InfoTab title="Ekipman" items={data.equipment} />}
+      {tab === 5 && <MediaTab media={data.media} studentId={studentId} />}
     </div>
   );
 }
@@ -341,6 +343,59 @@ function PaymentRow({ payment, studentId }: { payment: Payment; studentId: strin
         </button>
       </div>
     </li>
+  );
+}
+
+// ─── Medya ───────────────────────────────────────────────────────────────────
+
+function MediaTab({ media, studentId }: { media: Media[]; studentId: string }) {
+  if (media.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm p-8 text-center text-[#8497a1]">
+        Bu öğrenciye henüz medya atanmamış.
+      </div>
+    );
+  }
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      {media.map((m) => (
+        <MediaCard key={m.id} media={m} studentId={studentId} />
+      ))}
+    </div>
+  );
+}
+
+function MediaCard({ media, studentId }: { media: Media; studentId: string }) {
+  const [pending, startTransition] = useTransition();
+  const [downloadable, setDownloadable] = useState(media.downloadable);
+
+  function toggle() {
+    startTransition(async () => {
+      await toggleMediaDownloadable(media.id, !downloadable, studentId);
+      setDownloadable(!downloadable);
+    });
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div className="aspect-square bg-[#eef1f4] flex items-center justify-center text-4xl">
+        {media.type === 'video' ? '🎬' : '📷'}
+      </div>
+      <div className="p-3">
+        <p className="text-xs text-[#8497a1] mb-2 truncate">{media.r2_key}</p>
+        <button
+          onClick={toggle}
+          disabled={pending}
+          className={`w-full text-xs font-semibold py-1.5 rounded-lg transition-colors ${
+            downloadable
+              ? 'bg-green-100 text-green-800 hover:bg-green-200'
+              : 'bg-[#eef1f4] text-[#8497a1] hover:bg-[#e4e9ee]'
+          }`}
+        >
+          {downloadable ? '🔓 İndirilebilir' : '🔒 Kilitli — Aç'}
+        </button>
+      </div>
+    </div>
   );
 }
 
