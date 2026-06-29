@@ -272,14 +272,26 @@ export async function POST(req: NextRequest) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const event = (await req.json()) as Record<string, any>;
 
-  if (event['event'] !== 'message_created') return NextResponse.json({ ok: true });
-  if (event['message_type'] !== 0) return NextResponse.json({ ok: true });
+  console.log('CHATWOOT EVENT:', JSON.stringify(event));
+
+  if (event['event'] !== 'message_created') {
+    console.log('skip: event=', event['event'], 'message_type=', event['message_type']);
+    return NextResponse.json({ ok: true });
+  }
+  if (event['message_type'] !== 0) {
+    console.log('skip: event=', event['event'], 'message_type=', event['message_type']);
+    return NextResponse.json({ ok: true });
+  }
 
   const accountId = event['account']?.id ?? event['conversation']?.account_id;
   const convId = event['conversation']?.id;
-  if (!convId || !accountId) return NextResponse.json({ ok: true });
+  if (!convId || !accountId) {
+    console.log('skip: missing convId=', convId, 'accountId=', accountId);
+    return NextResponse.json({ ok: true });
+  }
 
   if (event['conversation']?.status === 'open' && event['conversation']?.meta?.assignee) {
+    console.log('skip: human assignee present, conv=', convId);
     return NextResponse.json({ ok: true });
   }
 
