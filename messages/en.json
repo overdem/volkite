@@ -71,7 +71,7 @@
           },
           {
             "label": "Extra hour",
-            "price": "€70"
+            "price": "€80"
           }
         ],
         "cta": "Book now"
@@ -83,16 +83,8 @@
         "desc": "Finish in one windy day. Start fresh or continue your unfinished training from where you left off.",
         "rows": [
           {
-            "label": "Private",
-            "price": "€280"
-          },
-          {
-            "label": "Group of 2 / person",
-            "price": "€240"
-          },
-          {
-            "label": "Extra hour",
-            "price": "€70"
+            "label": "Contact us for pricing",
+            "price": ""
           }
         ],
         "cta": "Book now"
@@ -225,25 +217,9 @@
   "reviews": {
     "kicker": "REVIEWS",
     "title": "WHAT OUR STUDENTS SAY",
-    "rating": "4.9",
-    "count": "120+ reviews",
-    "items": [
-      {
-        "name": "Elif K.",
-        "place": "İstanbul",
-        "text": "I started from zero and was riding on my own after three days. The radio coaching changes everything."
-      },
-      {
-        "name": "Marco R.",
-        "place": "Italy",
-        "text": "The spot is incredibly safe and the team is very professional. I'll come back to Gökçeada just for this."
-      },
-      {
-        "name": "Ahmet Y.",
-        "place": "Ankara",
-        "text": "Lessons, cafe and the view all in one. Holiday and sport together — a great time with the family."
-      }
-    ]
+    "rating": "",
+    "count": "",
+    "items": []
   },
   "stay": {
     "kicker": "STAY & TRAVEL",
@@ -351,7 +327,7 @@
   },
   "meta": {
     "title": "Volkite Kitesurf School | Gokceada",
-    "description": "Gokceada's most established kitesurf school. 21 years of experience, IKO certified instructors, professional training at Kefalos Bay."
+    "description": "Gokceada's most established kitesurf school. 21 years of experience, TYF KB5/KB4 certified instructors, professional training at Kefalos Bay."
   },
   "lessons_page": {
     "h1": "TRAINING PROGRAMS",

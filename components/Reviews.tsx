@@ -6,6 +6,8 @@ export default function Reviews() {
   const t = useTranslations('reviews');
   const items = t.raw('items') as ReviewItem[];
 
+  if (!items || items.length === 0) return null;
+
   return (
     <section id="yorumlar" style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(64px,8vw,120px) clamp(20px,5vw,72px)' }}>
       <div style={{ maxWidth: '1240px', margin: '0 auto' }}>

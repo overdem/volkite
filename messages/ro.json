@@ -71,7 +71,7 @@
           },
           {
             "label": "Oră extra",
-            "price": "70€"
+            "price": "80€"
           }
         ],
         "cta": "Rezervă"
@@ -83,16 +83,8 @@
         "desc": "Se termină într-o zi cu vânt. Începe de la zero sau continuă antrenamentul neterminat.",
         "rows": [
           {
-            "label": "Privat",
-            "price": "280€"
-          },
-          {
-            "label": "Grup de 2 / pers.",
-            "price": "240€"
-          },
-          {
-            "label": "Oră extra",
-            "price": "70€"
+            "label": "Contactați-ne pentru preț",
+            "price": ""
           }
         ],
         "cta": "Rezervă"
@@ -225,25 +217,9 @@
   "reviews": {
     "kicker": "RECENZII",
     "title": "CE SPUN CURSANȚII NOȘTRI?",
-    "rating": "4.9",
-    "count": "120+ recenzii",
-    "items": [
-      {
-        "name": "Elif K.",
-        "place": "Istanbul",
-        "text": "Am început de la zero și după trei zile mergeam singură. Instruirea prin radio schimbă totul."
-      },
-      {
-        "name": "Marco R.",
-        "place": "Italia",
-        "text": "Spotul e incredibil de sigur, iar echipa e foarte profesionistă. Mă întorc în Gökçeada doar pentru asta."
-      },
-      {
-        "name": "Ahmet Y.",
-        "place": "Ankara",
-        "text": "Lecții, cafenea și priveliște la un loc. Vacanță și sport împreună — timp minunat cu familia."
-      }
-    ]
+    "rating": "",
+    "count": "",
+    "items": []
   },
   "stay": {
     "kicker": "CAZARE & TRANSPORT",
@@ -351,6 +327,6 @@
   },
   "meta": {
     "title": "Volkite Şcoala de Kitesurf | Gökçeada",
-    "description": "Cea mai consacrată şcoală de kitesurf din Gökçeada. 21 ani de experienţă, instructori certificaţi IKO, antrenament la Golful Kefalos."
+    "description": "Cea mai consacrată şcoală de kitesurf din Gökçeada. 21 ani de experienţă, instructori certificaţi TYF KB5/KB4, antrenament la Golful Kefalos."
   }
 }
