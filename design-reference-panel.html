@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Manrope',system-ui,sans-serif;background:#eef1f4;color:#07283b;-webkit-font-smoothing:antialiased}
+  ::selection{background:#14b8cf;color:#06222f}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#cdd6dd;border-radius:6px}
+  a{color:inherit;text-decoration:none}
+  input,textarea,button,select{font-family:inherit}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  @media(max-width:880px){.resp2{grid-template-columns:1fr !important}}
+</style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:#eef1f4">
+
+  <!-- SIDEBAR -->
+  <aside style="width:248px;flex-shrink:0;background:#07283b;color:#dceaf0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+    <div style="padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px">
+      <img src="assets/volkite-logo-white.png" alt="Volkite" style="height:30px;width:auto;display:block">
+    </div>
+    <div style="padding:18px 16px 10px">
+      <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5d7f8e;font-weight:800;padding:0 8px 10px">{{ roleLabel }}</div>
+      <nav style="display:flex;flex-direction:column;gap:3px">
+        <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
+          <button onClick="{{ item.onClick }}" style="{{ item.style }}">
+            <span style="{{ item.dotStyle }}"></span>{{ item.label }}
+          </button>
+        </sc-for>
+      </nav>
+    </div>
+    <div style="margin-top:auto;padding:16px;border-top:1px solid rgba(255,255,255,.08)">
+      <div style="display:flex;align-items:center;gap:11px;padding:6px 8px">
+        <span style="width:38px;height:38px;border-radius:10px;background:rgba(20,184,207,.16);display:grid;place-items:center;color:#14b8cf;font-weight:800">{{ userInitial }}</span>
+        <div style="min-width:0">
+          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ userName }}</div>
+          <div style="font-size:12px;color:#5d7f8e">{{ userRole }}</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+    <header style="background:#fff;border-bottom:1px solid #e4e9ee;padding:16px clamp(18px,3vw,36px);display:flex;align-items:center;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:20">
+      <div>
+        <div style="font-size:12px;color:#8497a1;font-weight:700;letter-spacing:.04em">{{ roleLabel }}</div>
+        <h1 style="font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.01em;margin-top:2px">{{ screenTitle }}</h1>
+      </div>
+      <div style="display:flex;background:#eef1f4;border-radius:11px;padding:4px;gap:2px">
+        <sc-for list="{{ roleTabs }}" as="r" hint-placeholder-count="3">
+          <button onClick="{{ r.onClick }}" style="{{ r.style }}">{{ r.label }}</button>
+        </sc-for>
+      </div>
+    </header>
+
+    <div style="padding:clamp(18px,3vw,36px);flex:1">
+
+      <!-- ADMIN: DASHBOARD -->
+      <sc-if value="{{ s_a_dash }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+            <sc-for list="{{ adminStats }}" as="k" hint-placeholder-count="4">
+              <div style="background:#fff;border:1px solid #e4e9ee;border-radius:16px;padding:22px">
+                <div style="font-size:13px;color:#8497a1;font-weight:700">{{ k.label }}</div>
+                <div style="font-family:'Anton';font-size:40px;color:#07283b;line-height:1.1;margin-top:6px">{{ k.value }}</div>
+                <div style="{{ k.deltaStyle }}">{{ k.delta }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px" class="resp2">
+            <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+                <h2 style="font-size:17px;font-weight:800">Bugünün dersleri</h2>
+                <span style="font-size:13px;color:#8497a1;font-weight:700">{{ today }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ todayLessons }}" as="l" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid #eef1f4">
+                    <span style="font-family:'Anton';font-size:17px;color:#14b8cf;width:54px">{{ l.time }}</span>
+                    <span style="width:34px;height:34px;border-radius:9px;background:#eef6f8;display:grid;place-items:center;color:#0b6b7c;font-weight:800;font-size:13px">{{ l.initial }}</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-weight:700;font-size:14px">{{ l.student }}</div>
+                      <div style="font-size:12px;color:#8497a1">{{ l.type }} · {{ l.instructor }}</div>
+                    </div>
+                    <span style="{{ l.pillStyle }}">{{ l.pay }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+              <h2 style="font-size:17px;font-weight:800;margin-bottom:18px">Hoca yoğunluğu</h2>
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <sc-for list="{{ instructorLoad }}" as="i" hint-placeholder-count="3">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:7px">
+                      <span style="font-weight:700">{{ i.name }}</span>
+                      <span style="color:#8497a1;font-weight:700">{{ i.count }} ders</span>
+                    </div>
+                    <div style="height:9px;background:#eef1f4;border-radius:6px;overflow:hidden">
+                      <div style="{{ i.barStyle }}"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ADMIN: STUDENTS -->
+      <sc-if value="{{ s_a_students }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid #eef1f4">
+            <h2 style="font-size:17px;font-weight:800">Tüm öğrenciler · {{ studentCount }}</h2>
+            <span style="background:#14b8cf;color:#06222f;font-weight:800;font-size:13px;padding:9px 16px;border-radius:10px">+ Yeni öğrenci</span>
+          </div>
+          <div style="overflow-x:auto">
+          <div style="min-width:720px">
+          <div style="display:grid;grid-template-columns:1.6fr 1.2fr .8fr 1fr .8fr;gap:14px;padding:14px 24px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#8497a1;font-weight:800;border-bottom:1px solid #eef1f4">
+            <span>Öğrenci</span><span>Seviye</span><span>Hoca</span><span>Sonraki ders</span><span>Ödeme</span>
+          </div>
+          <sc-for list="{{ students }}" as="st" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:1.6fr 1.2fr .8fr 1fr .8fr;gap:14px;padding:15px 24px;border-bottom:1px solid #f4f6f8;align-items:center">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="width:36px;height:36px;border-radius:9px;background:#eef6f8;display:grid;place-items:center;color:#0b6b7c;font-weight:800;font-size:13px">{{ st.initial }}</span>
+                <div><div style="font-weight:700;font-size:14px">{{ st.name }}</div><div style="font-size:12px;color:#8497a1">{{ st.email }}</div></div>
+              </div>
+              <div style="font-size:13px"><div style="font-weight:700">{{ st.level }}</div><div style="height:6px;width:90px;background:#eef1f4;border-radius:4px;margin-top:5px;overflow:hidden"><div style="{{ st.barStyle }}"></div></div></div>
+              <span style="font-size:13px;color:#5a7079;font-weight:600">{{ st.instructor }}</span>
+              <span style="font-size:13px;color:#5a7079;font-weight:600">{{ st.nextLesson }}</span>
+              <span style="{{ st.pillStyle }}">{{ st.pay }}</span>
+            </div>
+          </sc-for>
+          </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ADMIN: INSTRUCTORS -->
+      <sc-if value="{{ s_a_instructors }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px">
+          <sc-for list="{{ instructors }}" as="i" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+                <span style="width:50px;height:50px;border-radius:13px;background:#07283b;display:grid;place-items:center;color:#14b8cf;font-weight:800;font-size:18px">{{ i.initial }}</span>
+                <div><div style="font-weight:800;font-size:17px">{{ i.name }}</div><div style="font-size:13px;color:#8497a1">{{ i.cert }}</div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+                <div style="background:#f4f6f8;border-radius:11px;padding:12px 6px"><div style="font-family:'Anton';font-size:22px;color:#07283b">{{ i.students }}</div><div style="font-size:11px;color:#8497a1;font-weight:700;margin-top:2px">Öğrenci</div></div>
+                <div style="background:#f4f6f8;border-radius:11px;padding:12px 6px"><div style="font-family:'Anton';font-size:22px;color:#07283b">{{ i.hours }}</div><div style="font-size:11px;color:#8497a1;font-weight:700;margin-top:2px">Saat</div></div>
+                <div style="background:#f4f6f8;border-radius:11px;padding:12px 6px"><div style="font-family:'Anton';font-size:22px;color:#14b8cf">{{ i.rating }}</div><div style="font-size:11px;color:#8497a1;font-weight:700;margin-top:2px">Puan</div></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ADMIN: PAYMENTS -->
+      <sc-if value="{{ s_a_pay }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+            <sc-for list="{{ payStats }}" as="k" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #e4e9ee;border-radius:16px;padding:22px">
+                <div style="font-size:13px;color:#8497a1;font-weight:700">{{ k.label }}</div>
+                <div style="font-family:'Anton';font-size:36px;color:#07283b;margin-top:6px">{{ k.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;overflow:hidden">
+            <div style="padding:20px 24px;border-bottom:1px solid #eef1f4"><h2 style="font-size:17px;font-weight:800">Ödeme kayıtları</h2></div>
+            <div style="overflow-x:auto"><div style="min-width:680px">
+            <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:14px;padding:14px 24px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#8497a1;font-weight:800;border-bottom:1px solid #eef1f4">
+              <span>Öğrenci</span><span>Tarih</span><span>Tutar</span><span>Yöntem</span><span>Durum</span>
+            </div>
+            <sc-for list="{{ payments }}" as="p" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:14px;padding:15px 24px;border-bottom:1px solid #f4f6f8;align-items:center;font-size:14px">
+                <span style="font-weight:700">{{ p.student }}</span>
+                <span style="color:#5a7079">{{ p.date }}</span>
+                <span style="font-weight:800;font-family:'Anton';letter-spacing:.02em">{{ p.amount }}</span>
+                <span style="color:#5a7079">{{ p.method }}</span>
+                <span style="{{ p.pillStyle }}">{{ p.status }}</span>
+              </div>
+            </sc-for>
+            </div></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ADMIN: MEDIA & DOWNLOAD (foto-admin) -->
+      <sc-if value="{{ s_a_media }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:300px 1fr;gap:20px" class="resp2">
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:18px;height:fit-content">
+            <div style="font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#8497a1;font-weight:800;padding:4px 8px 12px">Öğrenci seç</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <sc-for list="{{ mediaStudents }}" as="m" hint-placeholder-count="4">
+                <button onClick="{{ m.onClick }}" style="{{ m.style }}">
+                  <span style="width:32px;height:32px;border-radius:8px;background:#eef6f8;display:grid;place-items:center;color:#0b6b7c;font-weight:800;font-size:12px">{{ m.initial }}</span>
+                  <span style="flex:1;text-align:left"><span style="display:block;font-weight:700;font-size:14px">{{ m.name }}</span><span style="font-size:12px;color:#8497a1">{{ m.count }} medya</span></span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+              <div>
+                <h2 style="font-size:19px;font-weight:800">{{ selMediaName }}</h2>
+                <div style="font-size:13px;color:#8497a1;margin-top:3px">Ödeme durumu: <span style="{{ selPayPillStyle }}">{{ selPay }}</span></div>
+              </div>
+            </div>
+            <div style="border:2px dashed #cdd6dd;border-radius:14px;padding:28px;text-align:center;color:#8497a1;margin-bottom:22px">
+              <div style="font-weight:800;color:#5a7079">Fotoğraf / video yükle</div>
+              <div style="font-size:13px;margin-top:4px">Sürükle bırak veya tıkla · JPG, MP4 · maks 200MB</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:24px">
+              <sc-for list="{{ selMedia }}" as="g" hint-placeholder-count="6">
+                <div style="position:relative;aspect-ratio:1;border-radius:11px;overflow:hidden;background:repeating-linear-gradient(135deg,#dde5ea 0 12px,#d3dde3 12px 24px)">
+                  <span style="position:absolute;inset:0;display:grid;place-items:center;font-family:monospace;font-size:10px;letter-spacing:.1em;color:#7d909a;text-transform:uppercase">{{ g }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#f4f6f8;border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+              <div>
+                <div style="font-weight:800;font-size:15px">İndirme linki</div>
+                <div style="font-size:13px;color:#8497a1;margin-top:3px">{{ linkHint }}</div>
+              </div>
+              <button onClick="{{ toggleLink }}" style="{{ linkBtnStyle }}">{{ linkBtnLabel }}</button>
+            </div>
+            <sc-if value="{{ linkOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#06222f;border-radius:12px;padding:14px 16px">
+                <span style="font-family:monospace;font-size:13px;color:#8fd6e3;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ downloadUrl }}</span>
+                <span style="background:#14b8cf;color:#06222f;font-weight:800;font-size:13px;padding:8px 14px;border-radius:9px">Kopyala</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ADMIN: REPORTS -->
+      <sc-if value="{{ s_a_reports }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px" class="resp2">
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+            <h2 style="font-size:17px;font-weight:800;margin-bottom:4px">Aylık gelir</h2>
+            <div style="font-size:13px;color:#8497a1;margin-bottom:24px">2026 · € (bin)</div>
+            <div style="display:flex;align-items:flex-end;gap:14px;height:220px">
+              <sc-for list="{{ revenue }}" as="b" hint-placeholder-count="6">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end">
+                  <span style="font-size:13px;font-weight:800;color:#07283b">{{ b.val }}</span>
+                  <div style="{{ b.barStyle }}"></div>
+                  <span style="font-size:12px;color:#8497a1;font-weight:700">{{ b.month }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+            <h2 style="font-size:17px;font-weight:800;margin-bottom:24px">Seviye dağılımı</h2>
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <sc-for list="{{ levelDist }}" as="d" hint-placeholder-count="4">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:7px">
+                    <span style="font-weight:700">{{ d.label }}</span>
+                    <span style="color:#8497a1;font-weight:700">{{ d.count }}</span>
+                  </div>
+                  <div style="height:10px;background:#eef1f4;border-radius:6px;overflow:hidden"><div style="{{ d.barStyle }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- HOCA: WEEK CALENDAR -->
+      <sc-if value="{{ s_h_cal }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:22px;overflow-x:auto">
+          <div style="display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:14px;min-width:780px">
+            <sc-for list="{{ week }}" as="day" hint-placeholder-count="5">
+              <div>
+                <div style="text-align:center;padding-bottom:14px;border-bottom:2px solid #eef1f4;margin-bottom:12px">
+                  <div style="font-size:12px;color:#8497a1;font-weight:800;letter-spacing:.04em">{{ day.day }}</div>
+                  <div style="font-family:'Anton';font-size:24px;color:#07283b">{{ day.date }}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ day.lessons }}" as="l" hint-placeholder-count="2">
+                    <div style="{{ l.cardStyle }}">
+                      <div style="font-weight:800;font-size:13px">{{ l.time }}</div>
+                      <div style="font-size:13px;margin-top:2px">{{ l.student }}</div>
+                      <div style="font-size:11px;opacity:.8;margin-top:1px">{{ l.type }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- HOCA: MY STUDENTS -->
+      <sc-if value="{{ s_h_students }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
+          <sc-for list="{{ myStudents }}" as="st" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:22px">
+              <div style="display:flex;align-items:center;gap:13px;margin-bottom:18px">
+                <span style="width:46px;height:46px;border-radius:12px;background:#eef6f8;display:grid;place-items:center;color:#0b6b7c;font-weight:800;font-size:17px">{{ st.initial }}</span>
+                <div style="flex:1"><div style="font-weight:800;font-size:16px">{{ st.name }}</div><div style="font-size:13px;color:#8497a1">{{ st.level }}</div></div>
+                <span style="{{ st.pillStyle }}">{{ st.pay }}</span>
+              </div>
+              <div style="margin-bottom:16px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:#8497a1;font-weight:700;margin-bottom:6px"><span>İlerleme</span><span>{{ st.pct }}</span></div>
+                <div style="height:8px;background:#eef1f4;border-radius:5px;overflow:hidden"><div style="{{ st.barStyle }}"></div></div>
+              </div>
+              <button onClick="{{ st.onNote }}" style="width:100%;background:#07283b;color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;font-size:14px;cursor:pointer">Ders notu gir →</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- HOCA: NOTE ENTRY -->
+      <sc-if value="{{ s_h_note }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;max-width:1000px" class="resp2">
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px">
+            <div style="display:flex;align-items:center;gap:13px;margin-bottom:22px">
+              <span style="width:46px;height:46px;border-radius:12px;background:#eef6f8;display:grid;place-items:center;color:#0b6b7c;font-weight:800;font-size:17px">{{ noteInitial }}</span>
+              <div><div style="font-weight:800;font-size:18px">{{ noteName }}</div><div style="font-size:13px;color:#8497a1">{{ noteDate }} · Bugünün dersi</div></div>
+            </div>
+            <div style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#8497a1;margin-bottom:12px">Kazanılan beceriler</div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+              <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="6">
+                <button onClick="{{ sk.onToggle }}" style="{{ sk.style }}">
+                  <span style="{{ sk.checkStyle }}">{{ sk.check }}</span>{{ sk.label }}
+                </button>
+              </sc-for>
+            </div>
+            <div style="font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#8497a1;margin-bottom:10px">Ders notu</div>
+            <textarea placeholder="Bugün neler çalıştınız, bir sonraki ders için öneriler..." rows="4" style="width:100%;border:1px solid #dde5ea;border-radius:12px;padding:14px;font-size:14px;outline:none;resize:vertical;color:#07283b" style-focus="border-color:#14b8cf"></textarea>
+            <button style="margin-top:18px;background:#ff6a3d;color:#fff;border:none;border-radius:12px;padding:14px 26px;font-weight:800;font-size:15px;cursor:pointer">Dersi kaydet</button>
+          </div>
+          <div style="background:#fff;border:1px solid #e4e9ee;border-radius:18px;padding:24px;height:fit-content">
+            <h3 style="font-size:15px;font-weight:800;margin-bottom:16px">Genel ilerleme</h3>
+            <div style="text-align:center;margin-bottom:20px">
+              <div style="font-family:'Anton';font-size:52px;color:#14b8cf;line-height:1">{{ notePct }}</div>
+              <div style="font-size:13px;color:#8497a1;font-weight:700">{{ noteLevel }}</div>
+            </div>
+            <div style="height:10px;background:#eef1f4;border-radius:6px;overflow:hidden"><div style="{{ noteBarStyle }}"></div></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ÖĞRENCİ: DASHBOARD -->
+      <sc-if value="{{ s_s_dash }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:20px;max-width:1000px">
+          <div style="background:linear-gradient(120deg,#07283b,#0c3346);border-radius:20px;padding:28px;color:#fbf6ec;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:13px;color:#8fd6e3;font-weight:700;letter-spacing:.06em">SONRAKİ DERSİN</div>
+              <div style="font-family:'Anton';font-size:34px;margin-top:6px">{{ nextLessonBig }}</div>
+              <div style="color:#bcd4de;margin-top:4px">Hoca {{ myInstructor }} · Kefaloz koyu</div>
+            </div>
+            <div style="text-align:center;background:rgba(20,184,207,.14);border-radius:16px;padding:18px 24px">
+              <div style="font-family:'Anton';font-size:40px;color:#14b8cf;line-height:1">{{ myPct }}</div>
+              <div style="font-size:12px;color:#bcd4de;margin-top:4px">{{ myLevel }}</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+            <sc-for list="{{ studentStats }}" as="k" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #e4e9ee;border-radius:16px;padding:22px">
+                <div style="font-size:13px;color:#8497a1;font-weight:700">{{ k.label }}</div>
+                <div style="font-family:'Anton';font-size:34px;color:#07283b;margin-top:6px">{{ k.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ÖĞRENCİ: LESSONS -->
+      <sc-if value="{{ s_s_lessons }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:760px;display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ myLessons }}" as="l" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #e4e9ee;border-radius:16px;padding:20px 22px;display:flex;gap:18px;align-items:flex-start">
+              <div style="text-align:center;flex-shrink:0">
+                <div style="font-family:'Anton';font-size:22px;color:#14b8cf;line-height:1">{{ l.day }}</div>
+                <div style="font-size:12px;color:#8497a1;font-weight:700">{{ l.mon }}</div>
+              </div>
+              <div style="flex:1;border-left:2px solid #eef1f4;padding-left:18px">
+                <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="font-weight:800;font-size:15px">{{ l.title }}</div><span style="{{ l.tagStyle }}">{{ l.tag }}</span></div>
+                <p style="font-size:14px;color:#5a7079;line-height:1.55;margin-top:6px">{{ l.note }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ÖĞRENCİ: GALLERY -->
+      <sc-if value="{{ s_s_gallery }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="{{ galleryBannerStyle }}">
+            <div>
+              <div style="font-weight:800;font-size:15px">{{ galleryBannerTitle }}</div>
+              <div style="font-size:13px;opacity:.85;margin-top:2px">{{ galleryBannerSub }}</div>
+            </div>
+            <sc-if value="{{ linkOpen }}" hint-placeholder-val="{{ false }}">
+              <button style="background:#14b8cf;color:#06222f;border:none;font-weight:800;font-size:14px;padding:12px 22px;border-radius:11px;cursor:pointer">Tümünü indir ↓</button>
+            </sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px">
+            <sc-for list="{{ galleryItems }}" as="g" hint-placeholder-count="8">
+              <div style="position:relative;aspect-ratio:1;border-radius:13px;overflow:hidden;background:repeating-linear-gradient(135deg,#dde5ea 0 14px,#d3dde3 14px 28px)">
+                <span style="position:absolute;inset:0;display:grid;place-items:center;font-family:monospace;font-size:10px;letter-spacing:.1em;color:#7d909a;text-transform:uppercase">{{ g.label }}</span>
+                <div style="{{ g.lockStyle }}">
+                  <span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.04em">{{ g.lockText }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ÖĞRENCİ: PAYMENTS -->
+      <sc-if value="{{ s_s_pay }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:760px;display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ myPayments }}" as="p" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid #e4e9ee;border-radius:16px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+              <div>
+                <div style="font-weight:800;font-size:15px">{{ p.title }}</div>
+                <div style="font-size:13px;color:#8497a1;margin-top:3px">{{ p.date }} · {{ p.method }}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:16px">
+                <span style="font-family:'Anton';font-size:22px;letter-spacing:.02em">{{ p.amount }}</span>
+                <span style="{{ p.pillStyle }}">{{ p.status }}</span>
+                <span style="{{ p.receiptStyle }}">{{ p.receipt }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:860}}">
+class Component extends DCLogic {
+  state = {
+    role: 'admin',
+    screen: 'a_dash',
+    linkOpen: false,
+    mediaSel: 0,
+    noteSel: 0,
+    skillsDone: 5,
+  };
+
+  PILL = {
+    paid: 'font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px;background:#e3f5ea;color:#1f9d57;justify-self:start',
+    pending: 'font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px;background:#fef0d9;color:#c8860f;justify-self:start',
+  };
+
+  DATA = {
+    students: [
+      { name: 'Deniz Aksoy', email: 'deniz@mail.com', initial: 'DA', level: 'Bağımsız sürüş', pct: 70, instructor: 'Can', nextLesson: '30 Haz 10:00', pay: 'Ödendi', media: ['IMG_2201','IMG_2202','VID_009','IMG_2210','IMG_2215','IMG_2230'] },
+      { name: 'Mert Yıldız', email: 'mert@mail.com', initial: 'MY', level: 'Waterstart', pct: 45, instructor: 'Ece', nextLesson: '30 Haz 13:00', pay: 'Bekliyor', media: ['IMG_3301','VID_014','IMG_3320','IMG_3322'] },
+      { name: 'Lara Demir', email: 'lara@mail.com', initial: 'LD', level: 'Başlangıç', pct: 20, instructor: 'Can', nextLesson: '01 Tem 09:00', pay: 'Ödendi', media: [] },
+      { name: 'Kaan Şahin', email: 'kaan@mail.com', initial: 'KŞ', level: 'İleri / Jump', pct: 90, instructor: 'Ece', nextLesson: '02 Tem 16:00', pay: 'Ödendi', media: ['IMG_5501','IMG_5502','VID_021','IMG_5510','IMG_5511','IMG_5530','VID_022','IMG_5540'] },
+      { name: 'Sofia Rossi', email: 'sofia@mail.com', initial: 'SR', level: 'Waterstart', pct: 50, instructor: 'Can', nextLesson: '01 Tem 11:00', pay: 'Bekliyor', media: ['IMG_7701','IMG_7702','IMG_7710','VID_030'] },
+    ],
+    instructors: [
+      { name: 'Can Deniz', initial: 'CD', cert: 'TYF KB5 · Baş eğitmen', students: 14, hours: 320, rating: '4.9' },
+      { name: 'Ece Kaya', initial: 'EK', cert: 'TYF KB4 · Eğitmen', students: 11, hours: 260, rating: '4.8' },
+      { name: 'Burak Ar', initial: 'BA', cert: 'TYF KB4 · Eğitmen', students: 7, hours: 140, rating: '4.7' },
+    ],
+    payments: [
+      { student: 'Deniz Aksoy', date: '28 Haz', amount: '700€', method: 'Nakit', status: 'Ödendi' },
+      { student: 'Mert Yıldız', date: '29 Haz', amount: '280€', method: 'Nakit', status: 'Bekliyor' },
+      { student: 'Kaan Şahin', date: '27 Haz', amount: '240€', method: 'Havale', status: 'Ödendi' },
+      { student: 'Sofia Rossi', date: '29 Haz', amount: '280€', method: 'Nakit', status: 'Bekliyor' },
+      { student: 'Lara Demir', date: '26 Haz', amount: '600€', method: 'Kart', status: 'Ödendi' },
+    ],
+    week: [
+      { day: 'PZT', date: '30', lessons: [ { time: '10:00', student: 'Deniz A.', type: 'Özel · İleri', c: 'teal' }, { time: '13:00', student: 'Lara D.', type: 'Başlangıç', c: 'navy' } ] },
+      { day: 'SAL', date: '01', lessons: [ { time: '09:00', student: 'Sofia R.', type: 'Devam', c: 'teal' }, { time: '11:00', student: 'Grup (2)', type: 'Başlangıç', c: 'orange' } ] },
+      { day: 'ÇAR', date: '02', lessons: [ { time: '16:00', student: 'Kaan Ş.', type: 'İleri / Jump', c: 'navy' } ] },
+      { day: 'PER', date: '03', lessons: [ { time: '10:00', student: 'Mert Y.', type: 'Waterstart', c: 'teal' } ] },
+      { day: 'CUM', date: '04', lessons: [ { time: '12:00', student: 'Deniz A.', type: 'Özel', c: 'teal' }, { time: '15:00', student: 'Grup (3)', type: 'Safari', c: 'orange' } ] },
+    ],
+    skills: ['Güvenlik & ekipman kurulumu', 'Uçurtma kontrolü (pencere)', 'Bodydrag', 'Waterstart', 'İlk metreler & ayağa kalkış', 'Upwind (rüzgara karşı) sürüş', 'Dönüşler / transition', 'İlk jump'],
+    myLessons: [
+      { day: '28', mon: 'HAZ', title: 'Upwind sürüş çalışması', tag: 'Tamamlandı', note: 'Rüzgara karşı yol almada büyük gelişme. Bir sonraki derste dönüşlere başlıyoruz.', done: true },
+      { day: '24', mon: 'HAZ', title: 'Waterstart & ilk metreler', tag: 'Tamamlandı', note: 'İlk kez ayağa kalktın ve 30+ metre sürdün. Harika ilerleme!', done: true },
+      { day: '21', mon: 'HAZ', title: 'Bodydrag & güç çalışması', tag: 'Tamamlandı', note: 'Kite kontrolü oturdu. Su içinde yön bulma pratiği yapıldı.', done: true },
+      { day: '02', mon: 'TEM', title: 'Dönüşler / transition', tag: 'Planlandı', note: 'Sonraki ders: rüzgar tahmini 16-20 kn, 12:00 Kefaloz.', done: false },
+    ],
+    revenue: [ { month: 'Oca', v: 6.2 }, { month: 'Şub', v: 7.1 }, { month: 'Mar', v: 9.4 }, { month: 'Nis', v: 12.8 }, { month: 'May', v: 15.6 }, { month: 'Haz', v: 18.4 } ],
+    levelDist: [ { label: 'Başlangıç', count: 18 }, { label: 'Waterstart', count: 12 }, { label: 'Bağımsız', count: 8 }, { label: 'İleri', count: 4 } ],
+  };
+
+  NAV = {
+    admin: [ ['a_dash', 'Genel Bakış'], ['a_students', 'Öğrenciler'], ['a_instructors', 'Hocalar'], ['a_pay', 'Ödemeler'], ['a_media', 'Medya & İndirme'], ['a_reports', 'Raporlar'] ],
+    hoca: [ ['h_cal', 'Haftalık Takvim'], ['h_students', 'Öğrencilerim'], ['h_note', 'Ders Notu Gir'] ],
+    ogrenci: [ ['s_dash', 'Panelim'], ['s_lessons', 'Derslerim'], ['s_gallery', 'Galerim'], ['s_pay', 'Ödemelerim'] ],
+  };
+  DEFAULT_SCREEN = { admin: 'a_dash', hoca: 'h_cal', ogrenci: 's_dash' };
+  ROLE_LABEL = { admin: 'Okul Yönetimi', hoca: 'Hoca Paneli', ogrenci: 'Öğrenci Paneli' };
+  TITLES = {
+    a_dash: 'Genel Bakış', a_students: 'Öğrenciler', a_instructors: 'Hocalar', a_pay: 'Ödemeler', a_media: 'Medya & İndirme Linkleri', a_reports: 'Raporlar',
+    h_cal: 'Haftalık Takvim', h_students: 'Öğrencilerim', h_note: 'Ders Notu Gir',
+    s_dash: 'Panelim', s_lessons: 'Derslerim', s_gallery: 'Galerim', s_pay: 'Ödemelerim',
+  };
+
+  setRole = (role) => this.setState({ role, screen: this.DEFAULT_SCREEN[role] });
+  setScreen = (screen) => this.setState({ screen });
+  toggleLink = () => this.setState(s => ({ linkOpen: !s.linkOpen }));
+
+  pill(status) {
+    return (status === 'Ödendi' || status === 'paid') ? this.PILL.paid : this.PILL.pending;
+  }
+
+  renderVals() {
+    const D = this.DATA;
+    const role = this.state.role;
+    const screen = this.state.screen;
+    const me = D.students[0]; // student panel = Deniz
+
+    // sidebar nav
+    const nav = this.NAV[role].map(([key, label]) => {
+      const active = screen === key;
+      return {
+        label,
+        onClick: () => this.setScreen(key),
+        style: 'display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;padding:11px 14px;border-radius:10px;' +
+          (active ? 'background:rgba(20,184,207,.16);color:#fff' : 'background:transparent;color:#9fb6c2'),
+        dotStyle: 'width:7px;height:7px;border-radius:50%;flex-shrink:0;background:' + (active ? '#14b8cf' : '#3a5566'),
+      };
+    });
+
+    const roleTabs = [ ['admin', 'Admin'], ['hoca', 'Hoca'], ['ogrenci', 'Öğrenci'] ].map(([key, label]) => {
+      const active = role === key;
+      return {
+        label,
+        onClick: () => this.setRole(key),
+        style: 'border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;padding:8px 16px;border-radius:9px;' +
+          (active ? 'background:#07283b;color:#fff' : 'background:transparent;color:#5a7079'),
+      };
+    });
+
+    const user = role === 'admin' ? { name: 'Volkan K.', role: 'Yönetici', initial: 'VK' } : role === 'hoca' ? { name: 'Can Deniz', role: 'Baş eğitmen', initial: 'CD' } : { name: 'Deniz Aksoy', role: 'Öğrenci', initial: 'DA' };
+
+    // admin dashboard
+    const adminStats = [
+      { label: 'Aktif öğrenci', value: '42', delta: '+6 bu ay', up: true },
+      { label: 'Bu hafta ders', value: '38', delta: '+4', up: true },
+      { label: 'Bu ay gelir', value: '18.4k€', delta: '+18%', up: true },
+      { label: 'Bekleyen ödeme', value: '4', delta: '2.0k€', up: false },
+    ].map(k => ({ ...k, deltaStyle: 'font-size:13px;font-weight:700;margin-top:8px;color:' + (k.up ? '#1f9d57' : '#c8860f') }));
+
+    const todayLessons = [
+      { time: '10:00', initial: 'DA', student: 'Deniz Aksoy', type: 'Özel · İleri', instructor: 'Can', pay: 'Ödendi' },
+      { time: '11:00', initial: 'SR', student: 'Sofia Rossi', type: 'Devam', instructor: 'Can', pay: 'Bekliyor' },
+      { time: '13:00', initial: 'MY', student: 'Mert Yıldız', type: 'Waterstart', instructor: 'Ece', pay: 'Bekliyor' },
+      { time: '16:00', initial: 'KŞ', student: 'Kaan Şahin', type: 'İleri / Jump', instructor: 'Ece', pay: 'Ödendi' },
+    ].map(l => ({ ...l, pillStyle: this.pill(l.pay) }));
+
+    const maxLoad = 38;
+    const instructorLoad = [ { name: 'Can Deniz', count: 16 }, { name: 'Ece Kaya', count: 13 }, { name: 'Burak Ar', count: 9 } ].map(i => ({
+      ...i, barStyle: 'height:100%;width:' + Math.round(i.count / maxLoad * 100) + '%;background:linear-gradient(90deg,#14b8cf,#0b6b7c);border-radius:6px',
+    }));
+
+    const students = D.students.map(st => ({
+      name: st.name, email: st.email, initial: st.initial, level: st.level, instructor: st.instructor, nextLesson: st.nextLesson, pay: st.pay,
+      pillStyle: this.pill(st.pay),
+      barStyle: 'height:100%;width:' + st.pct + '%;background:#14b8cf;border-radius:4px',
+    }));
+
+    const instructors = D.instructors;
+
+    const payStats = [
+      { label: 'Bu ay tahsilat', value: '18.4k€' },
+      { label: 'Nakit ödemeler', value: '9.8k€' },
+      { label: 'Bekleyen', value: '2.0k€' },
+    ];
+    const payments = D.payments.map(p => ({ ...p, pillStyle: this.pill(p.status) }));
+
+    // media (foto-admin)
+    const sel = D.students[this.state.mediaSel];
+    const mediaStudents = D.students.map((st, i) => ({
+      name: st.name, initial: st.initial, count: st.media.length,
+      onClick: () => this.setState({ mediaSel: i }),
+      style: 'display:flex;align-items:center;gap:11px;width:100%;border:1px solid ' + (i === this.state.mediaSel ? '#14b8cf' : 'transparent') + ';background:' + (i === this.state.mediaSel ? '#f0fafc' : 'transparent') + ';border-radius:11px;padding:9px 10px;cursor:pointer;font-family:inherit',
+    }));
+    const linkPaid = sel.pay === 'Ödendi';
+
+    // reports
+    const maxRev = 20;
+    const revenue = D.revenue.map(b => ({ month: b.month, val: b.v, barStyle: 'width:100%;height:' + Math.round(b.v / maxRev * 100) + '%;min-height:6px;background:linear-gradient(180deg,#14b8cf,#0b6b7c);border-radius:7px 7px 0 0' }));
+    const maxDist = 18;
+    const levelDist = D.levelDist.map(d => ({ label: d.label, count: d.count, barStyle: 'height:100%;width:' + Math.round(d.count / maxDist * 100) + '%;background:#ff6a3d;border-radius:6px' }));
+
+    // hoca week
+    const cardColor = { teal: 'background:#e7f6f9;border-left:3px solid #14b8cf;color:#0b6b7c', navy: 'background:#e9eef2;border-left:3px solid #07283b;color:#07283b', orange: 'background:#fdeee7;border-left:3px solid #ff6a3d;color:#c2502c' };
+    const week = D.week.map(day => ({ day: day.day, date: day.date, lessons: day.lessons.map(l => ({ time: l.time, student: l.student, type: l.type, cardStyle: 'border-radius:10px;padding:10px 12px;' + cardColor[l.c] })) }));
+
+    const myStudents = D.students.slice(0, 4).map((st, i) => ({
+      name: st.name, initial: st.initial, level: st.level, pay: st.pay, pct: st.pct + '%',
+      pillStyle: this.pill(st.pay),
+      barStyle: 'height:100%;width:' + st.pct + '%;background:#14b8cf;border-radius:5px',
+      onNote: () => this.setState({ screen: 'h_note', noteSel: i, skillsDone: Math.round(st.pct / 100 * 8) }),
+    }));
+
+    // note entry
+    const noteStudent = D.students[this.state.noteSel];
+    const skills = D.skills.map((label, i) => {
+      const done = i < this.state.skillsDone;
+      return {
+        label,
+        onToggle: () => this.setState({ skillsDone: i + 1 === this.state.skillsDone ? i : i + 1 }),
+        style: 'display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:12px 14px;border-radius:11px;border:1px solid ' + (done ? '#cdeef3' : '#e4e9ee') + ';background:' + (done ? '#f0fafc' : '#fff') + ';color:' + (done ? '#07283b' : '#5a7079'),
+        check: done ? '✓' : '',
+        checkStyle: 'width:22px;height:22px;border-radius:6px;flex-shrink:0;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;background:' + (done ? '#14b8cf' : '#dde5ea'),
+      };
+    });
+    const notePctNum = Math.round(this.state.skillsDone / 8 * 100);
+
+    const myLessons = D.myLessons.map(l => ({ ...l, tagStyle: 'font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;height:fit-content;' + (l.done ? 'background:#e3f5ea;color:#1f9d57' : 'background:#eef1f4;color:#8497a1') }));
+
+    // student gallery — unlock tied to linkOpen
+    const unlocked = this.state.linkOpen;
+    const galleryItems = (me.media.length ? me.media : ['IMG_2201','IMG_2202','VID_009','IMG_2210','IMG_2215','IMG_2230','IMG_2240','VID_012']).map(label => ({
+      label,
+      lockStyle: unlocked ? 'display:none' : 'position:absolute;inset:0;background:rgba(7,40,59,.62);backdrop-filter:blur(3px);display:grid;place-items:center',
+      lockText: 'KİLİTLİ',
+    }));
+
+    const myPayments = [
+      { title: 'Başlangıç paketi (10 saat)', date: '28 Haz 2026', method: 'Nakit', amount: '700€', status: 'Ödendi' },
+      { title: 'Ek ders (2 saat)', date: '24 Haz 2026', method: 'Nakit', amount: '140€', status: 'Ödendi' },
+      { title: 'Foto & video paketi', date: '—', method: 'Nakit bekleniyor', amount: '60€', status: 'Bekliyor' },
+    ].map(p => {
+      const paid = p.status === 'Ödendi';
+      return { ...p, pillStyle: this.pill(p.status), receipt: paid ? 'Makbuz ↓' : '—', receiptStyle: paid ? 'font-size:13px;font-weight:800;color:#14b8cf;cursor:pointer' : 'font-size:13px;color:#cbd5db' };
+    });
+
+    return {
+      roleLabel: this.ROLE_LABEL[role],
+      screenTitle: this.TITLES[screen],
+      nav, roleTabs,
+      userName: user.name, userRole: user.role, userInitial: user.initial,
+
+      s_a_dash: screen === 'a_dash', s_a_students: screen === 'a_students', s_a_instructors: screen === 'a_instructors',
+      s_a_pay: screen === 'a_pay', s_a_media: screen === 'a_media', s_a_reports: screen === 'a_reports',
+      s_h_cal: screen === 'h_cal', s_h_students: screen === 'h_students', s_h_note: screen === 'h_note',
+      s_s_dash: screen === 's_dash', s_s_lessons: screen === 's_lessons', s_s_gallery: screen === 's_gallery', s_s_pay: screen === 's_pay',
+
+      adminStats, today: '29 Haziran 2026', todayLessons, instructorLoad,
+      students, studentCount: '42', instructors, payStats, payments,
+
+      mediaStudents, selMediaName: sel.name, selPay: sel.pay, selPayPillStyle: this.pill(sel.pay), selMedia: sel.media,
+      linkOpen: this.state.linkOpen, toggleLink: this.toggleLink,
+      linkHint: this.state.linkOpen ? 'Aktif · öğrenci panelinde indirilebilir' : (linkPaid ? 'Ödeme alındı — linki açabilirsin' : 'Önce nakit ödeme işaretlenmeli'),
+      linkBtnLabel: this.state.linkOpen ? 'Linki kapat' : 'İndirme linkini aç',
+      linkBtnStyle: 'border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:12px 20px;border-radius:11px;' + (this.state.linkOpen ? 'background:#fdeee7;color:#c2502c' : 'background:#14b8cf;color:#06222f'),
+      downloadUrl: 'volkite.com/dl/' + sel.initial.toLowerCase() + '-2026-x7f3a',
+
+      revenue, levelDist,
+      week, myStudents,
+      noteName: noteStudent.name, noteInitial: noteStudent.initial, noteDate: '29 Haz', skills,
+      notePct: notePctNum + '%', noteLevel: noteStudent.level,
+      noteBarStyle: 'height:100%;width:' + notePctNum + '%;background:linear-gradient(90deg,#14b8cf,#0b6b7c);border-radius:6px',
+
+      nextLessonBig: '02 Tem · 12:00', myInstructor: 'Can', myPct: me.pct + '%', myLevel: me.level,
+      studentStats: [ { label: 'Tamamlanan ders', value: '8' }, { label: 'Toplam saat', value: '14' }, { label: 'Kazanılan beceri', value: '6/8' } ],
+      myLessons,
+
+      galleryItems,
+      galleryBannerStyle: 'display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-radius:16px;padding:18px 22px;' + (unlocked ? 'background:#e3f5ea;color:#136b3a' : 'background:#fff;border:1px solid #e4e9ee;color:#07283b'),
+      galleryBannerTitle: unlocked ? 'Fotoğraf & videoların hazır 🎉' : 'Medyan kilitli',
+      galleryBannerSub: unlocked ? 'Tüm kareleri tek tek veya toplu indirebilirsin.' : 'Foto & video paketi ödemesi alınınca indirme açılır.',
+
+      myPayments,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Manrope',system-ui,sans-serif;background:#fbf6ec;color:#07283b;-webkit-font-smoothing:antialiased}
+  ::selection{background:#14b8cf;color:#06222f}
+  @keyframes kenburns{0%{transform:scale(1.06) translate(0,0)}100%{transform:scale(1.2) translate(-2%,-2%)}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+  @keyframes drift{0%{background-position:0 0}100%{background-position:1400px 0}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  a{color:inherit;text-decoration:none}
+  input,textarea,button{font-family:inherit}
+  @media(min-width:900px){.navlinks{display:flex !important}}
+</style>
+</helmet>
+<div style="overflow-x:hidden;position:relative">
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px clamp(20px,5vw,72px);backdrop-filter:blur(14px);background:rgba(6,33,49,.42);border-bottom:1px solid rgba(255,255,255,.1)">
+    <a href="#top" style="display:flex;align-items:center;gap:12px;color:#fbf6ec">
+      <img src="assets/volkite-logo-white.png" alt="Volkite Kiteboard Okulu" style="height:34px;width:auto;display:block">
+    </a>
+    <div style="display:flex;align-items:center;gap:26px">
+      <div style="display:none;gap:24px;font-size:14px;font-weight:600;color:#dceaf0;letter-spacing:.01em" class="navlinks">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="6">
+          <a href="{{ item.href }}" style="opacity:.85;transition:opacity .2s" style-hover="opacity:1;color:#14b8cf">{{ item.label }}</a>
+        </sc-for>
+      </div>
+      <div style="position:relative">
+        <button onClick="{{ toggleLangMenu }}" style="cursor:pointer;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fbf6ec;font-weight:700;font-size:13px;letter-spacing:.06em;padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:7px">{{ langCode }}<span style="font-size:8px;opacity:.7">▼</span></button>
+        <sc-if value="{{ langOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:calc(100% + 8px);right:0;background:#0c3346;border:1px solid rgba(255,255,255,.15);border-radius:10px;overflow:hidden;min-width:148px;box-shadow:0 16px 40px -12px rgba(0,0,0,.6)">
+            <sc-for list="{{ langMenu }}" as="l" hint-placeholder-count="4">
+              <button onClick="{{ l.onClick }}" style="width:100%;text-align:left;background:transparent;border:none;color:#dceaf0;font-family:inherit;font-weight:600;font-size:14px;padding:11px 16px;cursor:pointer" style-hover="background:rgba(20,184,207,.18);color:#14b8cf">{{ l.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <a href="#rezervasyon" style="background:#ff6a3d;color:#fff;font-weight:800;font-size:14px;letter-spacing:.02em;padding:11px 20px;border-radius:10px;box-shadow:0 8px 22px -8px rgba(255,106,61,.8)" style-hover="background:#ff7f57">{{ t.navCta }}</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="top" style="position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden;background:#062131">
+    <div style="position:absolute;inset:0;background:#062131 url('assets/hero-kite.jpg') center 35%/cover no-repeat;animation:kenburns 18s ease-in-out infinite alternate"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,33,49,.55) 0%,rgba(6,33,49,.25) 35%,rgba(6,33,49,.85) 100%)"></div>
+
+    <!-- live wind chip -->
+    <div style="position:absolute;top:96px;right:clamp(20px,5vw,72px);display:flex;align-items:center;gap:10px;background:rgba(6,33,49,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:9px 16px;color:#dceaf0;font-size:13px;font-weight:700;letter-spacing:.04em">
+      <span style="width:9px;height:9px;border-radius:50%;background:#3ee07a;animation:pulse 1.6s infinite"></span>
+      <span style="opacity:.7">{{ t.liveNow }}</span>
+      <span style="color:#14b8cf;font-family:'Anton';font-size:16px;letter-spacing:.02em">{{ windSpeed }}</span>
+      <span style="opacity:.7">{{ windDir }}</span>
+    </div>
+
+    <div style="position:relative;z-index:2;padding:0 clamp(20px,5vw,72px) clamp(56px,7vw,96px);max-width:1080px">
+      <div style="display:inline-flex;align-items:center;gap:10px;color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:22px">
+        <span style="width:28px;height:2px;background:#14b8cf"></span>{{ t.heroKicker }}
+      </div>
+      <h1 style="font-family:'Anton';color:#fbf6ec;font-size:clamp(54px,11vw,150px);line-height:.9;letter-spacing:.01em;text-shadow:0 6px 40px rgba(0,0,0,.4)">{{ t.heroTitle }}</h1>
+      <p style="color:#dceaf0;font-size:clamp(16px,2vw,21px);font-weight:500;max-width:560px;margin:26px 0 34px;line-height:1.5">{{ t.heroSub }}</p>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+        <a href="#rezervasyon" style="background:#ff6a3d;color:#fff;font-weight:800;font-size:16px;padding:16px 30px;border-radius:12px;box-shadow:0 14px 34px -10px rgba(255,106,61,.7)" style-hover="background:#ff7f57">{{ t.heroBtn1 }}</a>
+        <button style="display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);color:#fbf6ec;font-weight:700;font-size:15px;padding:14px 22px;border-radius:12px;cursor:pointer" style-hover="background:rgba(255,255,255,.18)">
+          <span style="width:30px;height:30px;border-radius:50%;background:#14b8cf;display:grid;place-items:center">
+            <span style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #06222f;margin-left:3px"></span>
+          </span>
+          {{ t.heroBtn2 }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <section style="background:#07283b;color:#fbf6ec;padding:clamp(40px,5vw,64px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px">
+      <sc-for list="{{ stats }}" as="item" hint-placeholder-count="5">
+        <div style="border-left:2px solid rgba(20,184,207,.5);padding-left:18px">
+          <div style="font-family:'Anton';font-size:clamp(38px,5vw,56px);color:#14b8cf;line-height:1">{{ item.num }}</div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9fc0cf;margin-top:6px">{{ item.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section style="background:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(32px,5vw,72px);align-items:center">
+      <div>
+        <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:18px">{{ t.aboutKicker }}</div>
+        <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,60px);line-height:.98;color:#07283b;margin-bottom:24px">{{ t.aboutTitle }}</h2>
+        <p style="font-size:17px;line-height:1.65;color:#3a5563;margin-bottom:18px">{{ t.aboutBody1 }}</p>
+        <p style="font-size:17px;line-height:1.65;color:#3a5563;margin-bottom:30px">{{ t.aboutBody2 }}</p>
+        <a href="#rezervasyon" style="display:inline-flex;align-items:center;gap:10px;font-weight:800;color:#07283b;border-bottom:3px solid #ff6a3d;padding-bottom:4px">{{ t.aboutLink }} →</a>
+      </div>
+      <div style="position:relative;aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:#cfdde2 url('assets/about-kite.jpg') center/cover no-repeat;box-shadow:0 30px 60px -28px rgba(7,40,59,.45)">
+        <div style="position:absolute;left:18px;bottom:18px;right:18px;background:rgba(6,33,49,.78);backdrop-filter:blur(6px);color:#fbf6ec;border-radius:12px;padding:16px 18px">
+          <div style="font-family:'Anton';font-size:22px;color:#14b8cf">21 {{ t.years }}</div>
+          <div style="font-size:13px;color:#cfe1e8;margin-top:2px">{{ t.aboutBadge }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSONS / LEAD -->
+  <section id="egitimler" style="background:#062131;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:48px">
+        <div>
+          <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.lessonsKicker }}</div>
+          <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,60px);line-height:.98">{{ t.lessonsTitle }}</h2>
+        </div>
+        <p style="max-width:380px;color:#9fc0cf;font-size:16px;line-height:1.6">{{ t.lessonsSub }}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px">
+        <sc-for list="{{ levels }}" as="item" hint-placeholder-count="3">
+          <div style="background:#0c3346;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:30px;display:flex;flex-direction:column;gap:14px;transition:transform .25s,border-color .25s" style-hover="transform:translateY(-6px);border-color:rgba(20,184,207,.6)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#14b8cf;background:rgba(20,184,207,.12);padding:6px 12px;border-radius:999px">{{ item.tag }}</span>
+              <span style="font-size:13px;color:#9fc0cf;font-weight:700">{{ item.dur }}</span>
+            </div>
+            <h3 style="font-family:'Anton';font-size:28px;letter-spacing:.01em">{{ item.title }}</h3>
+            <p style="color:#bcd4de;font-size:15px;line-height:1.6;flex:1">{{ item.desc }}</p>
+            <div style="display:flex;flex-direction:column;gap:9px;padding:14px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)">
+              <sc-for list="{{ item.rows }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px">
+                  <span style="color:#9fc0cf">{{ r.label }}</span>
+                  <span style="font-weight:800;color:#fbf6ec">{{ r.price }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <a href="#rezervasyon" style="margin-top:6px;font-weight:800;color:#ff8a64" style-hover="color:#ff6a3d">{{ item.cta }} →</a>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section style="background:#fbf6ec;padding:clamp(56px,7vw,100px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <h2 style="font-family:'Anton';font-size:clamp(28px,3.5vw,46px);text-align:center;color:#07283b;margin-bottom:14px">{{ t.trustTitle }}</h2>
+      <p style="text-align:center;color:#5a7079;max-width:560px;margin:0 auto 48px;font-size:16px;line-height:1.6">{{ t.trustSub }}</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+        <sc-for list="{{ trust }}" as="item" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #ece1cc;border-radius:16px;padding:28px">
+            <div style="font-family:'Anton';font-size:20px;color:#14b8cf;letter-spacing:.04em;margin-bottom:10px">{{ item.brand }}</div>
+            <div style="font-weight:800;color:#07283b;margin-bottom:8px">{{ item.title }}</div>
+            <p style="color:#5a7079;font-size:14px;line-height:1.6">{{ item.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="hizmetler" style="background:#07283b;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.servicesKicker }}</div>
+      <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,60px);margin-bottom:44px">{{ t.servicesTitle }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px">
+        <sc-for list="{{ services }}" as="item" hint-placeholder-count="7">
+          <div style="background:#0c3346;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:160px;transition:background .25s" style-hover="background:#114057">
+            <span style="font-family:'Anton';font-size:18px;color:#14b8cf">{{ item.no }}</span>
+            <h3 style="font-size:19px;font-weight:800">{{ item.name }}</h3>
+            <p style="color:#9fc0cf;font-size:14px;line-height:1.55">{{ item.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="galeri" style="background:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:40px">
+        <div>
+          <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.galleryKicker }}</div>
+          <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,60px);line-height:.98;color:#07283b">{{ t.galleryTitle }}</h2>
+        </div>
+        <p style="max-width:340px;color:#5a7079;font-size:16px;line-height:1.6">{{ t.gallerySub }}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px">
+        <sc-for list="{{ gallery }}" as="item" hint-placeholder-count="8">
+          <div style="position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(135deg,#cfdde2 0 15px,#c4d4da 15px 30px);cursor:pointer">
+            <div style="position:absolute;inset:0;display:grid;place-items:center;font-family:monospace;font-size:11px;letter-spacing:.12em;color:#5a7079;text-transform:uppercase;text-align:center;padding:8px;transition:background .25s" style-hover="background:rgba(20,184,207,.16)">{{ item }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPOT -->
+  <section id="spot" style="background:#062131;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
+      <div style="position:relative;aspect-ratio:16/12;border-radius:18px;overflow:hidden;background:#16384a url('assets/spot-kite.jpg') center/cover no-repeat">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,33,49,0) 40%,rgba(6,33,49,.5) 100%)"></div>
+      </div>
+      <div>
+        <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.spotKicker }}</div>
+        <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,56px);line-height:.98;margin-bottom:28px">{{ t.spotTitle }}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:30px">
+          <sc-for list="{{ spotFeatures }}" as="item" hint-placeholder-count="4">
+            <div>
+              <div style="font-family:'Anton';font-size:30px;color:#14b8cf">{{ item.num }}</div>
+              <div style="font-size:14px;color:#bcd4de;margin-top:4px">{{ item.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <a href="https://kiting.live/kitesurf-spot/wave-gokceada-turkey" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:rgba(20,184,207,.14);border:1px solid rgba(20,184,207,.5);color:#14b8cf;font-weight:800;padding:13px 22px;border-radius:11px" style-hover="background:rgba(20,184,207,.24)">{{ t.spotCta }} →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="yorumlar" style="background:#07283b;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:44px">
+        <div>
+          <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.reviewsKicker }}</div>
+          <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,60px);line-height:.98">{{ t.reviewsTitle }}</h2>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="font-family:'Anton';font-size:54px;color:#14b8cf;line-height:1">{{ t.reviewsRating }}</div>
+          <div>
+            <div style="color:#ffcf4d;font-size:18px;letter-spacing:2px">★★★★★</div>
+            <div style="font-size:13px;color:#9fc0cf;margin-top:2px">{{ t.reviewsCount }}</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
+        <sc-for list="{{ reviews }}" as="item" hint-placeholder-count="3">
+          <div style="background:#0c3346;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:16px">
+            <div style="color:#ffcf4d;font-size:16px;letter-spacing:2px">★★★★★</div>
+            <p style="color:#dceaf0;font-size:16px;line-height:1.65;flex:1">{{ item.text }}</p>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="width:40px;height:40px;border-radius:50%;background:rgba(20,184,207,.18);display:grid;place-items:center;color:#14b8cf;font-weight:800">{{ item.initial }}</span>
+              <div>
+                <div style="font-weight:800">{{ item.name }}</div>
+                <div style="font-size:13px;color:#9fc0cf">{{ item.place }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAY & TRAVEL -->
+  <section id="konaklama" style="background:#062131;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.stayKicker }}</div>
+      <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,56px);margin-bottom:44px">{{ t.stayTitle }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">
+        <sc-for list="{{ stay }}" as="item" hint-placeholder-count="3">
+          <div style="background:#0c3346;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:30px;display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#14b8cf;background:rgba(20,184,207,.12);padding:6px 12px;border-radius:999px;align-self:flex-start">{{ item.tag }}</span>
+            <h3 style="font-size:21px;font-weight:800">{{ item.title }}</h3>
+            <p style="color:#9fc0cf;font-size:15px;line-height:1.6">{{ item.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- KITCHEN -->
+  <section id="mutfak" style="background:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
+        <div>
+          <div style="color:#ff6a3d;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.kitchenKicker }}</div>
+          <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,56px);line-height:.98;color:#07283b;margin-bottom:22px">{{ t.kitchenTitle }}</h2>
+          <p style="font-size:17px;line-height:1.65;color:#3a5563;margin-bottom:30px">{{ t.kitchenBody }}</p>
+          <a href="#rezervasyon" style="display:inline-flex;font-weight:800;color:#07283b;border-bottom:3px solid #ff6a3d;padding-bottom:4px">{{ t.kitchenLink }} →</a>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <sc-for list="{{ kitchen }}" as="item" hint-placeholder-count="4">
+            <div style="position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(135deg,#cfdde2 0 14px,#c4d4da 14px 28px)">
+              <div style="position:absolute;inset:0;display:grid;place-items:center;font-family:monospace;font-size:11px;letter-spacing:.12em;color:#5a7079;text-transform:uppercase;text-align:center;padding:8px">{{ item }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="sss" style="background:#07283b;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:860px;margin:0 auto">
+      <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.faqKicker }}</div>
+      <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,56px);margin-bottom:40px">{{ t.faqTitle }}</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ faqView }}" as="item" hint-placeholder-count="6">
+          <div style="background:#0c3346;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden">
+            <button onClick="{{ item.onToggle }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:transparent;border:none;color:#fbf6ec;font-family:inherit;font-size:17px;font-weight:700;text-align:left;padding:20px 22px;cursor:pointer">
+              <span>{{ item.q }}</span>
+              <span style="color:#14b8cf;font-size:24px;font-weight:400;flex-shrink:0">{{ item.sign }}</span>
+            </button>
+            <div style="{{ item.answerStyle }}">
+              <p style="color:#bcd4de;font-size:15px;line-height:1.65;padding:0 22px 20px">{{ item.a }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section id="instagram" style="background:#fbf6ec;padding:clamp(56px,7vw,100px) clamp(20px,5vw,72px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-bottom:34px">
+        <div>
+          <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:14px">{{ t.igKicker }}</div>
+          <h2 style="font-family:'Anton';font-size:clamp(28px,3.5vw,46px);color:#07283b">{{ t.igTitle }}</h2>
+        </div>
+        <a href="https://www.instagram.com/volkite/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#07283b;color:#fbf6ec;font-weight:800;padding:13px 22px;border-radius:11px" style-hover="background:#0c3346">{{ t.igHandle }} · {{ t.igCta }} →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+        <sc-for list="{{ ig }}" as="item" hint-placeholder-count="6">
+          <a href="https://www.instagram.com/volkite/" target="_blank" style="position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:repeating-linear-gradient(135deg,#cfdde2 0 14px,#c4d4da 14px 28px);display:block">
+            <span style="position:absolute;inset:0;display:grid;place-items:center;font-family:monospace;font-size:11px;letter-spacing:.12em;color:#5a7079;text-transform:uppercase">{{ item }}</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESERVATION / LEAD -->
+  <section id="rezervasyon" style="background:#07283b;color:#fbf6ec;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px)">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(36px,5vw,72px)">
+      <div>
+        <div style="color:#14b8cf;font-weight:800;font-size:13px;letter-spacing:.22em;margin-bottom:16px">{{ t.bookKicker }}</div>
+        <h2 style="font-family:'Anton';font-size:clamp(34px,4.5vw,56px);line-height:.98;margin-bottom:22px">{{ t.bookTitle }}</h2>
+        <p style="color:#bcd4de;font-size:16px;line-height:1.65;margin-bottom:18px">{{ t.bookSub }}</p>
+        <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(20,184,207,.12);border:1px solid rgba(20,184,207,.4);color:#14b8cf;font-weight:700;font-size:13px;padding:10px 16px;border-radius:999px;margin-bottom:30px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#14b8cf"></span>{{ t.bookSoon }}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <a href="tel:+905332411015" style="display:flex;align-items:center;gap:14px">
+            <span style="width:42px;height:42px;border-radius:11px;background:rgba(20,184,207,.14);display:grid;place-items:center;color:#14b8cf;font-weight:800">T</span>
+            <span><span style="display:block;font-size:12px;color:#9fc0cf;letter-spacing:.06em">{{ t.phone }}</span><span style="font-weight:800;font-size:17px">+90 533 241 10 15</span></span>
+          </a>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="width:42px;height:42px;border-radius:11px;background:rgba(20,184,207,.14);display:grid;place-items:center;color:#14b8cf;font-weight:800">@</span>
+            <span><span style="display:block;font-size:12px;color:#9fc0cf;letter-spacing:.06em">{{ t.address }}</span><span style="font-weight:700;font-size:15px">Eşelek Köyü, Köy Sk. 104/1 · Gökçeada</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#0c3346;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(24px,3vw,38px)">
+        <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:320px;gap:16px">
+            <div style="width:64px;height:64px;border-radius:50%;background:rgba(62,224,122,.16);display:grid;place-items:center;color:#3ee07a;font-size:30px;font-family:'Anton'">✓</div>
+            <h3 style="font-family:'Anton';font-size:26px">{{ t.thanksTitle }}</h3>
+            <p style="color:#bcd4de;max-width:300px">{{ t.thanksBody }}</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <input value="{{ fName }}" onChange="{{ onName }}" placeholder="{{ t.fName }}" style="min-width:0;width:100%;background:#072636;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:14px 16px;color:#fbf6ec;font-size:15px;outline:none" style-focus="border-color:#14b8cf">
+              <input value="{{ fSurname }}" onChange="{{ onSurname }}" placeholder="{{ t.fSurname }}" style="min-width:0;width:100%;background:#072636;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:14px 16px;color:#fbf6ec;font-size:15px;outline:none" style-focus="border-color:#14b8cf">
+            </div>
+            <input value="{{ fEmail }}" onChange="{{ onEmail }}" placeholder="{{ t.fEmail }}" style="background:#072636;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:14px 16px;color:#fbf6ec;font-size:15px;outline:none" style-focus="border-color:#14b8cf">
+            <textarea value="{{ fMsg }}" onChange="{{ onMsg }}" placeholder="{{ t.fMsg }}" rows="4" style="background:#072636;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:14px 16px;color:#fbf6ec;font-size:15px;outline:none;resize:vertical" style-focus="border-color:#14b8cf"></textarea>
+            <button onClick="{{ submitForm }}" style="background:#ff6a3d;color:#fff;font-weight:800;font-size:16px;padding:15px;border:none;border-radius:11px;cursor:pointer;box-shadow:0 12px 30px -10px rgba(255,106,61,.7)" style-hover="background:#ff7f57">{{ t.fSend }}</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#062131;color:#9fc0cf;padding:clamp(48px,6vw,80px) clamp(20px,5vw,72px) 40px;border-top:1px solid rgba(255,255,255,.08)">
+    <div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:30px;align-items:flex-start">
+      <div style="max-width:300px">
+        <div style="display:flex;align-items:center;gap:12px;color:#fbf6ec;margin-bottom:14px">
+          <img src="assets/volkite-logo-white.png" alt="Volkite Kiteboard Okulu" style="height:38px;width:auto;display:block">
+        </div>
+        <p style="font-size:14px;line-height:1.6">{{ t.footerTag }}</p>
+      </div>
+      <div style="display:flex;gap:14px">
+        <a href="https://www.facebook.com/volkite" target="_blank" style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;color:#dceaf0;font-weight:800" style-hover="border-color:#14b8cf;color:#14b8cf">f</a>
+        <a href="https://www.instagram.com/volkite/" target="_blank" style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;color:#dceaf0;font-weight:800" style-hover="border-color:#14b8cf;color:#14b8cf">ig</a>
+        <a href="{{ waHref }}" target="_blank" style="width:42px;height:42px;border-radius:11px;border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;color:#dceaf0;font-weight:800" style-hover="border-color:#25D366;color:#25D366">wa</a>
+      </div>
+    </div>
+    <div style="max-width:1240px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px">
+      <span>© 2026 Volkite Kiteboard {{ t.school }}</span>
+      <span>Gökçeada · Çanakkale · Türkiye</span>
+    </div>
+  </footer>
+
+  <!-- CHAT AGENT -->
+  <div style="position:fixed;right:clamp(16px,3vw,28px);bottom:clamp(16px,3vw,28px);z-index:90">
+    <sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="width:min(360px,calc(100vw - 32px));height:min(540px,calc(100vh - 120px));background:#fbf6ec;border-radius:20px;box-shadow:0 30px 70px -20px rgba(6,33,49,.6);display:flex;flex-direction:column;overflow:hidden;border:1px solid #e7dcc6;animation:rise .25s ease">
+        <div style="background:#07283b;color:#fbf6ec;padding:16px 18px;display:flex;align-items:center;gap:12px">
+          <span style="width:38px;height:38px;border-radius:11px;background:#fff;display:grid;place-items:center;overflow:hidden"><img src="assets/volkite-octopus.png" alt="" style="width:30px;height:30px;object-fit:contain;display:block"></span>
+          <div style="flex:1">
+            <div style="font-weight:800;font-size:15px">{{ t.chatTitle }}</div>
+            <div style="font-size:12px;color:#9fc0cf;display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:#3ee07a;animation:pulse 1.6s infinite"></span>{{ t.chatStatus }}</div>
+          </div>
+          <button onClick="{{ toggleChat }}" style="background:transparent;border:none;color:#9fc0cf;font-size:22px;cursor:pointer;line-height:1">×</button>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ messagesView }}" as="m" hint-placeholder-count="1">
+            <div style="{{ m.rowStyle }}">
+              <div style="{{ m.bubbleStyle }}">{{ m.text }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding:0 14px 10px;display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ quickReplies }}" as="q" hint-placeholder-count="4">
+            <button onClick="{{ q.onClick }}" style="background:#fff;border:1px solid #e0d4bd;color:#07283b;font-size:13px;font-weight:600;padding:8px 13px;border-radius:999px;cursor:pointer" style-hover="border-color:#14b8cf;color:#0b6b7c">{{ q.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;padding:12px 14px;border-top:1px solid #e7dcc6;background:#fff">
+          <input value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="{{ t.chatPlaceholder }}" style="flex:1;border:1px solid #e0d4bd;border-radius:11px;padding:11px 14px;font-size:14px;outline:none;color:#07283b" style-focus="border-color:#14b8cf">
+          <button onClick="{{ sendChat }}" style="background:#14b8cf;border:none;color:#06222f;font-weight:800;padding:0 16px;border-radius:11px;cursor:pointer">→</button>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ chatClosed }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ toggleChat }}" style="display:flex;align-items:center;gap:10px;background:#ff6a3d;color:#fff;border:none;border-radius:999px;padding:14px 20px;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 16px 36px -10px rgba(255,106,61,.7);animation:floaty 3.5s ease-in-out infinite" style-hover="background:#ff7f57">
+        <span style="width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden"><img src="assets/volkite-octopus.png" alt="" style="width:24px;height:24px;object-fit:contain;display:block"></span>
+        {{ t.chatLauncher }}
+      </button>
+    </sc-if>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:3600}}">
+class Component extends DCLogic {
+  state = {
+    lang: 'tr',
+    submitted: false,
+    openFaq: null,
+    wind: null,
+    langOpen: false,
+    fName: '', fSurname: '', fEmail: '', fMsg: '',
+    chatOpen: false,
+    chatInput: '',
+    messages: null,
+  };
+
+  DICT = {
+    tr: {
+      navItems: [
+        { label: 'Eğitimler', href: '#egitimler' },
+        { label: 'Hizmetler', href: '#hizmetler' },
+        { label: 'Spot & Rüzgar', href: '#spot' },
+        { label: 'Galeri', href: '#galeri' },
+        { label: 'Mutfak', href: '#mutfak' },
+        { label: 'SSS', href: '#sss' },
+        { label: 'İletişim', href: '#rezervasyon' },
+      ],
+      navCta: 'Rezervasyon',
+      liveNow: 'Şu an Kefaloz',
+      heroKicker: 'GÖKÇEADA · KEFALOZ KOYU',
+      heroTitle: 'RÜZGARI YAKALA',
+      heroSub: 'Türkiye’nin en köklü kiteboard okulu. 21 yıllık tecrübe, senenin 300 günü rüzgar ve Kefaloz koyunun ilk okulu olmanın deneyimiyle suya ilk adımını at.',
+      heroBtn1: 'Eğitime Başla',
+      heroBtn2: 'Tanıtım Filmi',
+      stats: [
+        { num: '21', label: 'Yıl Tecrübe' },
+        { num: '300', label: 'Gün Rüzgar' },
+        { num: '600m', label: 'Eğitim Alanı' },
+        { num: '3km', label: 'Serbest Sürüş' },
+        { num: '5', label: 'Dilde Eğitim' },
+      ],
+      aboutKicker: 'BİZ KİMİZ?',
+      aboutTitle: 'HAYATIMIZI RÜZGARA VE SUYA ADADIK',
+      aboutBody1: 'Herşeyi geride bırakıp cittaslow Gökçeada’da kitesurf eğitimi alabileceğiniz Volkite Kiteboard Okulunu kurduk. 21 senelik uçurtma sörfü tecrübemizle Kefaloz koyundayız.',
+      aboutBody2: 'Yerimiz, bir kiteboardcunun tüm ihtiyaçlarını adım atma mesafesinde karşılamak üzere tasarlandı. İngilizce, İspanyolca, Arapça, Fransızca ve İtalyanca eğitim verebiliyoruz.',
+      aboutLink: 'Eğitime başla',
+      years: 'Yıl',
+      aboutBadge: 'Kesintisiz uçurtma sörfü tecrübesi',
+      lessonsKicker: 'EĞİTİMLER',
+      lessonsTitle: 'SENİN İÇİN DOĞRU PROGRAM',
+      lessonsSub: 'TYF onaylı KB5/KB4 sertifikalı eğitmenlerle; ister sıfırdan başla ister ilerle. Tüm paketlerde ekipman ve telsiz dahil.',
+      levels: [
+        { tag: 'Başlangıç', dur: '10 saat', title: 'BAŞLANGIÇ PROGRAMI', desc: 'Teori, güvenlik ve 5 modülle sıfırdan bağımsız kiteboardcu seviyesine. Tüm ekipman dahil.', rows: [ { label: 'Özel ders', price: '700€' }, { label: '2 kişilik grup / kişi', price: '600€' }, { label: 'Ek ders (1 saat)', price: '70€' } ], cta: 'Rezervasyon' },
+        { tag: 'Keşif & Devam', dur: '4 saat', title: 'KEŞİF & DEVAM', desc: 'Rüzgarlı bir günde tamamlanır. Yeni başla ya da yarım kalan eğitimine kaldığın yerden devam et.', rows: [ { label: 'Özel ders', price: '280€' }, { label: '2’li grup / kişi', price: '240€' }, { label: 'Ek ders (1 saat)', price: '70€' } ], cta: 'Rezervasyon' },
+        { tag: 'İleri Seviye', dur: 'saatlik', title: 'İLERİ SEVİYE', desc: 'Freeride, freestyle ve dalga sürüş. Seviyene özel yol haritası, BB Talkin telsizle birebir.', rows: [ { label: 'Özel ders / saat', price: '80€' }, { label: '2’li grup / kişi · saat', price: '70€' }, { label: 'Coaching', price: 'Bize sorun' } ], cta: 'Rezervasyon' },
+      ],
+      trustTitle: 'NEDEN VOLKITE?',
+      trustSub: 'En iyi ekipman, en yüksek standartlar ve kesintisiz iletişim ile öğrenmenin en güvenli yolu.',
+      trust: [
+        { brand: 'SLINGSHOT', title: 'Şampiyonların tercihi', desc: 'Kullanıcı dostu, dünyanın 1 numaralı kitesurf ekipmanları ile eğitim.' },
+        { brand: 'TYF STANDARDI', title: 'Yüksek standartlar', desc: 'Eğitimlerimiz Türkiye Yelken Federasyonu standartlarında yürütülür.' },
+        { brand: 'BB TALKIN', title: 'Bir adım önde', desc: 'Kask-telsiz ile sürüş boyunca eğitmenle kesintisiz iletişim konforu.' },
+      ],
+      servicesKicker: 'HİZMETLER',
+      servicesTitle: 'OKULDAKİ HER ŞEY BİR ARADA',
+      services: [
+        { no: '01', name: 'Ekipman Satış', desc: 'Slingshot ve seçili markalarda yeni & ikinci el ekipman.' },
+        { no: '02', name: 'Ekipman Kiralama', desc: 'Güncel kite, board ve trapez kiralama seçenekleri.' },
+        { no: '03', name: 'Malzeme Depolama', desc: 'Ekipmanını güvenle bırak, her geldiğinde hazır bul.' },
+        { no: '04', name: 'Kite Tamiri', desc: 'Kite ve ekipmanların için profesyonel tamir servisi.' },
+        { no: '05', name: 'Kitesurf Safari', desc: 'Uzun sürüş rotalarında rehberli kite safari deneyimi.' },
+        { no: '06', name: 'Wakeboard', desc: 'Rüzgar olmadığında da suda kalmanın keyifli yolu.' },
+        { no: '07', name: 'Masaj Terapi', desc: 'Klasik, spor ve thai masaj ile sudan sonra yenilen.' },
+      ],
+      spotKicker: 'SPOT & RÜZGAR',
+      spotTitle: 'İŞTE BURASI SENİN OYUN ALANIN',
+      spotFeatures: [
+        { num: '300', label: 'gün/yıl rüzgar' },
+        { num: '600m', label: 'eğitim alanı' },
+        { num: '3km', label: 'serbest sürüş' },
+        { num: 'Sığ', label: 'güvenli su' },
+      ],
+      spotCta: 'Anlık rüzgarı gör',
+      galleryKicker: 'GALERİ',
+      galleryTitle: 'SUDAN KARELER',
+      gallerySub: 'Eğitimlerden, spottan ve Volkite hayatından anlar.',
+      gallery: ['kite jump', 'sahil & okul', 'öğrenci anı', 'gün batımı sürüş', 'ekip', 'cafe on shore', 'wakeboard', 'gökçeada manzara'],
+      kitchenKicker: 'CAFE ON SHORE',
+      kitchenTitle: 'KITEBOARD ÖNCESİ & SONRASI',
+      kitchenBody: 'Dünya mutfağından seçilmiş lezzetleri taze ve kaliteli bir menüyle sunuyoruz. Doğumgünü, barbekü ve grup partileri için size özel menü tasarlıyoruz.',
+      kitchenLink: 'Masa ayırt',
+      kitchen: ['sahil cafe', 'trileçe', 'özel burger', 'taş fırın pizza'],
+      bookKicker: 'REZERVASYON',
+      bookTitle: 'RÜZGAR SENİ BEKLİYOR',
+      bookSub: 'Tarihini söyle, gerisini biz halledelim. Formu doldur ya da direkt ara; aynı gün dönüş yapıyoruz.',
+      phone: 'TELEFON',
+      address: 'ADRES',
+      fName: 'Ad', fSurname: 'Soyad', fEmail: 'E-posta', fMsg: 'Mesajın / tercih ettiğin tarih',
+      fSend: 'Rezervasyon Talebi Gönder',
+      thanksTitle: 'TEŞEKKÜRLER!',
+      thanksBody: 'Talebini aldık. En kısa sürede sana dönüş yapacağız. Rüzgarlı günler!',
+      footerTag: 'Rüzgar cenneti Gökçeada Kefaloz koyunda, Türkiye’nin en köklü kiteboard okulu.',
+      school: 'Okulu', 
+      chatTitle: 'Volkite Asistan',
+      chatStatus: 'Genelde birkaç dakikada yanıt',
+      chatLauncher: 'Sor / Rezervasyon',
+      chatPlaceholder: 'Bir şey sor...',
+      chatGreeting: 'Merhaba! Ben Volkite asistanıyım 🌊 Eğitim, fiyat, sezon ya da rezervasyon hakkında her şeyi sorabilirsin.',
+      qr: [
+        { label: 'Fiyatlar', q: 'Eğitim fiyatları nedir?' },
+        { label: 'Sezon ne zaman?', q: 'Sezon ne zaman açık?' },
+        { label: 'Hiç bilmiyorum', q: 'Hiç tecrübem yok, başlayabilir miyim?' },
+        { label: 'Nasıl gelirim?', q: 'Konum / nasıl gelirim?' },
+      ],
+      reviewsKicker: 'GÖRÜŞLER',
+      reviewsTitle: 'ÖĞRENCİLERİMİZ NE DİYOR?',
+      reviewsRating: '4.9',
+      reviewsCount: '120+ değerlendirme',
+      reviews: [
+        { name: 'Elif K.', place: 'İstanbul', text: 'Sıfırdan başladım, üç günün sonunda tek başıma sürüyordum. Telsizli eğitim her şeyi değiştiriyor.' },
+        { name: 'Marco R.', place: 'İtalya', text: 'Spot inanılmaz güvenli, ekip çok profesyonel. Gökçeada’ya sırf bunun için döneceğim.' },
+        { name: 'Ahmet Y.', place: 'Ankara', text: 'Hem eğitim hem cafe hem manzara. Tatil ve spor bir arada, ailecek harika vakit geçirdik.' },
+      ],
+      stayKicker: 'KONAKLAMA & ULAŞIM',
+      stayTitle: 'GELMEDEN ÖNCE BİLMEN GEREKENLER',
+      stay: [
+        { tag: 'Ulaşım', title: 'Adaya nasıl gelinir?', desc: 'Çanakkale’den Kabatepe feribotu ile Gökçeada’ya, adadan Kefaloz koyuna ~20 dk. Geliş planında sana yardımcı oluyoruz.' },
+        { tag: 'Konaklama', title: 'Nerede kalınır?', desc: 'Anlaşmalı pansiyon ve oteller, karavan & kamp alanı seçenekleri. Rezervasyonda en uygununu öneriyoruz.' },
+        { tag: 'Sezon', title: 'Ne zaman gelmeli?', desc: 'Nisan–Kasım arası açığız; senenin ~300 günü rüzgarlı. En yoğun rüzgar yaz aylarında.' },
+      ],
+      faqKicker: 'SSS',
+      faqTitle: 'SIK SORULAN SORULAR',
+      faq: [
+        { q: 'Hiç tecrübem yok, öğrenebilir miyim?', a: 'Evet! Başlangıç programı tam da sıfırdan başlayanlar için. Güvenlik ve uçurtma kontrolüyle adım adım ilerliyoruz, tüm ekipman dahil.' },
+        { q: 'Sezon ne zaman açık?', a: 'Nisan–Kasım arası okul açık ve senenin yaklaşık 300 günü rüzgar var.' },
+        { q: 'Ekipman getirmem gerekiyor mu?', a: 'Hayır. Eğitimlerde Slingshot ekipmanı, trapez ve kask-telsiz dahil. Kendi ekipmanını da kullanabilirsin.' },
+        { q: 'Rüzgar olmazsa ne oluyor?', a: 'Rüzgarsız günlerde ders ileri bir tarihe ertelenir; planını esnek tutuyoruz. Rüzgar yoksa wakeboard alternatifimiz var.' },
+        { q: 'Hangi dillerde eğitim var?', a: 'Türkçe, İngilizce, İspanyolca, Arapça, Fransızca ve İtalyanca eğitim verebiliyoruz.' },
+        { q: 'Konaklama sağlıyor musunuz?', a: 'Anlaşmalı pansiyon, otel ve kamp seçeneklerinde yönlendirme yapıyoruz. İletişime geç, en uygununu önerelim.' },
+      ],
+      igKicker: 'INSTAGRAM',
+      igTitle: 'ANLARI KAÇIRMA',
+      igHandle: '@volkite',
+      igCta: 'Takip et',
+      ig: ['kite session', 'sunset', 'crew', 'spot', 'cafe', 'jump'],
+      bookSoon: 'Online rezervasyon çok yakında — şimdilik form & telefon.',
+      waLabel: 'WhatsApp’tan yaz',
+      bot: {
+        price: 'Paketler: Başlangıç (10 saat) özel 700€, 2 kişilik grupta kişi başı 600€. Keşif & Devam (4 saat) özel 280€. İleri seviye saatlik 80€. Detay için formu doldur ya da +90 533 241 10 15’i ara.',
+        season: 'Sezonumuz uzun! Nisan – Kasım arası okul açık ve senenin yaklaşık 300 günü rüzgar var. 🌬️',
+        location: 'Eşelek Köyü, Köy Sk. 104/1, Kefaloz koyu – Gökçeada/Çanakkale. Çanakkale’den Kabatepe feribotu ile adaya, oradan Kefaloz’a ~20 dk.',
+        booking: 'Süper! Sayfadaki rezervasyon formunu doldurman yeterli ya da +90 533 241 10 15’i ara. Online rezervasyon çok yakında! Hangi tarihleri düşünüyorsun?',
+        beginner: 'Hiç tecrübe gerekmiyor! Başlangıç programında güvenlik, uçurtma kontrolü ve bodydrag ile başlıyoruz; tüm ekipman dahil. 🪁',
+        equipment: 'Eğitimlerde Slingshot ekipmanı kullanıyoruz ve hepsi pakete dahil. Ayrıca satış, kiralama, depolama ve tamir hizmetimiz de var.',
+        wind: 'Kefaloz koyu sığ ve güvenli; 600m eğitim alanı, 3km serbest sürüş. Anlık rüzgarı sayfadaki bağlantıdan takip edebilirsin.',
+        hello: 'Merhaba! Sana nasıl yardımcı olabilirim? Eğitim, fiyat, sezon veya rezervasyon hakkında sorabilirsin.',
+        default: 'Bunu en doğru şekilde ekibimiz yanıtlasın: +90 533 241 10 15 (telefon/WhatsApp) ya da rezervasyon formu. Eğitim, fiyat ve sezon hakkında da sorabilirsin!',
+      },
+    },
+    en: {
+      navItems: [
+        { label: 'Lessons', href: '#egitimler' },
+        { label: 'Services', href: '#hizmetler' },
+        { label: 'Spot & Wind', href: '#spot' },
+        { label: 'Gallery', href: '#galeri' },
+        { label: 'Kitchen', href: '#mutfak' },
+        { label: 'FAQ', href: '#sss' },
+        { label: 'Contact', href: '#rezervasyon' },
+      ],
+      navCta: 'Book Now',
+      liveNow: 'Now at Kefaloz',
+      heroKicker: 'GÖKÇEADA · KEFALOZ BAY',
+      heroTitle: 'CATCH THE WIND',
+      heroSub: 'Türkiye’s most established kiteboard school. 21 years of experience, 300 windy days a year, and the experience of being the first school in Kefaloz bay. Take your first step onto the water.',
+      heroBtn1: 'Start Learning',
+      heroBtn2: 'Watch the Film',
+      stats: [
+        { num: '21', label: 'Years Experience' },
+        { num: '300', label: 'Windy Days' },
+        { num: '600m', label: 'Training Zone' },
+        { num: '3km', label: 'Free Ride' },
+        { num: '5', label: 'Languages' },
+      ],
+      aboutKicker: 'WHO ARE WE?',
+      aboutTitle: 'WE DEVOTED OUR LIVES TO WIND & WATER',
+      aboutBody1: 'We left everything behind and founded Volkite Kiteboard School in cittaslow Gökçeada. With 21 years of kitesurf teaching experience, we are in Kefaloz bay.',
+      aboutBody2: 'Our base is designed to meet every kiteboarder’s needs within a few steps. We teach in English, Spanish, Arabic, French and Italian.',
+      aboutLink: 'Start learning',
+      years: 'Years',
+      aboutBadge: 'Uninterrupted kitesurf experience',
+      lessonsKicker: 'LESSONS',
+      lessonsTitle: 'THE RIGHT PROGRAM FOR YOU',
+      lessonsSub: 'With TYF-certified KB5/KB4 instructors — start from zero or level up. Equipment and radio included in every package.',
+      levels: [
+        { tag: 'Beginner', dur: '10 hours', title: 'BEGINNER PROGRAM', desc: 'From zero to independent kiteboarder with theory, safety and 5 modules. All equipment included.', rows: [ { label: 'Private', price: '€700' }, { label: 'Group of 2 / person', price: '€600' }, { label: 'Extra hour', price: '€70' } ], cta: 'Book now' },
+        { tag: 'Discovery', dur: '4 hours', title: 'DISCOVERY & CONTINUE', desc: 'Finish in one windy day. Start fresh or continue your unfinished training from where you left off.', rows: [ { label: 'Private', price: '€280' }, { label: 'Group of 2 / person', price: '€240' }, { label: 'Extra hour', price: '€70' } ], cta: 'Book now' },
+        { tag: 'Advanced', dur: 'hourly', title: 'ADVANCED LEVEL', desc: 'Freeride, freestyle and wave riding. A roadmap for your level, one-to-one over BB Talkin radio.', rows: [ { label: 'Private / hour', price: '€80' }, { label: 'Group of 2 / person · hr', price: '€70' }, { label: 'Coaching', price: 'Ask us' } ], cta: 'Book now' },
+      ],
+      trustTitle: 'WHY VOLKITE?',
+      trustSub: 'The safest way to learn — top equipment, the highest standards and constant communication.',
+      trust: [
+        { brand: 'SLINGSHOT', title: 'Choice of champions', desc: 'Learn on the world’s No.1, user-friendly kitesurf equipment.' },
+        { brand: 'TYF STANDARD', title: 'High standards', desc: 'Our lessons follow Türkiye Sailing Federation standards.' },
+        { brand: 'BB TALKIN', title: 'One step ahead', desc: 'Helmet-radio for nonstop communication with your coach while riding.' },
+      ],
+      servicesKicker: 'SERVICES',
+      servicesTitle: 'EVERYTHING IN ONE PLACE',
+      services: [
+        { no: '01', name: 'Equipment Sales', desc: 'New & second-hand gear from Slingshot and select brands.' },
+        { no: '02', name: 'Equipment Rental', desc: 'Up-to-date kite, board and harness rental options.' },
+        { no: '03', name: 'Gear Storage', desc: 'Leave your gear safely and find it ready every visit.' },
+        { no: '04', name: 'Kite Repair', desc: 'Professional repair service for your kite and gear.' },
+        { no: '05', name: 'Kitesurf Safari', desc: 'Guided long-distance kite safari along the best routes.' },
+        { no: '06', name: 'Wakeboard', desc: 'A fun way to stay on the water even when there is no wind.' },
+        { no: '07', name: 'Massage Therapy', desc: 'Classic, sport and thai massage to recover after the water.' },
+      ],
+      spotKicker: 'SPOT & WIND',
+      spotTitle: 'THIS IS YOUR PLAYGROUND',
+      spotFeatures: [
+        { num: '300', label: 'windy days/yr' },
+        { num: '600m', label: 'training zone' },
+        { num: '3km', label: 'free ride' },
+        { num: 'Shallow', label: 'safe water' },
+      ],
+      spotCta: 'See live wind',
+      galleryKicker: 'GALLERY',
+      galleryTitle: 'FRAMES FROM THE WATER',
+      gallerySub: 'Moments from lessons, the spot and the Volkite life.',
+      gallery: ['kite jump', 'shore & school', 'student moment', 'sunset ride', 'the crew', 'cafe on shore', 'wakeboard', 'gökçeada view'],
+      kitchenKicker: 'CAFE ON SHORE',
+      kitchenTitle: 'BEFORE & AFTER KITEBOARDING',
+      kitchenBody: 'We serve world-cuisine flavours with a fresh, quality menu. We design custom menus for birthdays, barbecues and group parties.',
+      kitchenLink: 'Reserve a table',
+      kitchen: ['shore cafe', 'tres leches', 'signature burger', 'stone-oven pizza'],
+      bookKicker: 'BOOKING',
+      bookTitle: 'THE WIND IS WAITING',
+      bookSub: 'Tell us your dates and we handle the rest. Fill the form or call directly — we reply the same day.',
+      phone: 'PHONE',
+      address: 'ADDRESS',
+      fName: 'Name', fSurname: 'Surname', fEmail: 'E-mail', fMsg: 'Your message / preferred dates',
+      fSend: 'Send Booking Request',
+      thanksTitle: 'THANK YOU!',
+      thanksBody: 'We received your request and will get back to you shortly. Windy days ahead!',
+      footerTag: 'Türkiye’s most established kiteboard school, in the wind paradise of Kefaloz bay, Gökçeada.',
+      school: 'School',
+      chatTitle: 'Volkite Assistant',
+      chatStatus: 'Usually replies in minutes',
+      chatLauncher: 'Ask / Book',
+      chatPlaceholder: 'Ask anything...',
+      chatGreeting: 'Hi! I’m the Volkite assistant 🌊 Ask me anything about lessons, prices, the season or booking.',
+      qr: [
+        { label: 'Prices', q: 'What are the lesson prices?' },
+        { label: 'When is the season?', q: 'When is the season open?' },
+        { label: 'Total beginner', q: 'I have no experience, can I start?' },
+        { label: 'How to get there?', q: 'Location / how do I get there?' },
+      ],
+      reviewsKicker: 'REVIEWS',
+      reviewsTitle: 'WHAT OUR STUDENTS SAY',
+      reviewsRating: '4.9',
+      reviewsCount: '120+ reviews',
+      reviews: [
+        { name: 'Elif K.', place: 'İstanbul', text: 'I started from zero and was riding on my own after three days. The radio coaching changes everything.' },
+        { name: 'Marco R.', place: 'Italy', text: 'The spot is incredibly safe and the team is very professional. I’ll come back to Gökçeada just for this.' },
+        { name: 'Ahmet Y.', place: 'Ankara', text: 'Lessons, cafe and the view all in one. Holiday and sport together — a great time with the family.' },
+      ],
+      stayKicker: 'STAY & TRAVEL',
+      stayTitle: 'WHAT TO KNOW BEFORE YOU COME',
+      stay: [
+        { tag: 'Travel', title: 'How to reach the island', desc: 'Take the Kabatepe ferry from Çanakkale to Gökçeada, then ~20 min to Kefaloz bay. We help you plan your trip.' },
+        { tag: 'Stay', title: 'Where to stay', desc: 'Partner guesthouses and hotels, plus caravan & camping options. We suggest the best fit when you book.' },
+        { tag: 'Season', title: 'When to come', desc: 'We are open April–November with ~300 windy days a year. The strongest wind is in summer.' },
+      ],
+      faqKicker: 'FAQ',
+      faqTitle: 'FREQUENTLY ASKED QUESTIONS',
+      faq: [
+        { q: 'I have no experience, can I learn?', a: 'Yes! The beginner program is made for absolute beginners. We progress step by step with safety and kite control, all equipment included.' },
+        { q: 'When is the season open?', a: 'The school is open April–November, with around 300 windy days a year.' },
+        { q: 'Do I need to bring equipment?', a: 'No. Slingshot gear, harness and helmet-radio are included. You can also use your own equipment.' },
+        { q: 'What if there is no wind?', a: 'On windless days the lesson is postponed to a later date; we keep your plan flexible. We also offer wakeboard as an alternative.' },
+        { q: 'Which languages do you teach in?', a: 'We teach in Turkish, English, Spanish, Arabic, French and Italian.' },
+        { q: 'Do you provide accommodation?', a: 'We guide you to partner guesthouses, hotels and camping options. Get in touch and we’ll suggest the best fit.' },
+      ],
+      igKicker: 'INSTAGRAM',
+      igTitle: 'DON’T MISS A MOMENT',
+      igHandle: '@volkite',
+      igCta: 'Follow',
+      ig: ['kite session', 'sunset', 'crew', 'spot', 'cafe', 'jump'],
+      bookSoon: 'Online booking coming soon — for now, form & phone.',
+      waLabel: 'Message on WhatsApp',
+      bot: {
+        price: 'Packages: Beginner (10h) private €700, group of 2 €600/person. Discovery & Continue (4h) private €280. Advanced €80/hour. Fill the form or call +90 533 241 10 15 for details.',
+        season: 'Our season is long! The school is open April – November, with around 300 windy days a year. 🌬️',
+        location: 'Eşelek Village, Köy St. 104/1, Kefaloz bay – Gökçeada/Çanakkale. Take the Kabatepe ferry from Çanakkale, then ~20 min to Kefaloz.',
+        booking: 'Great! Just fill the booking form on the page or call +90 533 241 10 15. Online booking is coming soon! Which dates are you considering?',
+        beginner: 'No experience needed! In the beginner program we start with safety, kite control and bodydrag; all equipment included. 🪁',
+        equipment: 'We use Slingshot gear in lessons and it’s all included. We also offer sales, rental, storage and repair.',
+        wind: 'Kefaloz bay is shallow and safe; 600m training zone, 3km free ride. Check live wind via the link on the page.',
+        hello: 'Hi there! How can I help? Ask about lessons, prices, the season or booking.',
+        default: 'Our team can answer this best: +90 533 241 10 15 (phone/WhatsApp) or the booking form. You can also ask about lessons, prices and the season!',
+      },
+    },
+    bg: {
+      navItems: [
+        { label: 'Уроци', href: '#egitimler' },
+        { label: 'Услуги', href: '#hizmetler' },
+        { label: 'Спот & Вятър', href: '#spot' },
+        { label: 'Галерия', href: '#galeri' },
+        { label: 'Кухня', href: '#mutfak' },
+        { label: 'ЧЗВ', href: '#sss' },
+        { label: 'Контакт', href: '#rezervasyon' },
+      ],
+      navCta: 'Резервация',
+      liveNow: 'Сега в Кефалоз',
+      heroKicker: 'ГЬОКЧЕАДА · ЗАЛИВ КЕФАЛОЗ',
+      heroTitle: 'УЛОВИ ВЯТЪРА',
+      heroSub: 'Най-утвърденото кайтборд училище в Турция. 21 години опит, 300 ветровити дни в годината и опитът да сме първото училище в залива Кефалоз. Направи първата си стъпка във водата.',
+      heroBtn1: 'Започни урок',
+      heroBtn2: 'Гледай филма',
+      stats: [
+        { num: '21', label: 'Години опит' },
+        { num: '300', label: 'Ветровити дни' },
+        { num: '600m', label: 'Зона за обучение' },
+        { num: '3km', label: 'Свободно каране' },
+        { num: '5', label: 'Езика' },
+      ],
+      aboutKicker: 'КОИ СМЕ НИЕ?',
+      aboutTitle: 'ПОСВЕТИХМЕ ЖИВОТА СИ НА ВЯТЪРА И ВОДАТА',
+      aboutBody1: 'Оставихме всичко зад себе си и основахме училище Volkite в читаслоу Гьокчеада. С 21 години опит в обучението по кайтсърф сме в залива Кефалоз.',
+      aboutBody2: 'Базата ни е създадена да посреща всички нужди на кайтбордиста на крачка разстояние. Преподаваме на английски, испански, арабски, френски и италиански.',
+      aboutLink: 'Започни урок',
+      years: 'Години',
+      aboutBadge: 'Непрекъснат опит в кайтсърфа',
+      lessonsKicker: 'УРОЦИ',
+      lessonsTitle: 'ПОДХОДЯЩАТА ПРОГРАМА ЗА ТЕБ',
+      lessonsSub: 'Със сертифицирани KB5/KB4 инструктори (TYF) — започни от нулата или напредвай. Оборудване и радио са включени във всеки пакет.',
+      levels: [
+        { tag: 'Начинаещи', dur: '10 часа', title: 'ПРОГРАМА ЗА НАЧИНАЕЩИ', desc: 'От нулата до независим кайтбордист с теория, безопасност и 5 модула. Цялото оборудване е включено.', rows: [ { label: 'Частен', price: '700€' }, { label: 'Група от 2 / човек', price: '600€' }, { label: 'Доп. час', price: '70€' } ], cta: 'Резервирай' },
+        { tag: 'Откриване', dur: '4 часа', title: 'ОТКРИВАНЕ & ПРОДЪЛЖЕНИЕ', desc: 'Завършва се за един ветровит ден. Започни наново или продължи незавършеното си обучение.', rows: [ { label: 'Частен', price: '280€' }, { label: 'Група от 2 / човек', price: '240€' }, { label: 'Доп. час', price: '70€' } ], cta: 'Резервирай' },
+        { tag: 'Напреднали', dur: 'на час', title: 'НАПРЕДНАЛО НИВО', desc: 'Фрийрайд, фрийстайл и каране по вълни. Пътна карта за твоето ниво, едно към едно по радио BB Talkin.', rows: [ { label: 'Частен / час', price: '80€' }, { label: 'Група от 2 / човек · час', price: '70€' }, { label: 'Коучинг', price: 'Попитай ни' } ], cta: 'Резервирай' },
+      ],
+      trustTitle: 'ЗАЩО VOLKITE?',
+      trustSub: 'Най-безопасният начин да се учиш — топ оборудване, най-високи стандарти и постоянна комуникация.',
+      trust: [
+        { brand: 'SLINGSHOT', title: 'Изборът на шампионите', desc: 'Учи с водещото в света, лесно за ползване кайтсърф оборудване.' },
+        { brand: 'TYF СТАНДАРТ', title: 'Високи стандарти', desc: 'Уроците ни следват стандартите на Турската ветроходна федерация.' },
+        { brand: 'BB TALKIN', title: 'Една крачка напред', desc: 'Радио в каската за непрекъсната връзка с инструктора по време на каране.' },
+      ],
+      servicesKicker: 'УСЛУГИ',
+      servicesTitle: 'ВСИЧКО НА ЕДНО МЯСТО',
+      services: [
+        { no: '01', name: 'Продажба на оборудване', desc: 'Ново и втора употреба от Slingshot и избрани марки.' },
+        { no: '02', name: 'Наем на оборудване', desc: 'Актуални опции за наем на кайт, борд и трапец.' },
+        { no: '03', name: 'Съхранение', desc: 'Остави оборудването си на сигурно и го намери готово всеки път.' },
+        { no: '04', name: 'Ремонт на кайт', desc: 'Професионален ремонт за твоя кайт и оборудване.' },
+        { no: '05', name: 'Кайт сафари', desc: 'Водено сафари на дълги разстояния по най-добрите маршрути.' },
+        { no: '06', name: 'Уейкборд', desc: 'Забавен начин да си във водата дори когато няма вятър.' },
+        { no: '07', name: 'Масажна терапия', desc: 'Класически, спортен и тай масаж за възстановяване след водата.' },
+      ],
+      spotKicker: 'СПОТ & ВЯТЪР',
+      spotTitle: 'ТОВА Е ТВОЯТА ИГРАЛНА ПЛОЩАДКА',
+      spotFeatures: [
+        { num: '300', label: 'ветровити дни/год' },
+        { num: '600m', label: 'зона за обучение' },
+        { num: '3km', label: 'свободно каране' },
+        { num: 'Плитко', label: 'безопасна вода' },
+      ],
+      spotCta: 'Виж вятъра на живо',
+      galleryKicker: 'ГАЛЕРИЯ',
+      galleryTitle: 'КАДРИ ОТ ВОДАТА',
+      gallerySub: 'Моменти от уроците, спота и живота във Volkite.',
+      gallery: ['kite jump', 'shore & school', 'student moment', 'sunset ride', 'the crew', 'cafe on shore', 'wakeboard', 'gökçeada view'],
+      kitchenKicker: 'CAFE ON SHORE',
+      kitchenTitle: 'ПРЕДИ & СЛЕД КАЙТБОРД',
+      kitchenBody: 'Поднасяме вкусове от световната кухня в свежо и качествено меню. Създаваме специални менюта за рождени дни, барбекю и групови партита.',
+      kitchenLink: 'Запази маса',
+      kitchen: ['shore cafe', 'tres leches', 'signature burger', 'stone-oven pizza'],
+      bookKicker: 'РЕЗЕРВАЦИЯ',
+      bookTitle: 'ВЯТЪРЪТ ТЕ ЧАКА',
+      bookSub: 'Кажи ни датите, ние поемаме останалото. Попълни формата или се обади — отговаряме същия ден.',
+      phone: 'ТЕЛЕФОН',
+      address: 'АДРЕС',
+      fName: 'Име', fSurname: 'Фамилия', fEmail: 'Имейл', fMsg: 'Съобщение / предпочитани дати',
+      fSend: 'Изпрати заявка',
+      thanksTitle: 'БЛАГОДАРИМ!',
+      thanksBody: 'Получихме заявката ти. Ще се свържем с теб възможно най-скоро. Ветровити дни!',
+      footerTag: 'Най-утвърденото кайтборд училище в Турция, в рая на вятъра — залива Кефалоз, Гьокчеада.',
+      school: 'Училище',
+      chatTitle: 'Volkite Асистент',
+      chatStatus: 'Обикновено отговаря за минути',
+      chatLauncher: 'Питай / Резервирай',
+      chatPlaceholder: 'Попитай нещо...',
+      chatGreeting: 'Здравей! Аз съм асистентът на Volkite 🌊 Питай ме всичко за уроци, цени, сезон или резервация.',
+      qr: [
+        { label: 'Цени', q: 'Какви са цените на уроците?' },
+        { label: 'Кога е сезонът?', q: 'Кога е отворен сезонът?' },
+        { label: 'Начинаещ съм', q: 'Нямам опит, мога ли да започна?' },
+        { label: 'Как да стигна?', q: 'Локация / как да стигна?' },
+      ],
+      reviewsKicker: 'ОТЗИВИ',
+      reviewsTitle: 'КАКВО КАЗВАТ УЧЕНИЦИТЕ НИ?',
+      reviewsRating: '4.9',
+      reviewsCount: '120+ отзива',
+      reviews: [
+        { name: 'Elif K.', place: 'Истанбул', text: 'Започнах от нулата и след три дни карах сама. Обучението по радио променя всичко.' },
+        { name: 'Marco R.', place: 'Италия', text: 'Спотът е невероятно безопасен, а екипът е много професионален. Ще се върна в Гьокчеада само за това.' },
+        { name: 'Ahmet Y.', place: 'Анкара', text: 'Уроци, кафе и гледка на едно място. Почивка и спорт заедно — страхотно прекарване със семейството.' },
+      ],
+      stayKicker: 'НАСТАНЯВАНЕ & ПЪТУВАНЕ',
+      stayTitle: 'КАКВО ДА ЗНАЕШ ПРЕДИ ДА ДОЙДЕШ',
+      stay: [
+        { tag: 'Пътуване', title: 'Как се стига до острова', desc: 'С ферибота Кабатепе от Чанаккале до Гьокчеада, после ~20 мин до залива Кефалоз. Помагаме с плана за пътуване.' },
+        { tag: 'Настаняване', title: 'Къде да отседнеш', desc: 'Партньорски къщи за гости и хотели, плюс опции за каравана и къмпинг. Предлагаме най-доброто при резервация.' },
+        { tag: 'Сезон', title: 'Кога да дойдеш', desc: 'Отворени сме април–ноември с ~300 ветровити дни в годината. Най-силен вятър има през лятото.' },
+      ],
+      faqKicker: 'ЧЗВ',
+      faqTitle: 'ЧЕСТО ЗАДАВАНИ ВЪПРОСИ',
+      faq: [
+        { q: 'Нямам опит, мога ли да се науча?', a: 'Да! Програмата за начинаещи е точно за абсолютни начинаещи. Напредваме стъпка по стъпка с безопасност и контрол на кайта, цялото оборудване е включено.' },
+        { q: 'Кога е отворен сезонът?', a: 'Училището е отворено април–ноември, с около 300 ветровити дни в годината.' },
+        { q: 'Трябва ли да нося оборудване?', a: 'Не. Оборудване Slingshot, трапец и радио-каска са включени. Можеш да ползваш и собствено оборудване.' },
+        { q: 'Какво става ако няма вятър?', a: 'В безветрени дни урокът се отлага за по-късна дата; пазим плана гъвкав. Предлагаме и уейкборд като алтернатива.' },
+        { q: 'На какви езици преподавате?', a: 'Преподаваме на турски, английски, испански, арабски, френски и италиански.' },
+        { q: 'Осигурявате ли настаняване?', a: 'Насочваме те към партньорски къщи за гости, хотели и къмпинг. Свържи се с нас и ще предложим най-доброто.' },
+      ],
+      igKicker: 'INSTAGRAM',
+      igTitle: 'НЕ ПРОПУСКАЙ МОМЕНТА',
+      igHandle: '@volkite',
+      igCta: 'Последвай',
+      ig: ['kite session', 'sunset', 'crew', 'spot', 'cafe', 'jump'],
+      bookSoon: 'Онлайн резервация съвсем скоро — засега форма и телефон.',
+      waLabel: 'Пиши в WhatsApp',
+      bot: {
+        price: 'Пакети: Начинаещи (10ч) частен 700€, група от 2 — 600€/човек. Откриване (4ч) частен 280€. Напреднали 80€/час. Попълни формата или се обади на +90 533 241 10 15.',
+        season: 'Сезонът ни е дълъг! Училището е отворено април – ноември, с около 300 ветровити дни в годината. 🌬️',
+        location: 'Село Ешелек, Köy St. 104/1, залив Кефалоз – Гьокчеада/Чанаккале. С ферибота Кабатепе от Чанаккале, после ~20 мин до Кефалоз.',
+        booking: 'Чудесно! Попълни формата на страницата или се обади на +90 533 241 10 15. Онлайн резервация съвсем скоро! Кои дати обмисляш?',
+        beginner: 'Не е нужен опит! В програмата за начинаещи започваме с безопасност, контрол на кайта и bodydrag; цялото оборудване е включено. 🪁',
+        equipment: 'В уроците ползваме оборудване Slingshot и всичко е включено. Предлагаме също продажба, наем, съхранение и ремонт.',
+        wind: 'Заливът Кефалоз е плитък и безопасен; 600m зона за обучение, 3km свободно каране. Виж вятъра на живо чрез връзката на страницата.',
+        hello: 'Здравей! С какво мога да помогна? Питай за уроци, цени, сезон или резервация.',
+        default: 'Екипът ни ще отговори най-добре: +90 533 241 10 15 (телефон/WhatsApp) или формата за резервация. Питай и за уроци, цени и сезон!',
+      },
+    },
+    ro: {
+      navItems: [
+        { label: 'Lecții', href: '#egitimler' },
+        { label: 'Servicii', href: '#hizmetler' },
+        { label: 'Spot & Vânt', href: '#spot' },
+        { label: 'Galerie', href: '#galeri' },
+        { label: 'Bucătărie', href: '#mutfak' },
+        { label: 'Întrebări', href: '#sss' },
+        { label: 'Contact', href: '#rezervasyon' },
+      ],
+      navCta: 'Rezervare',
+      liveNow: 'Acum la Kefaloz',
+      heroKicker: 'GÖKÇEADA · GOLFUL KEFALOZ',
+      heroTitle: 'PRINDE VÂNTUL',
+      heroSub: 'Cea mai consacrată școală de kiteboard din Turcia. 21 de ani de experiență, 300 de zile cu vânt pe an și experiența de a fi prima școală din golful Kefaloz. Fă primul pas în apă.',
+      heroBtn1: 'Începe lecția',
+      heroBtn2: 'Vezi filmul',
+      stats: [
+        { num: '21', label: 'Ani experiență' },
+        { num: '300', label: 'Zile cu vânt' },
+        { num: '600m', label: 'Zonă de instruire' },
+        { num: '3km', label: 'Ride liber' },
+        { num: '5', label: 'Limbi' },
+      ],
+      aboutKicker: 'CINE SUNTEM?',
+      aboutTitle: 'NE-AM DEDICAT VIAȚA VÂNTULUI ȘI APEI',
+      aboutBody1: 'Am lăsat totul în urmă și am fondat școala Volkite în cittaslow Gökçeada. Cu 21 de ani de experiență în kitesurf, suntem în golful Kefaloz.',
+      aboutBody2: 'Baza noastră este creată pentru a acoperi toate nevoile unui kiteboarder la câțiva pași. Predăm în engleză, spaniolă, arabă, franceză și italiană.',
+      aboutLink: 'Începe lecția',
+      years: 'Ani',
+      aboutBadge: 'Experiență neîntreruptă în kitesurf',
+      lessonsKicker: 'LECȚII',
+      lessonsTitle: 'PROGRAMUL POTRIVIT PENTRU TINE',
+      lessonsSub: 'Cu instructori certificați KB5/KB4 (TYF) — începe de la zero sau avansează. Echipamentul și stația radio sunt incluse în fiecare pachet.',
+      levels: [
+        { tag: 'Începători', dur: '10 ore', title: 'PROGRAM ÎNCEPĂTORI', desc: 'De la zero la kiteboarder independent cu teorie, siguranță și 5 module. Tot echipamentul inclus.', rows: [ { label: 'Privat', price: '700€' }, { label: 'Grup de 2 / pers.', price: '600€' }, { label: 'Oră extra', price: '70€' } ], cta: 'Rezervă' },
+        { tag: 'Descoperire', dur: '4 ore', title: 'DESCOPERIRE & CONTINUARE', desc: 'Se termină într-o zi cu vânt. Începe de la zero sau continuă antrenamentul neterminat.', rows: [ { label: 'Privat', price: '280€' }, { label: 'Grup de 2 / pers.', price: '240€' }, { label: 'Oră extra', price: '70€' } ], cta: 'Rezervă' },
+        { tag: 'Avansați', dur: 'pe oră', title: 'NIVEL AVANSAT', desc: 'Freeride, freestyle și ride pe valuri. O foaie de parcurs pentru nivelul tău, unu-la-unu prin radio BB Talkin.', rows: [ { label: 'Privat / oră', price: '80€' }, { label: 'Grup de 2 / pers. · oră', price: '70€' }, { label: 'Coaching', price: 'Întreabă-ne' } ], cta: 'Rezervă' },
+      ],
+      trustTitle: 'DE CE VOLKITE?',
+      trustSub: 'Cel mai sigur mod de a învăța — echipament de top, cele mai înalte standarde și comunicare permanentă.',
+      trust: [
+        { brand: 'SLINGSHOT', title: 'Alegerea campionilor', desc: 'Învață pe echipamentul nr.1 din lume, ușor de folosit.' },
+        { brand: 'STANDARD TYF', title: 'Standarde înalte', desc: 'Lecțiile noastre respectă standardele Federației de Yachting din Turcia.' },
+        { brand: 'BB TALKIN', title: 'Cu un pas înainte', desc: 'Radio în cască pentru comunicare continuă cu instructorul în timpul ride-ului.' },
+      ],
+      servicesKicker: 'SERVICII',
+      servicesTitle: 'TOTUL ÎNTR-UN SINGUR LOC',
+      services: [
+        { no: '01', name: 'Vânzare echipament', desc: 'Echipament nou și second-hand de la Slingshot și branduri selectate.' },
+        { no: '02', name: 'Închiriere echipament', desc: 'Opțiuni actuale de închiriere kite, placă și ham.' },
+        { no: '03', name: 'Depozitare', desc: 'Lasă-ți echipamentul în siguranță și găsește-l gata de fiecare dată.' },
+        { no: '04', name: 'Reparații kite', desc: 'Service profesional pentru kite-ul și echipamentul tău.' },
+        { no: '05', name: 'Safari kitesurf', desc: 'Safari ghidat pe distanțe lungi pe cele mai bune trasee.' },
+        { no: '06', name: 'Wakeboard', desc: 'Un mod distractiv de a fi în apă chiar și când nu e vânt.' },
+        { no: '07', name: 'Terapie prin masaj', desc: 'Masaj clasic, sportiv și thailandez pentru recuperare după apă.' },
+      ],
+      spotKicker: 'SPOT & VÂNT',
+      spotTitle: 'ACESTA E TERENUL TĂU DE JOACĂ',
+      spotFeatures: [
+        { num: '300', label: 'zile cu vânt/an' },
+        { num: '600m', label: 'zonă de instruire' },
+        { num: '3km', label: 'ride liber' },
+        { num: 'Mică', label: 'apă sigură' },
+      ],
+      spotCta: 'Vezi vântul live',
+      galleryKicker: 'GALERIE',
+      galleryTitle: 'CADRE DIN APĂ',
+      gallerySub: 'Momente din lecții, din spot și din viața Volkite.',
+      gallery: ['kite jump', 'shore & school', 'student moment', 'sunset ride', 'the crew', 'cafe on shore', 'wakeboard', 'gökçeada view'],
+      kitchenKicker: 'CAFE ON SHORE',
+      kitchenTitle: 'ÎNAINTE & DUPĂ KITEBOARD',
+      kitchenBody: 'Servim arome din bucătăria internațională într-un meniu proaspăt și de calitate. Creăm meniuri speciale pentru zile de naștere, grătare și petreceri de grup.',
+      kitchenLink: 'Rezervă o masă',
+      kitchen: ['shore cafe', 'tres leches', 'signature burger', 'stone-oven pizza'],
+      bookKicker: 'REZERVARE',
+      bookTitle: 'VÂNTUL TE AȘTEAPTĂ',
+      bookSub: 'Spune-ne datele, restul îl rezolvăm noi. Completează formularul sau sună direct — răspundem în aceeași zi.',
+      phone: 'TELEFON',
+      address: 'ADRESĂ',
+      fName: 'Prenume', fSurname: 'Nume', fEmail: 'E-mail', fMsg: 'Mesajul tău / datele preferate',
+      fSend: 'Trimite cererea',
+      thanksTitle: 'MULȚUMIM!',
+      thanksBody: 'Am primit cererea ta. Te vom contacta în cel mai scurt timp. Zile cu vânt!',
+      footerTag: 'Cea mai consacrată școală de kiteboard din Turcia, în paradisul vântului — golful Kefaloz, Gökçeada.',
+      school: 'Școala',
+      chatTitle: 'Asistent Volkite',
+      chatStatus: 'De obicei răspunde în câteva minute',
+      chatLauncher: 'Întreabă / Rezervă',
+      chatPlaceholder: 'Întreabă orice...',
+      chatGreeting: 'Salut! Sunt asistentul Volkite 🌊 Întreabă-mă orice despre lecții, prețuri, sezon sau rezervare.',
+      qr: [
+        { label: 'Prețuri', q: 'Care sunt prețurile lecțiilor?' },
+        { label: 'Când e sezonul?', q: 'Când e deschis sezonul?' },
+        { label: 'Sunt începător', q: 'Nu am experiență, pot începe?' },
+        { label: 'Cum ajung?', q: 'Locație / cum ajung?' },
+      ],
+      reviewsKicker: 'RECENZII',
+      reviewsTitle: 'CE SPUN CURSANȚII NOȘTRI?',
+      reviewsRating: '4.9',
+      reviewsCount: '120+ recenzii',
+      reviews: [
+        { name: 'Elif K.', place: 'Istanbul', text: 'Am început de la zero și după trei zile mergeam singură. Instruirea prin radio schimbă totul.' },
+        { name: 'Marco R.', place: 'Italia', text: 'Spotul e incredibil de sigur, iar echipa e foarte profesionistă. Mă întorc în Gökçeada doar pentru asta.' },
+        { name: 'Ahmet Y.', place: 'Ankara', text: 'Lecții, cafenea și priveliște la un loc. Vacanță și sport împreună — timp minunat cu familia.' },
+      ],
+      stayKicker: 'CAZARE & TRANSPORT',
+      stayTitle: 'CE TREBUIE SĂ ȘTII ÎNAINTE SĂ VII',
+      stay: [
+        { tag: 'Transport', title: 'Cum ajungi pe insulă', desc: 'Cu feribotul Kabatepe din Çanakkale spre Gökçeada, apoi ~20 min până în golful Kefaloz. Te ajutăm să-ți planifici drumul.' },
+        { tag: 'Cazare', title: 'Unde stai', desc: 'Pensiuni și hoteluri partenere, plus opțiuni de rulotă și camping. Îți sugerăm cea mai bună variantă la rezervare.' },
+        { tag: 'Sezon', title: 'Când să vii', desc: 'Suntem deschiși aprilie–noiembrie cu ~300 de zile cu vânt pe an. Cel mai puternic vânt e vara.' },
+      ],
+      faqKicker: 'ÎNTREBĂRI',
+      faqTitle: 'ÎNTREBĂRI FRECVENTE',
+      faq: [
+        { q: 'Nu am experiență, pot învăța?', a: 'Da! Programul pentru începători e făcut exact pentru începători absoluți. Avansăm pas cu pas cu siguranță și control al kite-ului, tot echipamentul inclus.' },
+        { q: 'Când e deschis sezonul?', a: 'Școala e deschisă aprilie–noiembrie, cu aproximativ 300 de zile cu vânt pe an.' },
+        { q: 'Trebuie să aduc echipament?', a: 'Nu. Echipamentul Slingshot, hamul și radio-casca sunt incluse. Poți folosi și echipamentul propriu.' },
+        { q: 'Ce se întâmplă dacă nu e vânt?', a: 'În zilele fără vânt lecția se reprogramează; păstrăm planul flexibil. Oferim și wakeboard ca alternativă.' },
+        { q: 'În ce limbi predați?', a: 'Predăm în turcă, engleză, spaniolă, arabă, franceză și italiană.' },
+        { q: 'Oferiți cazare?', a: 'Te îndrumăm către pensiuni, hoteluri și camping partenere. Contactează-ne și îți sugerăm cea mai bună variantă.' },
+      ],
+      igKicker: 'INSTAGRAM',
+      igTitle: 'NU RATA MOMENTUL',
+      igHandle: '@volkite',
+      igCta: 'Urmărește',
+      ig: ['kite session', 'sunset', 'crew', 'spot', 'cafe', 'jump'],
+      bookSoon: 'Rezervarea online vine în curând — deocamdată formular & telefon.',
+      waLabel: 'Scrie pe WhatsApp',
+      bot: {
+        price: 'Pachete: Începători (10h) privat 700€, grup de 2 — 600€/pers. Descoperire (4h) privat 280€. Avansați 80€/oră. Completează formularul sau sună la +90 533 241 10 15.',
+        season: 'Sezonul nostru e lung! Școala e deschisă aprilie – noiembrie, cu aproximativ 300 de zile cu vânt pe an. 🌬️',
+        location: 'Satul Eşelek, Köy St. 104/1, golful Kefaloz – Gökçeada/Çanakkale. Cu feribotul Kabatepe din Çanakkale, apoi ~20 min până la Kefaloz.',
+        booking: 'Super! Completează formularul de pe pagină sau sună la +90 533 241 10 15. Rezervarea online vine în curând! Ce date iei în calcul?',
+        beginner: 'Nu e nevoie de experiență! În programul pentru începători începem cu siguranță, control al kite-ului și bodydrag; tot echipamentul inclus. 🪁',
+        equipment: 'În lecții folosim echipament Slingshot și totul e inclus. Oferim și vânzare, închiriere, depozitare și reparații.',
+        wind: 'Golful Kefaloz e mic și sigur; 600m zonă de instruire, 3km ride liber. Vezi vântul live prin linkul de pe pagină.',
+        hello: 'Salut! Cu ce te pot ajuta? Întreabă despre lecții, prețuri, sezon sau rezervare.',
+        default: 'Echipa noastră răspunde cel mai bine: +90 533 241 10 15 (telefon/WhatsApp) sau formularul de rezervare. Întreabă și despre lecții, prețuri și sezon!',
+      },
+    },
+  };
+
+  componentDidMount() {
+    this.setState({ messages: [{ role: 'bot', text: this.DICT[this.state.lang].chatGreeting }] });
+    this.fetchWind();
+    this._windTimer = setInterval(() => this.fetchWind(), 600000);
+  }
+
+  componentWillUnmount() {
+    if (this._windTimer) clearInterval(this._windTimer);
+  }
+
+  fetchWind = () => {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=40.17&longitude=25.84&current=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn';
+    fetch(url)
+      .then(r => r.json())
+      .then(d => {
+        const c = d && d.current;
+        if (c && typeof c.wind_speed_10m === 'number') {
+          this.setState({ wind: { speed: Math.round(c.wind_speed_10m), dir: c.wind_direction_10m } });
+        }
+      })
+      .catch(() => {});
+  };
+
+  compass(deg) {
+    if (deg == null) return '';
+    const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+    return dirs[Math.round(deg / 45) % 8];
+  }
+
+  setLang = (lang) => {
+    this.setState({ lang, langOpen: false, messages: [{ role: 'bot', text: this.DICT[lang].chatGreeting }] });
+  };
+  toggleLangMenu = () => this.setState(s => ({ langOpen: !s.langOpen }));
+
+  toggleChat = () => this.setState(s => ({ chatOpen: !s.chatOpen }));
+  onChatInput = e => this.setState({ chatInput: e.target.value });
+  onChatKey = e => { if (e.key === 'Enter') this.sendChat(); };
+
+  botReply(text) {
+    const q = (text || '').toLowerCase();
+    const b = this.DICT[this.state.lang].bot;
+    const has = arr => arr.some(k => q.includes(k));
+    if (has(['fiyat', 'ücret', 'ne kadar', 'price', 'cost', 'how much', 'цен', 'preț', 'pret', 'cât', 'cat'])) return b.price;
+    if (has(['sezon', 'ne zaman', 'açık', 'season', 'open', 'when', 'сезон', 'кога', 'când', 'cand'])) return b.season;
+    if (has(['nere', 'konum', 'adres', 'nasıl gel', 'ulaş', 'location', 'address', 'how do i get', 'where', 'локац', 'адрес', 'как да стигна', 'locație', 'locatie', 'cum ajung', 'unde'])) return b.location;
+    if (has(['rezerv', 'kayıt', 'book', 'reserv', 'резерв'])) return b.booking;
+    if (has(['bilmiyor', 'tecrüb', 'sıfır', 'başlay', 'beginner', 'experience', 'never', 'start', 'начинаещ', 'опит', 'început', 'incepator', 'experiență', 'fără'])) return b.beginner;
+    if (has(['ekipman', 'malzeme', 'kite', 'board', 'equipment', 'gear', 'оборудване', 'кайт', 'echipament'])) return b.equipment;
+    if (has(['rüzgar', 'wind', 'spot', 'вятър', 'вятар', 'vânt', 'vant'])) return b.wind;
+    if (has(['merhaba', 'selam', 'hello', 'здрав', 'salut', 'bună', 'buna'])) return b.hello;
+    return b.default;
+  }
+
+  pushAndReply(text) {
+    if (!text || !text.trim()) return;
+    const reply = this.botReply(text);
+    this.setState(s => ({
+      messages: [...(s.messages || []), { role: 'user', text }, { role: 'bot', text: reply }],
+      chatInput: '',
+    }));
+  }
+  sendChat = () => this.pushAndReply(this.state.chatInput);
+
+  onName = e => this.setState({ fName: e.target.value });
+  onSurname = e => this.setState({ fSurname: e.target.value });
+  onEmail = e => this.setState({ fEmail: e.target.value });
+  onMsg = e => this.setState({ fMsg: e.target.value });
+  submitForm = () => this.setState({ submitted: true });
+
+  renderVals() {
+    const t = this.DICT[this.state.lang];
+    const msgs = this.state.messages || [];
+    const messagesView = msgs.map(m => {
+      const isUser = m.role === 'user';
+      return {
+        text: m.text,
+        rowStyle: 'display:flex;justify-content:' + (isUser ? 'flex-end' : 'flex-start'),
+        bubbleStyle: 'max-width:80%;padding:11px 14px;border-radius:14px;font-size:14px;line-height:1.5;' +
+          (isUser
+            ? 'background:#07283b;color:#fbf6ec;border-bottom-right-radius:4px'
+            : 'background:#fff;color:#07283b;border:1px solid #e7dcc6;border-bottom-left-radius:4px'),
+      };
+    });
+    const quickReplies = t.qr.map(q => ({ label: q.label, onClick: () => this.pushAndReply(q.q) }));
+
+    return {
+      t,
+      windSpeed: this.state.wind ? this.state.wind.speed + ' kn' : '— kn',
+      windDir: this.state.wind ? this.compass(this.state.wind.dir) : '··',
+      navItems: t.navItems,
+      stats: t.stats,
+      levels: t.levels,
+      trust: t.trust,
+      services: t.services,
+      spotFeatures: t.spotFeatures,
+      kitchen: t.kitchen,
+      gallery: t.gallery,
+      reviews: t.reviews.map(r => ({ text: r.text, name: r.name, place: r.place, initial: r.name.charAt(0) })),
+      stay: t.stay,
+      ig: t.ig,
+      faqView: t.faq.map((f, i) => {
+        const open = this.state.openFaq === i;
+        return {
+          q: f.q, a: f.a, sign: open ? '−' : '+',
+          onToggle: () => this.setState(s => ({ openFaq: s.openFaq === i ? null : i })),
+          answerStyle: 'overflow:hidden;transition:max-height .3s ease,opacity .25s ease;' + (open ? 'max-height:280px;opacity:1' : 'max-height:0;opacity:0'),
+        };
+      }),
+      waHref: 'https://wa.me/905332411015',
+      langCode: this.state.lang.toUpperCase(),
+      langOpen: this.state.langOpen,
+      toggleLangMenu: this.toggleLangMenu,
+      langMenu: [
+        { code: 'tr', label: 'Türkçe', onClick: () => this.setLang('tr') },
+        { code: 'en', label: 'English', onClick: () => this.setLang('en') },
+        { code: 'bg', label: 'Български', onClick: () => this.setLang('bg') },
+        { code: 'ro', label: 'Română', onClick: () => this.setLang('ro') },
+      ],
+      submitted: this.state.submitted,
+      notSubmitted: !this.state.submitted,
+      fName: this.state.fName, fSurname: this.state.fSurname, fEmail: this.state.fEmail, fMsg: this.state.fMsg,
+      onName: this.onName, onSurname: this.onSurname, onEmail: this.onEmail, onMsg: this.onMsg,
+      submitForm: this.submitForm,
+      chatOpen: this.state.chatOpen,
+      chatClosed: !this.state.chatOpen,
+      toggleChat: this.toggleChat,
+      chatInput: this.state.chatInput,
+      onChatInput: this.onChatInput,
+      onChatKey: this.onChatKey,
+      sendChat: this.sendChat,
+      messagesView,
+      quickReplies,
+    };
+  }
+}
+</script>
+</body>
+</html>
