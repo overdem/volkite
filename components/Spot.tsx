@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 interface Feature { num: string; label: string }
 
@@ -32,14 +33,22 @@ export default function Spot() {
               </div>
             ))}
           </div>
-          <a
-            href="https://kiting.live/kitesurf-spot/wave-gokceada-turkey"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(20,184,207,.14)', border: '1px solid rgba(20,184,207,.5)', color: '#14b8cf', fontWeight: 800, padding: '13px 22px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
-          >
-            {t('cta')} →
-          </a>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+            <a
+              href="https://kiting.live/kitesurf-spot/wave-gokceada-turkey"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(20,184,207,.14)', border: '1px solid rgba(20,184,207,.5)', color: '#14b8cf', fontWeight: 800, padding: '13px 22px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
+            >
+              {t('cta')} →
+            </a>
+            <Link
+              href="/spot-ruzgar"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,.07)', border: '1px solid rgba(255,255,255,.15)', color: '#fbf6ec', fontWeight: 800, padding: '13px 22px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
+            >
+              {t('read_more')}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

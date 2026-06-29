@@ -42,6 +42,7 @@
   "about": {
     "kicker": "WHO ARE WE?",
     "title": "WE DEVOTED OUR LIVES TO WIND & WATER",
+    "read_more": "About us →",
     "body1": "We left everything behind and founded Volkite Kiteboard School in cittaslow Gökçeada. With 21 years of kitesurf teaching experience, we are in Kefaloz bay.",
     "body2": "Our base is designed to meet every kiteboarder's needs within a few steps. We teach in English, Spanish, Arabic, French and Italian.",
     "link": "Start learning",
@@ -52,6 +53,7 @@
     "kicker": "LESSONS",
     "title": "THE RIGHT PROGRAM FOR YOU",
     "sub": "With TYF-certified KB5/KB4 instructors — start from zero or level up. Equipment and radio included in every package.",
+    "read_more": "All programs & curriculum →",
     "levels": [
       {
         "tag": "Beginner",
@@ -142,6 +144,7 @@
   "services": {
     "kicker": "SERVICES",
     "title": "EVERYTHING IN ONE PLACE",
+    "read_more": "All services →",
     "items": [
       {
         "no": "01",
@@ -198,6 +201,7 @@
   "spot": {
     "kicker": "SPOT & WIND",
     "title": "THIS IS YOUR PLAYGROUND",
+    "read_more": "Spot details →",
     "features": [
       {
         "num": "300",
@@ -265,6 +269,7 @@
   "kitchen": {
     "kicker": "CAFE ON SHORE",
     "title": "BEFORE & AFTER KITEBOARDING",
+    "read_more": "Cafe menu →",
     "body": "We serve world-cuisine flavours with a fresh, quality menu. We design custom menus for birthdays, barbecues and group parties.",
     "link": "Reserve a table",
     "items": [
@@ -347,5 +352,119 @@
   "meta": {
     "title": "Volkite Kitesurf School | Gokceada",
     "description": "Gokceada's most established kitesurf school. 21 years of experience, IKO certified instructors, professional training at Kefalos Bay."
+  },
+  "lessons_page": {
+    "h1": "TRAINING PROGRAMS",
+    "kicker": "PROGRAMS",
+    "subtitle": "TYF KB5/KB4 certified instructors · BB Talkin radio helmet · onshore wind",
+    "advantages_title": "WHY VOLKITE?",
+    "advantages": ["TYF top-level KB5/KB4 certified instructors", "BB Talkin' helmet radio — talk to your instructor while riding", "Onshore wind — if the kite falls you won't drift out to sea", "4 km uncrowded bay, 600 m exclusive training area"],
+    "price_note": "All equipment, helmet and radio included in every lesson. Students only need personal items + sunglasses.",
+    "group_note": "You can start together with a friend; we recommend switching to individual lessons as your levels diverge.",
+    "cta": "Book Now",
+    "back": "← Home",
+    "read_more": "All Programs →"
+  },
+  "services_page": {
+    "h1": "SERVICES",
+    "kicker": "SERVICES",
+    "subtitle": "Everything you need at the school, all in one place",
+    "rental_title": "RENTAL & STORAGE",
+    "rental_items": [
+      { "name": "Full Set Rental", "desc": "Kite + board + harness", "price": "€80/day" },
+      { "name": "Gear Storage", "desc": "Safe, easy-access storage", "price": "€5/day" },
+      { "name": "Facilities", "desc": "Parking, hot shower, wifi, deck, charging, compressor, beach volleyball", "price": "€10/day*" }
+    ],
+    "rental_note": "* Free on lesson days.",
+    "massage_title": "MASSAGE THERAPY",
+    "massage_items": [
+      { "name": "Classic Massage", "prices": [{ "label": "1 hour", "price": "€40" }, { "label": "30 min", "price": "€25" }] },
+      { "name": "Sports Massage", "prices": [{ "label": "1 hour", "price": "€40" }, { "label": "30 min", "price": "€25" }] },
+      { "name": "Internal Organs (Chi Nei Tsang)", "prices": [{ "label": "45 min", "price": "€65" }] },
+      { "name": "Emotional Release", "prices": [{ "label": "1 hour", "price": "€70" }] },
+      { "name": "Thai Massage", "prices": [{ "label": "1 hour", "price": "€50" }] },
+      { "name": "Face Lifting", "prices": [{ "label": "20 min", "price": "€25" }] },
+      { "name": "Foot Massage", "prices": [{ "label": "30 min", "price": "€30" }] }
+    ],
+    "cta": "Get in Touch",
+    "back": "← Home",
+    "read_more": "All Services →"
+  },
+  "spot_page": {
+    "h1": "SPOT & WIND",
+    "kicker": "SPOT",
+    "subtitle": "Gökçeada Kefalos Bay — Turkey's Best Kitesurf Spot",
+    "wind_title": "WIND",
+    "wind_direction": "Northeast (Poyraz)",
+    "wind_type": "Onshore — blows toward shore 24 hours",
+    "wind_season": "April – November",
+    "wind_high": "July – October (high season)",
+    "wind_avg": "15–25 knots throughout the season",
+    "wind_strong": "+30 knots in the morning: lessons pause",
+    "wind_pattern_title": "DAILY PATTERN",
+    "wind_pattern": [
+      { "time": "~11:00", "desc": "18–22 kn — lesson time" },
+      { "time": "13:00–15:00", "desc": "~10 kn (1 hour break)" },
+      { "time": "15:00+", "desc": "15+ kn — back on" },
+      { "time": "19:00+", "desc": "20+ kn — sunset session" }
+    ],
+    "spot_title": "TRAINING AREA",
+    "spot_features": [
+      "4 km uncrowded bay, kitesurf only",
+      "50 m shallow water · 100 m beach",
+      "600 m buoyed exclusive training area",
+      "Zodiac rescue boat on standby",
+      "30 m walk from parking"
+    ],
+    "island_title": "GÖKÇEADA",
+    "island_desc": "Ancient name Imroz — 'the windy island'. Cittaslow town, natural parks, Greek villages, flamingos, poppy fields, sunset and Milky Way. Beyond kiting: yoga, café breakfast, National Park diving, free-roaming animals.",
+    "live_wind_cta": "Live Wind →",
+    "back": "← Home",
+    "read_more": "Spot Details →"
+  },
+  "about_page": {
+    "h1": "ABOUT US",
+    "kicker": "VOLKITE",
+    "slogan": "We dedicated our lives to wind and water.",
+    "story_title": "OUR STORY",
+    "story": "Volkite was founded in Istanbul at Burç Beach in 2000 as a sailing, catamaran, wakeboard and kiteboard school. We discovered Gökçeada in 2008 and fully relocated to Kefalos Bay in 2010. Turkey's most established kiteboard school — 21 years, dozens of instructors, thousands of students.",
+    "history_title": "HISTORY",
+    "history": [
+      { "year": "2000", "text": "Istanbul Burç Beach — sailing, catamaran, wakeboard and kiteboard." },
+      { "year": "2005", "text": "First kiteboard lessons. Kartalkaya/Kartepe snowboard training." },
+      { "year": "2007–10", "text": "Uludağ Snowkite School & Snowpark." },
+      { "year": "2008", "text": "Gökçeada discovered, new location opened, first students." },
+      { "year": "2010", "text": "Full relocation due to Poyraz wind. 'Progression is Everything' camp." },
+      { "year": "2013–16", "text": "Çamlıca Kitesurf Challenge I–II–III (120+ athletes)." },
+      { "year": "2021+", "text": "Dozens of instructors, thousands of students. TYF KB5 & KB4 certified." }
+    ],
+    "team_title": "TEAM",
+    "founder_name": "Volkan Günel",
+    "founder_role": "Founder & KB5 Instructor",
+    "founder_desc": "Born 1977 in Istanbul. Snowboard, sailing, kitesurf — all self-taught. 2007–2008 World Kiteboard Championship. Extreme living, nature, teaching and sharing.",
+    "team": [
+      { "name": "Volkan Günel", "role": "Founder & KB5 Instructor", "langs": "TR, EN" },
+      { "name": "Burçak Doğan", "role": "KB4 Instructor", "langs": "TR, FR, EN" },
+      { "name": "Emin Ufuk", "role": "KB4 Instructor", "langs": "TR, EN" },
+      { "name": "Soydan Cıgsar", "role": "KB4 Instructor", "langs": "TR, EN" },
+      { "name": "Enes Günel", "role": "School Manager", "langs": "" }
+    ],
+    "certifications": "TYF (Turkish Sailing Federation) KB5/KB4 certified. Authorized Slingshot dealer.",
+    "back": "← Home",
+    "read_more": "About Us →"
+  },
+  "kitchen_page": {
+    "h1": "CAFE ON SHORE",
+    "kicker": "KITCHEN",
+    "subtitle": "Next to the Kitesurf School — Kefalos Bay",
+    "desc": "Fresh, quality, healthy food from world cuisines. Cheesecake, tiramisu, special burger on homemade bread, pizza. From pre-kite breakfast to post-sunset session dinner, we've got you.",
+    "menu_title": "MENU HIGHLIGHTS",
+    "menu_items": ["Cheesecake", "Tiramisu", "Special Homemade Burger", "Pizza", "Healthy Breakfast", "Fresh Squeezed Juice"],
+    "events_title": "SPECIAL EVENTS",
+    "events_desc": "Birthday parties, barbecues and group events with special menu + bonfire. Reservation recommended.",
+    "team_title": "TEAM",
+    "team": ["Deniz Gönül (Big Mama)", "Sezen Pak (Chef)", "Zeynep Halisçelik (Chef)"],
+    "back": "← Home",
+    "read_more": "Kitchen →"
   }
 }

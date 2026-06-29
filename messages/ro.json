@@ -42,6 +42,7 @@
   "about": {
     "kicker": "CINE SUNTEM?",
     "title": "NE-AM DEDICAT VIAȚA VÂNTULUI ȘI APEI",
+    "read_more": "About us →",
     "body1": "Am lăsat totul în urmă și am fondat școala Volkite în cittaslow Gökçeada. Cu 21 de ani de experiență în kitesurf, suntem în golful Kefaloz.",
     "body2": "Baza noastră este creată pentru a acoperi toate nevoile unui kiteboarder la câțiva pași. Predăm în engleză, spaniolă, arabă, franceză și italiană.",
     "link": "Începe lecția",
@@ -52,6 +53,7 @@
     "kicker": "LECȚII",
     "title": "PROGRAMUL POTRIVIT PENTRU TINE",
     "sub": "Cu instructori certificați KB5/KB4 (TYF) — începe de la zero sau avansează. Echipamentul și stația radio sunt incluse în fiecare pachet.",
+    "read_more": "All programs & curriculum →",
     "levels": [
       {
         "tag": "Începători",
@@ -142,6 +144,7 @@
   "services": {
     "kicker": "SERVICII",
     "title": "TOTUL ÎNTR-UN SINGUR LOC",
+    "read_more": "All services →",
     "items": [
       {
         "no": "01",
@@ -198,6 +201,7 @@
   "spot": {
     "kicker": "SPOT & VÂNT",
     "title": "ACESTA E TERENUL TĂU DE JOACĂ",
+    "read_more": "Spot details →",
     "features": [
       {
         "num": "300",
@@ -265,6 +269,7 @@
   "kitchen": {
     "kicker": "CAFE ON SHORE",
     "title": "ÎNAINTE & DUPĂ KITEBOARD",
+    "read_more": "Cafe menu →",
     "body": "Servim arome din bucătăria internațională într-un meniu proaspăt și de calitate. Creăm meniuri speciale pentru zile de naștere, grătare și petreceri de grup.",
     "link": "Rezervă o masă",
     "items": [

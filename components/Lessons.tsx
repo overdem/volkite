@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import type { PackageRow } from '@/lib/queries';
 
 interface Props {
@@ -55,6 +56,15 @@ export default function Lessons({ packages }: Props) {
               </a>
             </div>
           ))}
+        </div>
+
+        <div style={{ marginTop: '36px', textAlign: 'center' }}>
+          <Link
+            href="/egitimler"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(20,184,207,.14)', border: '1px solid rgba(20,184,207,.5)', color: '#14b8cf', fontWeight: 800, padding: '13px 24px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
+          >
+            {t('read_more')}
+          </Link>
         </div>
       </div>
     </section>
