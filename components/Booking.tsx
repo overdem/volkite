@@ -32,11 +32,11 @@ export default function Booking() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '.18em', color: '#14b8cf', textTransform: 'uppercase', marginBottom: '6px' }}>{t('phone')}</div>
-              <a href="tel:+905326101011" style={{ fontSize: '20px', fontWeight: 800, color: '#07283b', textDecoration: 'none' }}>+90 532 610 10 11</a>
+              <a href="tel:+905332411015" style={{ fontSize: '20px', fontWeight: 800, color: '#07283b', textDecoration: 'none' }}>+90 533 241 10 15</a>
             </div>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '.18em', color: '#14b8cf', textTransform: 'uppercase', marginBottom: '6px' }}>{t('address')}</div>
-              <p style={{ fontSize: '15px', color: '#3a5563', lineHeight: 1.5, margin: 0 }}>Kefaloz Koyu, Gökçeada<br />Çanakkale, Türkiye</p>
+              <p style={{ fontSize: '15px', color: '#3a5563', lineHeight: 1.5, margin: 0 }}>Eşelek Köyü, Köy Sokağı 104/1<br />Gökçeada, Çanakkale</p>
             </div>
           </div>
         </div>

@@ -45,13 +45,13 @@ create table if not exists faq (
 -- ─── site_settings ────────────────────────────────────────────────────────────
 create table if not exists site_settings (
   id            int primary key default 1,
-  phone         text default '+90 532 610 10 11',
+  phone         text default '+90 533 241 10 15',
   email         text default 'info@volkite.com',
   address_tr    text,
   address_en    text,
   instagram_url text default 'https://www.instagram.com/volkite/',
   facebook_url  text default 'https://www.facebook.com/volkite',
-  whatsapp_url  text default 'https://wa.me/905326101011',
+  whatsapp_url  text default 'https://wa.me/905332411015',
   wind_url      text default 'https://kiting.live',
   season_tr     text,
   season_en     text,

@@ -71,7 +71,7 @@
           },
           {
             "label": "Ek ders (1 saat)",
-            "price": "70€"
+            "price": "80€"
           }
         ],
         "cta": "Rezervasyon"
@@ -83,16 +83,8 @@
         "desc": "Rüzgarlı bir günde tamamlanır. Yeni başla ya da yarım kalan eğitimine kaldığın yerden devam et.",
         "rows": [
           {
-            "label": "Özel ders",
-            "price": "280€"
-          },
-          {
-            "label": "2'li grup / kişi",
-            "price": "240€"
-          },
-          {
-            "label": "Ek ders (1 saat)",
-            "price": "70€"
+            "label": "Fiyat için bize sorun",
+            "price": ""
           }
         ],
         "cta": "Rezervasyon"
@@ -225,25 +217,9 @@
   "reviews": {
     "kicker": "GÖRÜŞLER",
     "title": "ÖĞRENCİLERİMİZ NE DİYOR?",
-    "rating": "4.9",
-    "count": "120+ değerlendirme",
-    "items": [
-      {
-        "name": "Elif K.",
-        "place": "İstanbul",
-        "text": "Sıfırdan başladım, üç günün sonunda tek başıma sürüyordum. Telsizli eğitim her şeyi değiştiriyor."
-      },
-      {
-        "name": "Marco R.",
-        "place": "İtalya",
-        "text": "Spot inanılmaz güvenli, ekip çok profesyonel. Gökçeada'ya sırf bunun için döneceğim."
-      },
-      {
-        "name": "Ahmet Y.",
-        "place": "Ankara",
-        "text": "Hem eğitim hem cafe hem manzara. Tatil ve spor bir arada, ailecek harika vakit geçirdik."
-      }
-    ]
+    "rating": "",
+    "count": "",
+    "items": []
   },
   "stay": {
     "kicker": "KONAKLAMA & ULAŞIM",
@@ -351,7 +327,7 @@
   },
   "meta": {
     "title": "Volkite Kitesurf Okulu | Gökçeada",
-    "description": "Gökçeada'nın en köklü kitesurf okulu. 21 yıllık deneyim, IKO sertifikalı eğitmenler, Kefaloz Koyunda profesyonel eğitim."
+    "description": "Gökçeada'nın en köklü kitesurf okulu. 21 yıllık deneyim, TYF KB5/KB4 sertifikalı eğitmenler, Kefaloz Koyunda profesyonel eğitim."
   },
   "lessons_page": {
     "h1": "EĞİTİM PROGRAMLARI",
