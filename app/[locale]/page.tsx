@@ -16,7 +16,6 @@ import Faq from '@/components/Faq';
 import Instagram from '@/components/Instagram';
 import Booking from '@/components/Booking';
 import Footer from '@/components/Footer';
-import ChatWidget from '@/components/ChatWidget';
 
 type Locale = 'tr' | 'en' | 'bg' | 'ro';
 
@@ -55,7 +54,6 @@ export default async function HomePage({
         <Booking />
       </main>
       <Footer />
-      <ChatWidget />
     </>
   );
 }

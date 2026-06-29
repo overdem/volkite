@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
+import ChatWidget from '@/components/ChatWidget';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -64,6 +65,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <ChatWidget />
       </body>
     </html>
   );
