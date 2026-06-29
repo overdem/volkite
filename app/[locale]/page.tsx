@@ -1,3 +1,4 @@
+import { getPackages, getServices, getFaq } from '@/lib/queries';
 import { fetchWind } from '@/lib/openmeteo';
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
@@ -17,8 +18,22 @@ import Booking from '@/components/Booking';
 import Footer from '@/components/Footer';
 import ChatWidget from '@/components/ChatWidget';
 
-export default async function HomePage() {
-  const wind = await fetchWind();
+type Locale = 'tr' | 'en' | 'bg' | 'ro';
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const loc = locale as Locale;
+
+  const [wind, packages, services, faq] = await Promise.all([
+    fetchWind(),
+    getPackages(loc),
+    getServices(loc),
+    getFaq(loc),
+  ]);
 
   return (
     <>
@@ -27,15 +42,15 @@ export default async function HomePage() {
         <Hero wind={wind} />
         <Stats />
         <About />
-        <Lessons />
+        <Lessons packages={packages} />
         <Trust />
-        <Services />
+        <Services services={services} />
         <Gallery />
         <Spot />
         <Reviews />
         <Stay />
         <Kitchen />
-        <Faq />
+        <Faq faq={faq} />
         <Instagram />
         <Booking />
       </main>

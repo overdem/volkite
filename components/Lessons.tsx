@@ -1,11 +1,16 @@
 import { useTranslations } from 'next-intl';
+import type { PackageRow } from '@/lib/queries';
 
-interface Row { label: string; price: string }
-interface Level { tag: string; dur: string; title: string; desc: string; rows: Row[]; cta: string }
+interface Props {
+  packages?: PackageRow[] | null;
+}
 
-export default function Lessons() {
+export default function Lessons({ packages }: Props) {
   const t = useTranslations('lessons');
-  const levels = t.raw('levels') as Level[];
+
+  // Fallback to message data when Supabase is not configured
+  type Level = { tag: string; dur: string; title: string; desc: string; rows: { label: string; price: string }[]; cta: string };
+  const levels: Level[] = packages ?? (t.raw('levels') as Level[]);
 
   return (
     <section id="egitimler" style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(64px,8vw,120px) clamp(20px,5vw,72px)' }}>

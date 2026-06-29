@@ -1,10 +1,15 @@
 import { useTranslations } from 'next-intl';
+import type { ServiceRow } from '@/lib/queries';
 
-interface ServiceItem { no: string; name: string; desc: string }
+interface Props {
+  services?: ServiceRow[] | null;
+}
 
-export default function Services() {
+export default function Services({ services }: Props) {
   const t = useTranslations('services');
-  const items = t.raw('items') as ServiceItem[];
+
+  type ServiceItem = { no: string; name: string; desc: string };
+  const items: ServiceItem[] = services ?? (t.raw('items') as ServiceItem[]);
 
   return (
     <section id="hizmetler" style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(64px,8vw,120px) clamp(20px,5vw,72px)' }}>
