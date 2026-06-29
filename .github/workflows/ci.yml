@@ -12,6 +12,11 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
+      SUPABASE_SERVICE_ROLE_KEY: placeholder_service_role_key
+      ANTHROPIC_API_KEY: placeholder_anthropic_key
+      CHATWOOT_BASE_URL: https://app.chatwoot.com
+      CHATWOOT_BOT_TOKEN: placeholder_bot_token
+      AGENT_SHARED_SECRET: placeholder_secret
 
     steps:
       - uses: actions/checkout@v4
@@ -29,6 +34,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Unit tests
+        run: npm test
 
       - name: Build
         run: npm run build
