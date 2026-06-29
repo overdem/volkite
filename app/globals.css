@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Backgrounds */
+  --color-cream: #fbf6ec;
+  --color-ink: #07283b;
+  --color-deep: #062131;
+  --color-surface: #0c3346;
+  --color-surface-2: #114057;
+  --color-hero-base: #16384a;
+
+  /* Accents */
+  --color-cyan: #14b8cf;
+  --color-orange: #ff6a3d;
+
+  /* Text */
+  --color-on-dark: #dceaf0;
+  --color-on-dark-soft: #9fc0cf;
+  --color-on-dark-soft2: #bcd4de;
+  --color-on-light: #07283b;
+  --color-on-light-soft: #3a5563;
+  --color-muted: #5a7079;
+
+  /* Lines / status */
+  --color-line-light: #ece1cc;
+  --color-line-dark: rgba(255, 255, 255, 0.08);
+  --color-green: #3ee07a;
+  --color-gold: #ffcf4d;
+
+  /* Panel */
+  --color-panel-bg: #eef1f4;
+  --color-panel-card: #ffffff;
+  --color-panel-line: #e4e9ee;
+  --color-panel-muted: #8497a1;
+
+  /* Fonts */
+  --font-display: "Anton", Impact, sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+}
+
+:root {
+  /* Keep CSS vars for direct usage in non-Tailwind contexts */
+  --cream: #fbf6ec;
+  --ink: #07283b;
+  --deep: #062131;
+  --surface: #0c3346;
+  --surface-2: #114057;
+  --hero-base: #16384a;
+  --cyan: #14b8cf;
+  --orange: #ff6a3d;
+  --on-dark: #dceaf0;
+  --on-dark-soft: #9fc0cf;
+  --on-dark-soft2: #bcd4de;
+  --on-light: #07283b;
+  --on-light-soft: #3a5563;
+  --muted: #5a7079;
+  --line-light: #ece1cc;
+  --line-dark: rgba(255, 255, 255, 0.08);
+  --green: #3ee07a;
+  --gold: #ffcf4d;
+  --panel-bg: #eef1f4;
+  --panel-card: #ffffff;
+  --panel-line: #e4e9ee;
+  --panel-muted: #8497a1;
+}
+
+/* Motion */
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-2%, -2%); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--on-light);
+}
