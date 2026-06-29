@@ -1,7 +1,351 @@
 {
-  "site": {
-    "title": "Volkite Kiteboarding School",
-    "description": "The only professional kiteboarding school on Gökçeada. 21 years of experience, certified instructors.",
-    "phase": "Phase 0 — Skeleton ready"
+  "nav": {
+    "lessons": "Lessons",
+    "services": "Services",
+    "spot": "Spot & Wind",
+    "gallery": "Gallery",
+    "kitchen": "Kitchen",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "cta": "Book Now"
+  },
+  "hero": {
+    "kicker": "GÖKÇEADA · KEFALOZ BAY",
+    "title": "CATCH THE WIND",
+    "sub": "Türkiye's most established kiteboard school. 21 years of experience, 300 windy days a year, and the experience of being the first school in Kefaloz bay. Take your first step onto the water.",
+    "btn1": "Start Learning",
+    "btn2": "Watch the Film",
+    "liveNow": "Now at Kefaloz"
+  },
+  "stats": [
+    {
+      "num": "21",
+      "label": "Years Experience"
+    },
+    {
+      "num": "300",
+      "label": "Windy Days"
+    },
+    {
+      "num": "600m",
+      "label": "Training Zone"
+    },
+    {
+      "num": "3km",
+      "label": "Free Ride"
+    },
+    {
+      "num": "5",
+      "label": "Languages"
+    }
+  ],
+  "about": {
+    "kicker": "WHO ARE WE?",
+    "title": "WE DEVOTED OUR LIVES TO WIND & WATER",
+    "body1": "We left everything behind and founded Volkite Kiteboard School in cittaslow Gökçeada. With 21 years of kitesurf teaching experience, we are in Kefaloz bay.",
+    "body2": "Our base is designed to meet every kiteboarder's needs within a few steps. We teach in English, Spanish, Arabic, French and Italian.",
+    "link": "Start learning",
+    "years": "Years",
+    "badge": "Uninterrupted kitesurf experience"
+  },
+  "lessons": {
+    "kicker": "LESSONS",
+    "title": "THE RIGHT PROGRAM FOR YOU",
+    "sub": "With TYF-certified KB5/KB4 instructors — start from zero or level up. Equipment and radio included in every package.",
+    "levels": [
+      {
+        "tag": "Beginner",
+        "dur": "10 hours",
+        "title": "BEGINNER PROGRAM",
+        "desc": "From zero to independent kiteboarder with theory, safety and 5 modules. All equipment included.",
+        "rows": [
+          {
+            "label": "Private",
+            "price": "€700"
+          },
+          {
+            "label": "Group of 2 / person",
+            "price": "€600"
+          },
+          {
+            "label": "Extra hour",
+            "price": "€70"
+          }
+        ],
+        "cta": "Book now"
+      },
+      {
+        "tag": "Discovery",
+        "dur": "4 hours",
+        "title": "DISCOVERY & CONTINUE",
+        "desc": "Finish in one windy day. Start fresh or continue your unfinished training from where you left off.",
+        "rows": [
+          {
+            "label": "Private",
+            "price": "€280"
+          },
+          {
+            "label": "Group of 2 / person",
+            "price": "€240"
+          },
+          {
+            "label": "Extra hour",
+            "price": "€70"
+          }
+        ],
+        "cta": "Book now"
+      },
+      {
+        "tag": "Advanced",
+        "dur": "hourly",
+        "title": "ADVANCED LEVEL",
+        "desc": "Freeride, freestyle and wave riding. A roadmap for your level, one-to-one over BB Talkin radio.",
+        "rows": [
+          {
+            "label": "Private / hour",
+            "price": "€80"
+          },
+          {
+            "label": "Group of 2 / person · hr",
+            "price": "€70"
+          },
+          {
+            "label": "Coaching",
+            "price": "Ask us"
+          }
+        ],
+        "cta": "Book now"
+      }
+    ]
+  },
+  "trust": {
+    "title": "WHY VOLKITE?",
+    "sub": "The safest way to learn — top equipment, the highest standards and constant communication.",
+    "items": [
+      {
+        "brand": "SLINGSHOT",
+        "title": "Choice of champions",
+        "desc": "Learn on the world's No.1, user-friendly kitesurf equipment."
+      },
+      {
+        "brand": "TYF STANDARD",
+        "title": "High standards",
+        "desc": "Our lessons follow Türkiye Sailing Federation standards."
+      },
+      {
+        "brand": "BB TALKIN",
+        "title": "One step ahead",
+        "desc": "Helmet-radio for nonstop communication with your coach while riding."
+      }
+    ]
+  },
+  "services": {
+    "kicker": "SERVICES",
+    "title": "EVERYTHING IN ONE PLACE",
+    "items": [
+      {
+        "no": "01",
+        "name": "Equipment Sales",
+        "desc": "New & second-hand gear from Slingshot and select brands."
+      },
+      {
+        "no": "02",
+        "name": "Equipment Rental",
+        "desc": "Up-to-date kite, board and harness rental options."
+      },
+      {
+        "no": "03",
+        "name": "Gear Storage",
+        "desc": "Leave your gear safely and find it ready every visit."
+      },
+      {
+        "no": "04",
+        "name": "Kite Repair",
+        "desc": "Professional repair service for your kite and gear."
+      },
+      {
+        "no": "05",
+        "name": "Kitesurf Safari",
+        "desc": "Guided long-distance kite safari along the best routes."
+      },
+      {
+        "no": "06",
+        "name": "Wakeboard",
+        "desc": "A fun way to stay on the water even when there is no wind."
+      },
+      {
+        "no": "07",
+        "name": "Massage Therapy",
+        "desc": "Classic, sport and thai massage to recover after the water."
+      }
+    ]
+  },
+  "gallery": {
+    "kicker": "GALLERY",
+    "title": "FRAMES FROM THE WATER",
+    "sub": "Moments from lessons, the spot and the Volkite life.",
+    "items": [
+      "kite jump",
+      "shore & school",
+      "student moment",
+      "sunset ride",
+      "the crew",
+      "cafe on shore",
+      "wakeboard",
+      "gökçeada view"
+    ]
+  },
+  "spot": {
+    "kicker": "SPOT & WIND",
+    "title": "THIS IS YOUR PLAYGROUND",
+    "features": [
+      {
+        "num": "300",
+        "label": "windy days/yr"
+      },
+      {
+        "num": "600m",
+        "label": "training zone"
+      },
+      {
+        "num": "3km",
+        "label": "free ride"
+      },
+      {
+        "num": "Shallow",
+        "label": "safe water"
+      }
+    ],
+    "cta": "See live wind"
+  },
+  "reviews": {
+    "kicker": "REVIEWS",
+    "title": "WHAT OUR STUDENTS SAY",
+    "rating": "4.9",
+    "count": "120+ reviews",
+    "items": [
+      {
+        "name": "Elif K.",
+        "place": "İstanbul",
+        "text": "I started from zero and was riding on my own after three days. The radio coaching changes everything."
+      },
+      {
+        "name": "Marco R.",
+        "place": "Italy",
+        "text": "The spot is incredibly safe and the team is very professional. I'll come back to Gökçeada just for this."
+      },
+      {
+        "name": "Ahmet Y.",
+        "place": "Ankara",
+        "text": "Lessons, cafe and the view all in one. Holiday and sport together — a great time with the family."
+      }
+    ]
+  },
+  "stay": {
+    "kicker": "STAY & TRAVEL",
+    "title": "WHAT TO KNOW BEFORE YOU COME",
+    "items": [
+      {
+        "tag": "Travel",
+        "title": "How to reach the island",
+        "desc": "Take the Kabatepe ferry from Çanakkale to Gökçeada, then ~20 min to Kefaloz bay. We help you plan your trip."
+      },
+      {
+        "tag": "Stay",
+        "title": "Where to stay",
+        "desc": "Partner guesthouses and hotels, plus caravan & camping options. We suggest the best fit when you book."
+      },
+      {
+        "tag": "Season",
+        "title": "When to come",
+        "desc": "We are open April–November with ~300 windy days a year. The strongest wind is in summer."
+      }
+    ]
+  },
+  "kitchen": {
+    "kicker": "CAFE ON SHORE",
+    "title": "BEFORE & AFTER KITEBOARDING",
+    "body": "We serve world-cuisine flavours with a fresh, quality menu. We design custom menus for birthdays, barbecues and group parties.",
+    "link": "Reserve a table",
+    "items": [
+      "shore cafe",
+      "tres leches",
+      "signature burger",
+      "stone-oven pizza"
+    ]
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "FREQUENTLY ASKED QUESTIONS",
+    "items": [
+      {
+        "q": "I have no experience, can I learn?",
+        "a": "Yes! The beginner program is made for absolute beginners. We progress step by step with safety and kite control, all equipment included."
+      },
+      {
+        "q": "When is the season open?",
+        "a": "The school is open April–November, with around 300 windy days a year."
+      },
+      {
+        "q": "Do I need to bring equipment?",
+        "a": "No. Slingshot gear, harness and helmet-radio are included. You can also use your own equipment."
+      },
+      {
+        "q": "What if there is no wind?",
+        "a": "On windless days the lesson is postponed to a later date; we keep your plan flexible. We also offer wakeboard as an alternative."
+      },
+      {
+        "q": "Which languages do you teach in?",
+        "a": "We teach in Turkish, English, Spanish, Arabic, French and Italian."
+      },
+      {
+        "q": "Do you provide accommodation?",
+        "a": "We guide you to partner guesthouses, hotels and camping options. Get in touch and we'll suggest the best fit."
+      }
+    ]
+  },
+  "instagram": {
+    "kicker": "INSTAGRAM",
+    "title": "DON'T MISS A MOMENT",
+    "handle": "@volkite",
+    "cta": "Follow",
+    "items": [
+      "kite session",
+      "sunset",
+      "crew",
+      "spot",
+      "cafe",
+      "jump"
+    ]
+  },
+  "booking": {
+    "kicker": "BOOKING",
+    "title": "THE WIND IS WAITING",
+    "sub": "Tell us your dates and we handle the rest. Fill the form or call directly — we reply the same day.",
+    "soon": "Online booking coming soon — for now, form & phone.",
+    "phone": "PHONE",
+    "address": "ADDRESS",
+    "fName": "Name",
+    "fSurname": "Surname",
+    "fEmail": "E-mail",
+    "fMsg": "Your message / preferred dates",
+    "fSend": "Send Booking Request",
+    "thanksTitle": "THANK YOU!",
+    "thanksBody": "We received your request and will get back to you shortly. Windy days ahead!"
+  },
+  "footer": {
+    "tag": "Türkiye's most established kiteboard school, in the wind paradise of Kefaloz bay, Gökçeada.",
+    "school": "School"
+  },
+  "chat": {
+    "title": "Volkite Assistant",
+    "status": "Usually replies in minutes",
+    "launcher": "Ask / Book",
+    "placeholder": "Ask anything...",
+    "soon": "Our assistant is coming soon! For now, reach us by phone or WhatsApp."
+  },
+  "meta": {
+    "title": "Volkite Kitesurf School | Gokceada",
+    "description": "Gokceada's most established kitesurf school. 21 years of experience, IKO certified instructors, professional training at Kefalos Bay."
   }
 }

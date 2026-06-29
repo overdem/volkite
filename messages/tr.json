@@ -1,7 +1,351 @@
 {
-  "site": {
-    "title": "Volkite Kitesurf Okulu",
-    "description": "Gökçeada'nın tek profesyonel kitesurf okulu. 21 yıl deneyim, sertifikalı eğitmenler.",
-    "phase": "Faz 0 — İskelet hazır"
+  "nav": {
+    "lessons": "Eğitimler",
+    "services": "Hizmetler",
+    "spot": "Spot & Rüzgar",
+    "gallery": "Galeri",
+    "kitchen": "Mutfak",
+    "faq": "SSS",
+    "contact": "İletişim",
+    "cta": "Rezervasyon"
+  },
+  "hero": {
+    "kicker": "GÖKÇEADA · KEFALOZ KOYU",
+    "title": "RÜZGARI YAKALA",
+    "sub": "Türkiye'nin en köklü kiteboard okulu. 21 yıllık tecrübe, senenin 300 günü rüzgar ve Kefaloz koyunun ilk okulu olmanın deneyimiyle suya ilk adımını at.",
+    "btn1": "Eğitime Başla",
+    "btn2": "Tanıtım Filmi",
+    "liveNow": "Şu an Kefaloz"
+  },
+  "stats": [
+    {
+      "num": "21",
+      "label": "Yıl Tecrübe"
+    },
+    {
+      "num": "300",
+      "label": "Gün Rüzgar"
+    },
+    {
+      "num": "600m",
+      "label": "Eğitim Alanı"
+    },
+    {
+      "num": "3km",
+      "label": "Serbest Sürüş"
+    },
+    {
+      "num": "5",
+      "label": "Dilde Eğitim"
+    }
+  ],
+  "about": {
+    "kicker": "BİZ KİMİZ?",
+    "title": "HAYATIMIZI RÜZGARA VE SUYA ADADIK",
+    "body1": "Herşeyi geride bırakıp cittaslow Gökçeada'da kitesurf eğitimi alabileceğiniz Volkite Kiteboard Okulunu kurduk. 21 senelik uçurtma sörfü tecrübemizle Kefaloz koyundayız.",
+    "body2": "Yerimiz, bir kiteboardcunun tüm ihtiyaçlarını adım atma mesafesinde karşılamak üzere tasarlandı. İngilizce, İspanyolca, Arapça, Fransızca ve İtalyanca eğitim verebiliyoruz.",
+    "link": "Eğitime başla",
+    "years": "Yıl",
+    "badge": "Kesintisiz uçurtma sörfü tecrübesi"
+  },
+  "lessons": {
+    "kicker": "EĞİTİMLER",
+    "title": "SENİN İÇİN DOĞRU PROGRAM",
+    "sub": "TYF onaylı KB5/KB4 sertifikalı eğitmenlerle; ister sıfırdan başla ister ilerle. Tüm paketlerde ekipman ve telsiz dahil.",
+    "levels": [
+      {
+        "tag": "Başlangıç",
+        "dur": "10 saat",
+        "title": "BAŞLANGIÇ PROGRAMI",
+        "desc": "Teori, güvenlik ve 5 modülle sıfırdan bağımsız kiteboardcu seviyesine. Tüm ekipman dahil.",
+        "rows": [
+          {
+            "label": "Özel ders",
+            "price": "700€"
+          },
+          {
+            "label": "2 kişilik grup / kişi",
+            "price": "600€"
+          },
+          {
+            "label": "Ek ders (1 saat)",
+            "price": "70€"
+          }
+        ],
+        "cta": "Rezervasyon"
+      },
+      {
+        "tag": "Keşif & Devam",
+        "dur": "4 saat",
+        "title": "KEŞİF & DEVAM",
+        "desc": "Rüzgarlı bir günde tamamlanır. Yeni başla ya da yarım kalan eğitimine kaldığın yerden devam et.",
+        "rows": [
+          {
+            "label": "Özel ders",
+            "price": "280€"
+          },
+          {
+            "label": "2'li grup / kişi",
+            "price": "240€"
+          },
+          {
+            "label": "Ek ders (1 saat)",
+            "price": "70€"
+          }
+        ],
+        "cta": "Rezervasyon"
+      },
+      {
+        "tag": "İleri Seviye",
+        "dur": "saatlik",
+        "title": "İLERİ SEVİYE",
+        "desc": "Freeride, freestyle ve dalga sürüş. Seviyene özel yol haritası, BB Talkin telsizle birebir.",
+        "rows": [
+          {
+            "label": "Özel ders / saat",
+            "price": "80€"
+          },
+          {
+            "label": "2'li grup / kişi · saat",
+            "price": "70€"
+          },
+          {
+            "label": "Coaching",
+            "price": "Bize sorun"
+          }
+        ],
+        "cta": "Rezervasyon"
+      }
+    ]
+  },
+  "trust": {
+    "title": "NEDEN VOLKITE?",
+    "sub": "En iyi ekipman, en yüksek standartlar ve kesintisiz iletişim ile öğrenmenin en güvenli yolu.",
+    "items": [
+      {
+        "brand": "SLINGSHOT",
+        "title": "Şampiyonların tercihi",
+        "desc": "Kullanıcı dostu, dünyanın 1 numaralı kitesurf ekipmanları ile eğitim."
+      },
+      {
+        "brand": "TYF STANDARDI",
+        "title": "Yüksek standartlar",
+        "desc": "Eğitimlerimiz Türkiye Yelken Federasyonu standartlarında yürütülür."
+      },
+      {
+        "brand": "BB TALKIN",
+        "title": "Bir adım önde",
+        "desc": "Kask-telsiz ile sürüş boyunca eğitmenle kesintisiz iletişim konforu."
+      }
+    ]
+  },
+  "services": {
+    "kicker": "HİZMETLER",
+    "title": "OKULDAKİ HER ŞEY BİR ARADA",
+    "items": [
+      {
+        "no": "01",
+        "name": "Ekipman Satış",
+        "desc": "Slingshot ve seçili markalarda yeni & ikinci el ekipman."
+      },
+      {
+        "no": "02",
+        "name": "Ekipman Kiralama",
+        "desc": "Güncel kite, board ve trapez kiralama seçenekleri."
+      },
+      {
+        "no": "03",
+        "name": "Malzeme Depolama",
+        "desc": "Ekipmanını güvenle bırak, her geldiğinde hazır bul."
+      },
+      {
+        "no": "04",
+        "name": "Kite Tamiri",
+        "desc": "Kite ve ekipmanların için profesyonel tamir servisi."
+      },
+      {
+        "no": "05",
+        "name": "Kitesurf Safari",
+        "desc": "Uzun sürüş rotalarında rehberli kite safari deneyimi."
+      },
+      {
+        "no": "06",
+        "name": "Wakeboard",
+        "desc": "Rüzgar olmadığında da suda kalmanın keyifli yolu."
+      },
+      {
+        "no": "07",
+        "name": "Masaj Terapi",
+        "desc": "Klasik, spor ve thai masaj ile sudan sonra yenilen."
+      }
+    ]
+  },
+  "gallery": {
+    "kicker": "GALERİ",
+    "title": "SUDAN KARELER",
+    "sub": "Eğitimlerden, spottan ve Volkite hayatından anlar.",
+    "items": [
+      "kite jump",
+      "sahil & okul",
+      "öğrenci anı",
+      "gün batımı sürüş",
+      "ekip",
+      "cafe on shore",
+      "wakeboard",
+      "gökçeada manzara"
+    ]
+  },
+  "spot": {
+    "kicker": "SPOT & RÜZGAR",
+    "title": "İŞTE BURASI SENİN OYUN ALANIN",
+    "features": [
+      {
+        "num": "300",
+        "label": "gün/yıl rüzgar"
+      },
+      {
+        "num": "600m",
+        "label": "eğitim alanı"
+      },
+      {
+        "num": "3km",
+        "label": "serbest sürüş"
+      },
+      {
+        "num": "Sığ",
+        "label": "güvenli su"
+      }
+    ],
+    "cta": "Anlık rüzgarı gör"
+  },
+  "reviews": {
+    "kicker": "GÖRÜŞLER",
+    "title": "ÖĞRENCİLERİMİZ NE DİYOR?",
+    "rating": "4.9",
+    "count": "120+ değerlendirme",
+    "items": [
+      {
+        "name": "Elif K.",
+        "place": "İstanbul",
+        "text": "Sıfırdan başladım, üç günün sonunda tek başıma sürüyordum. Telsizli eğitim her şeyi değiştiriyor."
+      },
+      {
+        "name": "Marco R.",
+        "place": "İtalya",
+        "text": "Spot inanılmaz güvenli, ekip çok profesyonel. Gökçeada'ya sırf bunun için döneceğim."
+      },
+      {
+        "name": "Ahmet Y.",
+        "place": "Ankara",
+        "text": "Hem eğitim hem cafe hem manzara. Tatil ve spor bir arada, ailecek harika vakit geçirdik."
+      }
+    ]
+  },
+  "stay": {
+    "kicker": "KONAKLAMA & ULAŞIM",
+    "title": "GELMEDEN ÖNCE BİLMEN GEREKENLER",
+    "items": [
+      {
+        "tag": "Ulaşım",
+        "title": "Adaya nasıl gelinir?",
+        "desc": "Çanakkale'den Kabatepe feribotu ile Gökçeada'ya, adadan Kefaloz koyuna ~20 dk. Geliş planında sana yardımcı oluyoruz."
+      },
+      {
+        "tag": "Konaklama",
+        "title": "Nerede kalınır?",
+        "desc": "Anlaşmalı pansiyon ve oteller, karavan & kamp alanı seçenekleri. Rezervasyonda en uygununu öneriyoruz."
+      },
+      {
+        "tag": "Sezon",
+        "title": "Ne zaman gelmeli?",
+        "desc": "Nisan–Kasım arası açığız; senenin ~300 günü rüzgarlı. En yoğun rüzgar yaz aylarında."
+      }
+    ]
+  },
+  "kitchen": {
+    "kicker": "CAFE ON SHORE",
+    "title": "KITEBOARD ÖNCESİ & SONRASI",
+    "body": "Dünya mutfağından seçilmiş lezzetleri taze ve kaliteli bir menüyle sunuyoruz. Doğumgünü, barbekü ve grup partileri için size özel menü tasarlıyoruz.",
+    "link": "Masa ayırt",
+    "items": [
+      "sahil cafe",
+      "trileçe",
+      "özel burger",
+      "taş fırın pizza"
+    ]
+  },
+  "faq": {
+    "kicker": "SSS",
+    "title": "SIK SORULAN SORULAR",
+    "items": [
+      {
+        "q": "Hiç tecrübem yok, öğrenebilir miyim?",
+        "a": "Evet! Başlangıç programı tam da sıfırdan başlayanlar için. Güvenlik ve uçurtma kontrolüyle adım adım ilerliyoruz, tüm ekipman dahil."
+      },
+      {
+        "q": "Sezon ne zaman açık?",
+        "a": "Nisan–Kasım arası okul açık ve senenin yaklaşık 300 günü rüzgar var."
+      },
+      {
+        "q": "Ekipman getirmem gerekiyor mu?",
+        "a": "Hayır. Eğitimlerde Slingshot ekipmanı, trapez ve kask-telsiz dahil. Kendi ekipmanını da kullanabilirsin."
+      },
+      {
+        "q": "Rüzgar olmazsa ne oluyor?",
+        "a": "Rüzgarsız günlerde ders ileri bir tarihe ertelenir; planını esnek tutuyoruz. Rüzgar yoksa wakeboard alternatifimiz var."
+      },
+      {
+        "q": "Hangi dillerde eğitim var?",
+        "a": "Türkçe, İngilizce, İspanyolca, Arapça, Fransızca ve İtalyanca eğitim verebiliyoruz."
+      },
+      {
+        "q": "Konaklama sağlıyor musunuz?",
+        "a": "Anlaşmalı pansiyon, otel ve kamp seçeneklerinde yönlendirme yapıyoruz. İletişime geç, en uygununu önerelim."
+      }
+    ]
+  },
+  "instagram": {
+    "kicker": "INSTAGRAM",
+    "title": "ANLARI KAÇIRMA",
+    "handle": "@volkite",
+    "cta": "Takip et",
+    "items": [
+      "kite session",
+      "sunset",
+      "crew",
+      "spot",
+      "cafe",
+      "jump"
+    ]
+  },
+  "booking": {
+    "kicker": "REZERVASYON",
+    "title": "RÜZGAR SENİ BEKLİYOR",
+    "sub": "Tarihini söyle, gerisini biz halledelim. Formu doldur ya da direkt ara; aynı gün dönüş yapıyoruz.",
+    "soon": "Online rezervasyon çok yakında — şimdilik form & telefon.",
+    "phone": "TELEFON",
+    "address": "ADRES",
+    "fName": "Ad",
+    "fSurname": "Soyad",
+    "fEmail": "E-posta",
+    "fMsg": "Mesajın / tercih ettiğin tarih",
+    "fSend": "Rezervasyon Talebi Gönder",
+    "thanksTitle": "TEŞEKKÜRLER!",
+    "thanksBody": "Talebini aldık. En kısa sürede sana dönüş yapacağız. Rüzgarlı günler!"
+  },
+  "footer": {
+    "tag": "Rüzgar cenneti Gökçeada Kefaloz koyunda, Türkiye'nin en köklü kiteboard okulu.",
+    "school": "Okulu"
+  },
+  "chat": {
+    "title": "Volkite Asistan",
+    "status": "Genelde birkaç dakikada yanıt",
+    "launcher": "Sor / Rezervasyon",
+    "placeholder": "Bir şey sor...",
+    "soon": "Asistanımız çok yakında burada! Şimdilik bize telefon veya WhatsApp ile ulaşabilirsin."
+  },
+  "meta": {
+    "title": "Volkite Kitesurf Okulu | Gökçeada",
+    "description": "Gökçeada'nın en köklü kitesurf okulu. 21 yıllık deneyim, IKO sertifikalı eğitmenler, Kefaloz Koyunda profesyonel eğitim."
   }
 }
