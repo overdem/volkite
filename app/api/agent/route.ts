@@ -275,23 +275,34 @@ export async function POST(req: NextRequest) {
   console.log('CHATWOOT EVENT:', JSON.stringify(event));
 
   if (event['event'] !== 'message_created') {
-    console.log('skip: event=', event['event'], 'message_type=', event['message_type']);
+    console.log('skip: event !== message_created (got:', event['event'], ')');
     return NextResponse.json({ ok: true });
   }
-  if (event['message_type'] !== 0) {
-    console.log('skip: event=', event['event'], 'message_type=', event['message_type']);
+
+  // Chatwoot top-level message_type is "incoming"/"outgoing"/"activity" (string).
+  // Numeric 0 = incoming, 1 = outgoing, 2 = activity (fallback for older payloads).
+  // Also accept if first message in the messages array has numeric type 0.
+  const msgType = event['message_type'];
+  const isIncoming =
+    msgType === 'incoming' ||
+    msgType === 0 ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (event['messages'] as any[])?.[0]?.message_type === 0;
+
+  if (!isIncoming) {
+    console.log('skip: not incoming (message_type=', msgType, '— only incoming processed)');
     return NextResponse.json({ ok: true });
   }
 
   const accountId = event['account']?.id ?? event['conversation']?.account_id;
   const convId = event['conversation']?.id;
   if (!convId || !accountId) {
-    console.log('skip: missing convId=', convId, 'accountId=', accountId);
+    console.log('skip: missing ids (convId=', convId, 'accountId=', accountId, ')');
     return NextResponse.json({ ok: true });
   }
 
   if (event['conversation']?.status === 'open' && event['conversation']?.meta?.assignee) {
-    console.log('skip: human assignee present, conv=', convId);
+    console.log('skip: human assignee present (conv=', convId, ')');
     return NextResponse.json({ ok: true });
   }
 
