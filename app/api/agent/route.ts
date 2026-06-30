@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { fetchWindForecast } from '@/lib/openmeteo';
 import { scoreDay } from '@/lib/wind';
 import type { WindBand } from '@/lib/wind';
+import { buildClaudeMessages, type CwApiMessage } from '@/lib/chatwoot';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -282,7 +283,29 @@ async function cw(path: string, body: Record<string, unknown>) {
   });
 }
 
-type CwMessage = { message_type: number; content?: string };
+// Pull the FULL message history for a conversation so Claude sees the whole
+// thread on every turn. Returns [] on failure so the caller can fall back to
+// the single triggering message.
+async function fetchConversationMessages(
+  accountId: number | string,
+  convId: number | string
+): Promise<CwApiMessage[]> {
+  try {
+    const res = await fetch(
+      `${CW_BASE}/api/v1/accounts/${accountId}/conversations/${convId}/messages`,
+      { headers: { api_access_token: BOT_TOKEN } }
+    );
+    if (!res.ok) {
+      console.log('cw history fetch failed:', res.status);
+      return [];
+    }
+    const data = (await res.json()) as { payload?: CwApiMessage[] };
+    return data.payload ?? [];
+  } catch (e) {
+    console.log('cw history fetch error:', e);
+    return [];
+  }
+}
 
 // ─── POST handler ──────────────────────────────────────────────────────────────
 
@@ -328,20 +351,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  // Build conversation history
-  const history = (
-    (event['conversation']?.messages ?? []) as CwMessage[]
-  )
-    .filter((m) => m.message_type === 0 || m.message_type === 1)
-    .map((m) => ({
-      role: (m.message_type === 0 ? 'user' : 'assistant') as 'user' | 'assistant',
-      content: (m.content ?? '').trim(),
-    }))
-    .filter((m) => m.content.length > 0);
-
+  // Pull the full conversation history from Chatwoot (the webhook payload only
+  // carries the latest message), then replay the whole thread to Claude.
   const currentContent = (event['content'] ?? '') as string;
-  const baseMessages: Anthropic.MessageParam[] =
-    history.length > 0 ? history : [{ role: 'user', content: currentContent }];
+  const rawMessages = await fetchConversationMessages(accountId, convId);
+  const baseMessages: Anthropic.MessageParam[] = buildClaudeMessages(rawMessages, currentContent);
+
+  if (baseMessages.length === 0) {
+    console.log('skip: no usable message content (conv=', convId, ')');
+    return NextResponse.json({ ok: true });
+  }
 
   const kb = await buildKnowledge();
 
