@@ -319,11 +319,10 @@
     "school": "Școala"
   },
   "chat": {
-    "title": "Asistent Volkite",
-    "status": "De obicei răspunde în câteva minute",
+    "title": "Volkite",
     "launcher": "Întreabă / Rezervă",
     "placeholder": "Întreabă orice...",
-    "greeting": "Bună! 🤙 Întreabă orice — kitesurf, pachete, vânt sau rezervare.",
+    "greeting": "Salut! 🤙 Cu ce te pot ajuta?",
     "send": "Trimite",
     "error": "A apărut o problemă, încearcă din nou. Sau WhatsApp: +90 533 241 10 15"
   },

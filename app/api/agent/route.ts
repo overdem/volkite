@@ -21,6 +21,14 @@ const MAX_CONTENT_LEN = 2000;
 const MAX_CONV_ID_LEN = 100;
 const MAX_HISTORY = 40; // most recent turns replayed to Claude
 
+// Site locale → language name for the agent's reply language.
+const LOCALE_NAME: Record<string, string> = {
+  tr: 'Türkçe',
+  en: 'English',
+  bg: 'Български (Bulgarian)',
+  ro: 'Română (Romanian)',
+};
+
 // WhatsApp CTA copy per language (shown on [[HANDOFF]]).
 const WA_CTA: Record<string, { label: string; prefill: string }> = {
   tr: { label: 'WhatsApp’tan Volkan’a yaz', prefill: 'Merhaba! Volkite kitesurf ön kaydım hakkında yazıyorum.' },
@@ -57,7 +65,7 @@ Bu bir WhatsApp/Chat sohbeti. Aynı seferde TÜM cevabı sığdırma:
 Önce kısa bir ilgi-tetikleyici cümle, sonra doğal bir soru. Karşılıklı, akan kısa sohbet. Doğal sırayla öğren: seviye → tarih → süre → kişi sayısı → konaklama. Hepsini tek nefeste sorma.
 
 # DİLLER
-Kullanıcının yazdığı dili algıla ve AYNI dilde cevap ver. Desteklenenler: Türkçe, İngilizce, Bulgarca, Romence. Belirsiz/karışıksa İngilizce.
+Sana o anki site dili (locale) verilir. İlk cevabını bu site diliyle ver. Sonrasında kullanıcının YAZDIĞI dili algıla ve AYNI dilde devam et (kullanıcı dili değiştirirse sen de değiştir). Desteklenenler: Türkçe, İngilizce, Bulgarca, Romence. Site dili belirsizse İngilizce.
 
 # DÜRÜSTLÜK
 "Bot musun?" diye sorulursa içtenlikle asistan olduğunu, gerçek görüşme için Volkan'a ulaşabileceklerini söyle. Okul adına KESİN taahhüt verme.
@@ -383,6 +391,7 @@ export async function POST(req: NextRequest) {
       system: [
         { type: 'text', text: SYSTEM_STATIC, cache_control: { type: 'ephemeral' } },
         { type: 'text', text: kb },
+        { type: 'text', text: `# SİTE DİLİ\no anki site dili (locale): ${locale} — ${LOCALE_NAME[locale] ?? 'English'}. İlk cevabını bu dilde ver; sonra kullanıcının yazdığı dile uy.` },
       ],
       tools: TOOLS,
       messages: msgs,

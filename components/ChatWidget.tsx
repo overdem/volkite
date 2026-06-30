@@ -158,13 +158,17 @@ export default function ChatWidget() {
           }}
         >
           {/* Header */}
-          <div style={{ background: '#062131', color: '#fbf6ec', padding: '16px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+          <div style={{ background: '#062131', color: '#fbf6ec', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '11px' }}>
-              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#3ee07a', animation: 'pulse-dot 2s infinite', flexShrink: 0 }} aria-hidden="true" />
-              <div>
-                <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '18px', letterSpacing: '.02em', lineHeight: 1 }}>{t('title')}</div>
-                <div style={{ fontSize: '11px', color: '#9fc0cf', marginTop: '3px' }}>{t('status')}</div>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/volkite-icon.svg"
+                alt="Volkite"
+                width={32}
+                height={32}
+                style={{ width: '32px', height: '32px', flexShrink: 0 }}
+              />
+              <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '20px', letterSpacing: '.03em', lineHeight: 1 }}>{t('title')}</div>
             </div>
             <button
               onClick={() => setOpen(false)}
