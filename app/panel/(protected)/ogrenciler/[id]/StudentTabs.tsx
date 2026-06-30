@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { updateStudent, updateLesson, addPayment, togglePaymentPaid, toggleMediaDownloadable } from '../../actions';
+import { updateStudent, updateLesson, addPayment, togglePaymentPaid, toggleMediaDownloadable } from '../../../actions';
 
 type Student = Record<string, unknown>;
 type Lesson = { id: string; lesson_no: number; title: string | null; status: string; hours: number | null; wind_kn: number | null; instructor_notes: string | null };

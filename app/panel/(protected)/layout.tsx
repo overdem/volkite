@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createAuthClient, createAdminClient } from '@/lib/supabase-server';
-import { logout } from './actions';
-import PanelNav from './PanelNav';
+import { logout } from '../actions';
+import PanelNav from '../PanelNav';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Volkite Panel', robots: 'noindex' };

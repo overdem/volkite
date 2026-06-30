@@ -2,7 +2,7 @@
 
 import { useTransition, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { approveBooking, rejectBooking } from '../actions';
+import { approveBooking, rejectBooking } from '../../actions';
 
 export default function BookingActions({ bookingId }: { bookingId: string }) {
   const [pending, startTransition] = useTransition();

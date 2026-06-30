@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { updateSiteSettings, updateWindBand } from '../actions';
+import { updateSiteSettings, updateWindBand } from '../../actions';
 
 type Settings = Record<string, unknown>;
 type WindBand = { level: string; min_kn: number; max_kn: number; max_gust_kn: number; ideal_kn: number; note_tr: string | null };

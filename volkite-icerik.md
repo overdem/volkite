@@ -25,113 +25,181 @@ Sitedeki fiyatlar eski. **Aşağıdaki fiyatlar geçerlidir** (2024–2025, hâl
 
 ---
 
-## 1. HAKKIMIZDA / MARKA (about + ajan KB)
+## 1. HAKKIMIZDA / MARKA (about + ajan KB — TAM içerik)
 
 **Konum:** Cittaslow Gökçeada, Kefaloz koyu. Eşelek Köyü, Köy Sokağı 104/1, Gökçeada–Çanakkale.
 **Slogan:** "Hayatımızı rüzgâra ve suya adadık." · "Rüzgâr cenneti Gökçeada."
 **Tecrübe:** 21 yıllık uçurtma sörfü eğitim tecrübesi. Türkiye'nin en köklü kiteboard okulu.
 **Eğitmen dilleri (ders):** İngilizce, İspanyolca, Arapça, Fransızca, İtalyanca dahil çok dilde ders.
 
-### Kısa tarihçe
-- 2000: Volkite'ın temelleri İstanbul/Burç Beach'te. Windsurf, katamaran, wakeboard → kiteboard.
-- 2005: İlk kiteboard eğitimleri (Burç Beach). Kartalkaya/Kartepe snowboard eğitimleri.
-- 2007–2010: Uludağ Snowkite Okulu & Snowpark.
-- 2008: Gökçeada keşfedildi, yeni lokasyon açıldı, ilk öğrenciler.
-- 2010: Poyraz rüzgârı nedeniyle İstanbul okulu tamamen Gökçeada'ya taşındı — yeni ev: Volkite Gökçeada. "Progression is Everything" kampı, TKBA yarışı.
-- 2013–2016: Kite festivalleri (Zahit Mungan misafir); **Çamlıca Kitesurf Challenge** I-II-III (120+ sporcu, fikri Volkite'a ait).
-- 2000–2021: onlarca eğitmen, binlerce öğrenci. TYF KB5 & KB4 sertifikalı.
+### Açılış metni (detay sayfa başı)
+**Volkite Kiteboard Okulu olarak 21. yılımızı kutluyoruz!** Biz eksilmeyen sporcu ruhumuz ve 21 senelik eğitmenlik deneyimimizle uçurtma sörfü cenneti Gökçeada'dayız. Kitesurf başlangıçta doğru eğitim, ekipman ve spota ihtiyaç duyar; bu sporu biraz deneyimlemek yerine hayatının merkezine koymak tam da bu üç kriterin verimliliğine bağlıdır. Bu yüzden: TYF'de eğitmenlik belgesi verebilen ekibimizle bilgi dolu kitesurf dersleri; dünyanın en kaliteli uçurtma sörfü markası Slingshot ekipmanları; ve Türkiye'nin en rüzgarlı, en geniş eğitim alanı.
 
-### Kurucu — Volkan Günel
-1977 İstanbul doğumlu. 1987 kaykay (11-board ollie Türkiye rekoru), 1995 snowboard, 2000 yelken/windsurf/kitesurf (Burç Beach), hepsi kendi kendine. Kapalıçarşı'da kuyumculuğu bırakıp 2000'den snowboard eğitmenliği. 2007–2008 Dünya Kiteboard Şampiyonası. Köprülerden kite ile atladı, 50-60 knot fırtınalarda sürdü. Extreme yaşam, doğa, eğitim ve paylaşım insanı. **Owner – KB5 Eğitmen · Diller: TR, EN.**
+### Volkite'ın Kısa Tarihi (tam)
+- **2000:** Volkite'ın temelleri İstanbul/Burç Beach'te atıldı. Windsurf, katamaran, wakeboard derken kiteboard hayatımıza girdi ve rotamız tamamen uçurtma sörfüne döndü.
+- **2005 yazı:** Volkite kiteboard okulu ilk eğitimlerine İstanbul Burç Beach'te başladı.
+- **2000'ler:** Kartalkaya'da; 2005–2007'de Kartepe'de snowboard eğitimleri.
+- **2007–2010:** Uludağ'da Snowkite Okulu ve Snowpark.
+- **2008:** Gökçeada'yı keşfe geldik; rüzgarı ve doğasıyla adaya aşık olup Volkite'ın yeni lokasyonunu hayata geçirdik. O yaz ilk öğrencilerimizi ağırladık.
+- **2008–2010:** İstanbul, Uludağ ve Gökçeada lokasyonlarında sporcu yetiştirdik.
+- **2010:** Gökçeada'nın kesintisiz esen poyraz rüzgarının kitesurfe uygunluğu nedeniyle İstanbul okulunu tamamen adaya taşıdık — yeni evimiz ve odağımız **Volkite Gökçeada** oldu. "Progression is Everything" kitesurf gelişim kampına ve TKBA özel yarışına ev sahipliği yaptık.
+- **2013–2014:** Uçurtma festivalleri; dünyaca ünlü uçurtmacı Zahit Mungan'ı Mardin'den misafir ederek çocukları dev uçurtmalar ve kitesurf ile tanıştırdık.
+- **2014–2016:** Fikri tamamen Volkite'a ait **Çamlıca Kitesurf Challenge**'ı 120'nin üzerinde sporcuyla gerçekleştirdik (I-II-III).
+- **2013–2015:** Çamlıca Gazoz sponsorluğunda birçok lokasyonda kitesurf, windsurf, snowkite, skateboard, mountain bike vb. onlarca yarış düzenledik.
+- **2000–2021:** Onlarca eğitmen, binlerce öğrenci. TYF yeterlilik belgesine sahip, **KB5 ve KB4 sertifikalı** eğitmenlerle hizmet veriyoruz.
 
-### Ekip
-- **Volkan Günel** — Owner, KB5 — TR, EN
-- **Burçak Doğan** — KB4 — TR, FR, EN
-- **Emin Ufuk** — KB4 — TR, EN
-- **Soydan Cıgsar** — KB4 — TR, EN
-- **Karapati** — Asistan — "Meow!" (okul kedisi)
+*İlk rüzgarda görüşmek üzere…*
+
+### Volkan Günel kimdir? (birinci ağızdan — tam)
+1977 yılında İstanbul'da doğdum. Çocukluğum İstanbul'un kalelerinin üstünde, ağaç tepelerinde tırmanmak, zıplamak, koşmak ve bir şeyler icat etmekle geçti. 1987'de board sporlarına kaykayla başladım — 11 board ollie ile sanırım Türkiye rekoru hâlâ bende. 1995'te hayatıma snowboard, 2000'de Burç Beach ile yelken, windsurf ve kitesurf girdi; hepsini kendi kendime öğrenmenin gururunu ve zorluğunu yaşadım. Dağlara turlar götürdüm, organizasyonlarında çalıştım ve sonunda Kapalıçarşı'daki mesleğim kuyumculuğu tamamen bırakarak 2000'den itibaren snowboard eğitmenliğine başladım. 2007 ve 2008'de Dünya Kiteboard Şampiyonası'na katıldım. Onlarca freestyle snowboard yarışına katıldım, kite ile köprülerden atladım, fırtınalarda (50–60 knot) kaydım, Haydarpaşa'da kite yaptım durdum. Organizasyon şirketimle bir sürü başarılı yarış gerçekleştirdik; bunların içinde Kitesurf Challenge serilerinin yeri ayrıdır. Kısacası extreme hayat tarzını seven, doğaya aşık, yeniliklere, gelişime, eğitime, paylaşıma ve kaliteli dostluklara açık, kendi halinde biriyim.
+— **Volkan Günel, Kurucu / Owner – KB5 Eğitmen · Diller: Türkçe, İngilizce.**
+
+### Volkite Ekibi
+*Sadece öğrenci yetiştirmekle kalmıyor, TYF eğitmenlik sertifikası veren bir ekip olarak öne çıkıyoruz.*
+- **Volkan Günel** — Owner, KB5 Eğitmen — TR, EN
+- **Burçak Doğan** — KB4 Eğitmen — TR, FR, EN
+- **Emin Ufuk** — KB4 Eğitmen — TR, EN
+- **Soydan Cıgsar** — KB4 Eğitmen — TR, EN
+- **Karapati** — Assistant — "Meow!" (okul kedisi)
 - **Enes Günel** — School Manager
-- **Cafe On Shore:** Deniz Gönül (Big Mama), Sezen Pak (Şef), Zeynep Halisçelik (Şef)
+
+**Cafe On Shore Melekleri** *(kitesurf ile ruhunuz doyarken bedeniniz doğru besinleri alsın):*
+- **Deniz Gönül** — Big Mama
+- **Sezen Pak** — Şef
+- **Zeynep Halisçelik** — Şef
 
 ---
 
-## 2. EĞİTİM PROGRAMLARI (Supabase `packages` + detay sayfa)
+## 2. EĞİTİM PROGRAMLARI (Supabase `packages` + detay sayfa — TAM içerik)
 
-### Volkite avantajları
-TYF üst seviye KB5/KB4 eğitmenler · BB Talkin' telsiz kask (sürerken eğitmenle konuşma) · onshore (karaya) rüzgâr — kite düşse de açığa sürüklenmezsin, ayağın yere basar · 4 km trafiksiz koy, öğrenciye özel 600 m eğitim alanı.
 
-### A) Başlangıç Programı — 10 saat
-Hedef: bağımsız kiteboardcu. 5 ders (her biri 50+50 dk):
-1. **Teori & küçük kite** — kite tanımı, emniyet, rüzgâr & rüzgâr penceresi, küçük kite ile karada pratik, 4 ipli kite kurulumu.
-2. **Kara→Deniz geçişi** — trapezle orta boy kite kontrolü, kite indirme/kaldırma, suya giriş, sudan kite kaldırma, rüzgâraltı/üstü bodydrag, board ile tanışma.
-3. **Deniz eğitimi** — yeterli kite kontrolü, board ile suda tanışma, pozisyon dengeleme, ilk kalkışlar, ilk kayışlar.
-4. **Board eğitimi** — yalnız suya giriş, board ile kalkış, pozisyon düzeltme, kontrollü kayış/duruş.
-5. **Kontrollü sürüş** — iki yöne kontrollü kayış/duruş, geri dönüş, vücut pozisyonu, bağımsız kiteboardcu.
+> Detay sayfası (`/egitimler`) için tam metin. Landing'de kısa intro + kartlar; detayda aşağıdaki her şey. Fiyatlar yukarıdaki **GEÇERLİ FİYATLAR** tablosuna bağlıdır (saatlik 80€, başlangıç 700€).
 
-Fiyat: Özel (10 saat) **700€** · saatlik birebir 80€ · 2 kişilik grup kişi başı 600€.
+**Giriş:** Daha fazla ertelemeden, hayatına yeni bir pencere aç! Volkite olarak uçurtma sörfünü hızlı ve güvenli bir şekilde öğrenmen için 3 farklı eğitim programı oluşturduk. Eğitim içeriklerine göz atarak kendine uygun programı bulabilir, dilersen bize ulaşarak daha fazla bilgi ve planlama üzerine yardım alabilirsin.
 
-### B) Keşif & Devam Programı — 4 saat (rüzgârlı bir günde biter)
-Kime: vakti az olan / başka yerde yarım kalan / seviye atlamak isteyen. 2 ders (50+50):
-1. **Teori** — kite tanımı, emniyet, rüzgâr penceresi, küçük kite kara eğitim, 4 ipli büyük kite kurulumu.
-2. **Kara→Deniz geçişi** — trapezle kite kontrolü, kite indirme/kaldırma, suya giriş, bodydrag.
+### Volkite Eğitim Avantajları
+- **Tecrübeli Eğitmen Kadromuz** — TYF'nin en üst seviye eğitmen belgesine sahip KB5 ve KB4 sertifikalı deneyimli ekibimiz.
+- **Telsiz Kask ile Konforlu Eğitim** — Yeni nesil telsiz kulaklık BB Talkin' ile sürüş yaparken eğitmeninizle karşılıklı konuşarak ders yapabilirsiniz.
+- **İdeal Rüzgar Yönü ve Hızı** — Karaya esen rüzgar sayesinde kite'ınız düşse bile açığa sürüklenmezsiniz, ayağınız yere basar ve güvende hissedersiniz.
+- **Trafikten İzole Eğitim Alanı** — 4 km uzunluğunda bir koydayız ve öğrencilere özel 600 m eğitim alanımızda kolayca kitesurf öğrenirsiniz.
 
-Fiyat: Saatlik birebir 80€ üzerinden (4 saatlik keşif). Kesin paket fiyatı Volkan'a danışılır; site fiyatı (280€) geçersiz.
+### A) Kitesurf Başlangıç Programı — 10 saat
+Başlangıç eğitimimiz 10 saatten oluşur. Teorik ve güvenlik bilgilerini de içeren, farklı boyutlarda uçurtmalarla pratik yaptığımız ilk derslerin devamında board'a geçiş yapıyoruz. İlk sudan kalkış, kontrollü sürüş ve duruş antrenmanlarıyla sizi yardıma ihtiyacı olmayan **bağımsız kiteboardcu** seviyesine getirmeyi hedefliyoruz.
+
+**Ders İçeriği**
+
+| Ders | İçerik |
+|---|---|
+| Teori ve küçük kite eğitimi (50+50 dk.) | Kite tanımı, emniyet bilgileri, rüzgar tanımı, rüzgar penceresi, küçük kite ile karada pratik eğitime giriş ve pratik, dört ipli kite kurulumu. |
+| Kara & Deniz eğitim geçişi (50+50 dk.) | Trapez ile orta boy kite kontrolü, kite'ı yere indirip kaldırma, suya giriş, sudan kite kaldırma, rüzgaraltı ve rüzgarüstü kite kullanarak suda vücutla ilerleme (bodydrag), board ile tanışma. |
+| Deniz eğitimine devam (50+50 dk.) | Yeterli büyüklükteki kite kontrolü, board ile suda tanışma, pozisyon dengeleme, sudan ilk kalkışlar ve ilk kayışlar. |
+| Board eğitimine devam (50+50 dk.) | Suya yalnız giriş ve board ile sudan kalkışlar, kayarken pozisyon düzeltme, kontrollü kayışlar ve duruşlar. |
+| Kontrollü sürüş teknikleri (50+50 dk.) | Her iki yöne kontrollü kayışlar, kontrollü duruşlar, geri dönüşler, vücut pozisyonunu düzeltme ve bağımsız kiteboardcu olmak. |
+
+Fiyat: Özel ders (10 saat) **700€** · saatlik birebir **80€** · 2 kişilik grup (kişi başı) **600€**.
+
+### B) Keşif ve Devam Programı — 4 saat (rüzgarlı bir günde biter)
+*Kitesurfe başlamak istiyorsun fakat yeterli vaktin mi yok?* 4 dersten oluşan ve rüzgarlı bir günde bitirebileceğin bu programı hazırladık. Teori ve pratik eğitimlerle uçurtma kontrolü hedeflediğimiz dersler, üst seviyeler için fikir verir. Sezon içinde kaldığımız yerden devam etmek için seni bekliyoruz.
+
+*Bir yerde kitesurf eğitimi aldın fakat yarım mı kaldı?* Kaldığın yerden devam etmek ve seviyeni yükseltmek istersen bu paket tam sana göre — kısa sürede stilini oturtabilir, rüzgarüstüne daha iyi gidebilir ya da havalara çıkabilirsin.
+
+**Ders İçeriği**
+
+| Ders | İçerik |
+|---|---|
+| Teori eğitimi (50+50 dk.) | Kite tanımı, emniyet bilgileri, rüzgar tanımı, rüzgar penceresi, küçük kite ile kara eğitime giriş, dört ipli büyük kite kurulumu. |
+| Kara & Deniz eğitimine geçiş (50+50 dk.) | Trapez ile kite kontrolü, kite'ı yere indirip kaldırma, suya giriş, sudan kite kaldırma, rüzgaraltı ve rüzgarüstü kite kullanarak bodydrag. |
+
+Fiyat: 4 saatlik program, saatlik birebir **80€** üzerinden. Kesin paket fiyatı için bize sorun.
 
 ### C) İleri Seviye Programı — freeride / oldschool & newschool freestyle
-1. **Rüzgârüstü sürüşler** — stil, doğru duruş, board kenarıyla su kesme, rüzgârüstüne çıkış, oturmadan dönüş.
-2. **İleri sürüş** — ileri teknikler, ilk sıçrayışlar.
-3. **Seçin öğretelim** — stil hareketler, oturmadan waterstart, sıçrayarak yön değiştirme, freestyle, dalga sürüş (isteğe bağlı).
+Kiteboardu bu kadar eğlenceli kılan en önemli özellik, kendini geliştirmenin asla bitmemesi! Freeride, oldschool ve newschool freestyle'da öğrenmek istediklerini bizimle paylaş, seviyene uygun yol haritasını beraber oluşturalım. Derslerde BB Talkin' sayesinde eğitmenle kesintisiz iletişimin verimliliğini de unutma.
 
-Fiyat: Özel **80€/saat** · 2'li grup kişi başı 70€ · Coaching (talep üzerine).
+**Ders İçeriği**
 
-> Tüm eğitimlerde ekipman, kask, telsiz dahil. Öğrenci sadece kişisel eşya + güneş gözlüğü getirir.
+| Ders | İçerik |
+|---|---|
+| Rüzgarüstü sürüşler (50+50 dk.) | Stil oluşturarak doğru duruşu sağlamak, board'un kenarıyla suyu keserek kontrollü yön verebilmek, rüzgarüstüne çıkışlar, suya oturmadan dönüşler. |
+| İleri sürüş (50 dk.) | İleri sürüş teknikleri ve ilk sıçrayışlar. |
+| Seçin öğretelim (50 dk.) | Stil hareketler, oturmadan waterstart, sıçrayarak yön değiştirme, freestyle hareketler, dalga sürüş teknikleri — isteğe bağlı eğitimler. |
 
----
+Fiyat: Özel ders **80€/saat** · Coaching için bize sorun.
 
-## 3. HİZMETLER (Supabase `services` + detay sayfa) — fiyatlar 2021, teyit gerek
-
-**Ekipman satış:** Yeni/kullanılmış Slingshot. Her m² kite ve board mevcut.
-
-**Kiralama:** Tam set (kite+board+harness) **80€/gün**. (Sitedeki eski kalem fiyatları geçersiz.) Sigorta opsiyonu için Volkan'a danışılır.
-
-**Depolama:** Günlük **5€** (uzun süreli için Volkan'a danışılır).
-
-**Tamir:** Hasarlı ekipman hızlı tamir servisi.
-
-**Kite Safari:** 2 saatlik downwind macera; bot + bb talkin' ile Gökçeada'nın farklı sahilleri.
-
-**Wakeboard:** Rüzgâr bitince tekne arkasında kendi ekipmanınla wakeboard / yeni teknikler.
-
-**Masaj Terapi:** Klasik 1s 40€ / 30dk 25€ · Spor 1s 40€ / 30dk 25€ · İç Organ (Chi Nei Tsang) 45dk 65€ · Duygu Boşaltım 1s 70€ · Thai 1s 50€ · Face Lifting 20dk 25€ · Ayak 30dk 30€.
+> Tüm eğitimlerde ekipman, kask ve telsiz dahil. Öğrenci sadece kişisel eşya + güneş gözlüğü getirir. (Grup modeli için yukarıdaki nota bakın: başta birlikte, sonra birebire geçiş.)
 
 ---
 
-## 4. SPOT & RÜZGÂR (detay sayfa + ajan KB + rüzgâr özelliği)
+## 3. HİZMETLER (Supabase `services` + detay sayfa — TAM içerik)
 
-**Neden Gökçeada:** Eski adı Imroz ("rüzgârlı ada"), mistik, doğal. Yoga, cafe kahvaltısı, flamingolar (10 dk), Milli Park dalış, Rum köyleri, özgür hayvanlar, gelincik tarlaları, sunset, ateş başında samanyolu.
+> Fiyatlar **GEÇERLİ FİYATLAR** tablosuna bağlıdır: kiralama 80€/gün, depolama 5€/gün. Masaj fiyatları doğru (Özdem onaylı). Eski sitedeki kalem fiyatları (50€/3€) kullanılmaz.
 
-**Rüzgâr (rüzgâr özelliği için kritik):**
-- Yön: Volkite'tan denize bakınca yüz **kuzeydoğu = poyraz**. 24 saat karaya (onshore) eser → güvenli.
-- Sezon başı/sonu güney rüzgârı açığa eserken zodiac kurtarma botu hazır.
-- **Sezon boyu 15–25 knot.** Bazı sabahlar **+30 knot → dersler durur.**
-- Günlük patern: sabah ~11:00 → 18–22 kn · öğlen 13:00–15:00 → ~10 kn (1 saat) · sonra 15+ kn · akşam 19:00 sonrası 20+ kn.
-- **Sezon: Nisan–Kasım. Yüksek sezon: Temmuz–Ekim.**
+**Kitesurf Ekipman Satış** — Eğitim biterken kendine yeni ya da kullanılmış Slingshot ekipmanlardan almayı unutma. Her m² kite ve board okulumuzda bulunur.
 
-> Bu veri `wind_bands` varsayılanlarını doğruluyor: başlangıç için ideal ~15-22 kn, +30 riskli/durur. Volkan eşikleri buna göre ayarlasın.
+**Kitesurf Ekipman Kiralama** — Hava her an değişebilir ve ihtiyacın olan kite tam o an bizdedir. Gereken tüm ekipmanı okulumuzdan kiralayabilirsin. Tam set (kite + board + harness) **80€/gün**. Yarım gün kiralamalar 3 saattir ve günlük ücretin %70'i kadardır. Sigorta seçeneği ve detayları için bize sorun.
 
-**Plaj/eğitim alanı:** Parktan 30 m. Sadece kitesurfe ayrılmış 50 m sığ deniz, 100 m kumsal, 4 km trafiksiz koy. 600 m şamandıralı özel eğitim alanı. Kara dersi geniş; deniz dersinde 50 m açıkta su belde.
+**Kitesurf Ekipman Depolama** — Sürekli ekipmanını taşımana gerek yok; bir dahaki ziyaretine kadar ekipmanını güvenle misafir ediyoruz. **5€/gün** (haftalık/aylık için bize sorun).
 
-**Konfor:** 24 saat rüzgâr (15-40 kn), dalga ya da düz su, elektrik + internet (uzaktan çalışma), cafe, sıcak duş, minder, sunset sürüşü (hava kararana dek), depo, akşam Surfer's Party.
+**Kitesurf Ekipman Tamir** — Hasar görmüş ekipmanını Volkite'a getir! Tatilin kabusa dönmesin; hızlı tamir servisimizle sağlam malzemene çabucak kavuş.
+
+**Kitesurf Safari** — 2 saatlik downwind maceraya hazır ol! Bot ve BB Talkin' ile iletişim kesilmeden Gökçeada'nın farklı sahillerinde kitesurf deneyimle.
+
+**Wakeboard** — Rüzgar bitse de eğlence devam eder! Tekne arkasında kendi ekipmanınla wakeboard yapabilir ya da yeni sürüş tekniklerini öğrenebilirsin.
+
+**Masaj Terapi** — Tüm gün sörf yapmak yorucu olabilir; ertesi güne hazır olmak için kendini ödüllendir.
+
+| Masaj | Süre / Fiyat |
+|---|---|
+| Klasik Masaj | 1 saat 40€ · 30 dk 25€ |
+| Spor Masajı | 1 saat 40€ · 30 dk 25€ |
+| İç Organ Masajı (Chi Nei Tsang) | 45 dk 65€ |
+| Duygu Boşaltım Masajı | 1 saat 70€ |
+| Thai Masaj | 1 saat 50€ |
+| Face Lifting | 20 dk 25€ |
+| Ayak Masajı | 30 dk 30€ |
 
 ---
 
-## 5. CAFE ON SHORE (detay sayfa)
+## 4. SPOT & RÜZGÂR (detay sayfa + ajan KB + rüzgâr özelliği — TAM içerik)
 
-Dünya mutfağından seçilmiş, taze, kaliteli, sağlıklı menü. Cheesecake, trileçe, özel ekmekli burger, pizza. Kiteboard öncesi/sonrası. Doğum günü, barbekü ve grup partileri için özel menü + ateş. Ekip: Deniz Gönül, Sezen Pak, Zeynep Halisçelik.
+### Kitesurf için neden Gökçeada'dayız?
+Evden çıkıp maceraya atılmak istiyorsan bu alışılmışın dışında bir yolculuk olmalı. Bir ada olmalı mesela — ona ulaşmak, keşfetmek, içindekileri hissetmek. Doğal olmalı: suyu, havası, hayvanı, bitkisi. Mistik olmalı; eski adı Imroz (rüzgarlı ada), Poseidon'un atlarını dinlendirdiği yerde rüzgar hissedilmeli. Biz ekip olarak rüzgarına vurulduk ve yıllardır maceranın içinde kitesurf ile yaşıyoruz.
+
+Güne sahilde yoga ile başla, sonra Cafe'de lezzetli bir kahvaltı, muhteşem rüzgarla kitesurfe çık ve molada 10 dk ilerideki flamingoları ziyaret et. İstersen Milli Park'ta dalışa git ya da Rum köylerinde tarihe dokun. Özgür koyunlar, keçiler, atlar, tavşanlar gelincik tarlalarında eşlik etsin; Ege'nin en güzel balıklarıyla güneşin en son battığı yerde buluş. Gece ateş başında samanyolunu izlerken derin bir oh çekmeyi de unutma.
+
+### Gökçeada Kitesurf Rüzgar Sezonu, Yönü ve Hızı
+Volkite'tan denize baktığında yüzün tam da kuzeydoğuya, yani **poyraz** rüzgarına döner. Poyraz küçük açılarla değişse de güvenli bir sürüş için **24 saat karaya doğru (onshore)** eser. Sezon başı ve sonunda güney rüzgarları açığa eserken tedirgin olma — zodiac kurtarma botumuz emrinde.
+- Sezon boyunca **15–25 knot** arası rüzgar. Bazı sabahlar **+30 knot** eser ve derslere ara verilir.
+- Günlük patern: sabah ~11:00 **18–22 kn**, öğlen 13:00–15:00 arası ~1 saat **10 kn** civarına iner, sonra tekrar **15 kn ve üzeri**, akşam 19:00 sonrası **20 kn ve üzeri**.
+- **Sezon: Nisan–Kasım. Yüksek sezon: Temmuz–Ekim.** (Son 13 yılın ortalama windguru verisine dayanır.)
+
+> `wind_bands` varsayılanlarını doğrular: başlangıç için ideal ~15–22 kn, +30 riskli/durur.
+
+### Kitesurf Plajı ve Eğitim Alanı
+Arabanı park ettin, 30 m sonra Volkite'dasın. Sadece kitesurfe ayrılmış **50 m sığlıkta deniz, 100 m genişliğinde kumsal ve 4 km uzunluğunda trafiksiz bir koy.** İlk kara dersinde bol hareket alanı var; deniz eğitimleri için 50 m açılıyoruz ve su belimizde. **600 m uzunluğundaki özel eğitim alanı** şamandıralarla çevrilidir; board'a ilk çıkışları rahatça buradan yaparsın.
+
+### Volkite Konfor Alanı
+24 saat esen rüzgar — kaç knot istersen: 15-20-25, hatta 30-40. Dalga mı düz su mu, seç beğen. Elektrik ve internet bol (uzaktan çalışabilirsin), açık mutfak, enerji için cheesecake, sıcak duş, minderler. Sunset ile akşam suyunu kaçırma — burada hava kararana kadar kite yapılır. Malzemeni depoya bırak, adayı gez, akşam Surfer's Party'ye geç kalma.
+
+---
+
+## 5. CAFE ON SHORE (detay sayfa — TAM içerik)
+
+**Kiteboard Öncesi ve Sonrası Enerji Depolama Yeri.** On Shore Cafe menüsünde: en doğal kahvaltılıklar, zenginleştirilmiş tostlar, ev yapımı burgerlar, salatalar, İtalyan pizza ve makarnaları, zeytinyağlılar ve meze çeşitleri, et-tavuk-balık ve deniz mahsulleri, zengin aromatik kahveler, her daim taze demleme çay. Kitesurf eğitimin sonrası ya da iyi bir sürüş molasında hem gözün aksiyona doyar hem de senin için hazırlanan enfes yemeklerin tadını çıkarırsın.
+
+**Geçen yazın en sevilenleri:**
+- **Ana Yemek:** Beğendili Antrikot · Cordon Bleu · Viyana Usulü Dana Şinitzel
+- **Burger:** Kiteloop Burger · Volkite Burger · Cheeseburger
+- **Pizza:** Volkite Pizza · Vejeteryan Pizza · Smoke Pizza
+- **Makarna:** Penne Arabiata · Etli Penne Alfredo · Penne Vejeteryan
+- **Tatlı:** Trileçe · Cheesecake · Çikolata Şelale
+
+**Size özel partiler:** Barbekü ve mezeleri biz hazırlayalım, sofranızı kuralım, ateşi yakalım; doğum günü pastanızın mumlarını sevdiklerinizle üfleyin. Sinema gecesi, kitesurf sonrası "Happy Hour", plajda mangalda et/balık/kokoreç ya da kuzu çevirme — menüyü size özel hazırlıyoruz. Bu organizasyonlara kendi içkinizi getirebilirsiniz. Planınızı bizimle paylaşın.
+Cafe iletişim: Instagram @cafe_onshore · Tel +90 507 615 79 15. Ekip: Deniz Gönül (Big Mama), Sezen Pak (Şef), Zeynep Halisçelik (Şef).
 
 ---
 
 ## 6. KONAKLAMA (senden — siteye yeni eklenecek)
+
 
 Okul yanı kamp: çadır/karavan, kahvaltılı 25€ / kahvaltısız 15€. Öğrencilik günlerinde %50 indirim. Ayrıca yakın köy/adada pansiyon, bungalov, otel için yönlendirme.
 
