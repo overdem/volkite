@@ -319,11 +319,10 @@
     "school": "School"
   },
   "chat": {
-    "title": "Volkite Assistant",
-    "status": "Usually replies in minutes",
+    "title": "Volkite",
     "launcher": "Ask / Book",
     "placeholder": "Ask anything...",
-    "greeting": "Hi! 🤙 Ask me anything — kitesurf, packages, wind or booking.",
+    "greeting": "Hi! 🤙 How can I help?",
     "send": "Send",
     "error": "Something went wrong, please try again. Or WhatsApp: +90 533 241 10 15"
   },

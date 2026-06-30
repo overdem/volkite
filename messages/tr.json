@@ -319,11 +319,10 @@
     "school": "Okulu"
   },
   "chat": {
-    "title": "Volkite Asistan",
-    "status": "Genelde birkaç dakikada yanıt",
+    "title": "Volkite",
     "launcher": "Sor / Rezervasyon",
     "placeholder": "Bir şey sor...",
-    "greeting": "Merhaba! 🤙 Kitesurf, paketler, rüzgâr ya da rezervasyon — ne istersen sor.",
+    "greeting": "Merhaba! 🤙 Nasıl yardımcı olabilirim?",
     "send": "Gönder",
     "error": "Bir sorun oldu, tekrar dener misin? Dilersen WhatsApp: +90 533 241 10 15"
   },
