@@ -3,87 +3,71 @@ import {
   normalizeForClaude,
   buildClaudeMessages,
   type StoredMessage,
-} from '@/lib/chatwoot';
+} from '@/lib/agent-history';
+import { parseHandoff, buildWhatsappCta, WHATSAPP_NUMBER } from '@/lib/handoff';
 
 // ─── [[HANDOFF]] parsing ───────────────────────────────────────────────────────
 
-function parseReply(raw: string): { reply: string; handoff: boolean } {
-  const handoff = raw.includes('[[HANDOFF]]');
-  const reply = raw.replace('[[HANDOFF]]', '').trim();
-  return { reply, handoff };
-}
-
 describe('[[HANDOFF]] ayrıştırma', () => {
   it('etiket yoksa handoff false', () => {
-    const { reply, handoff } = parseReply('Merhaba, sana yardımcı olabilirim.');
+    const { reply, handoff } = parseHandoff('Merhaba, sana yardımcı olabilirim.');
     expect(handoff).toBe(false);
     expect(reply).toBe('Merhaba, sana yardımcı olabilirim.');
   });
 
   it('etiket varsa handoff true ve metinden çıkarılır', () => {
-    const { reply, handoff } = parseReply('Hemen Volkan ile bağlantı kuruyorum. 🤙\n[[HANDOFF]]');
+    const { reply, handoff } = parseHandoff('Hemen Volkan ile bağlantı kuruyorum. 🤙\n[[HANDOFF]]');
     expect(handoff).toBe(true);
     expect(reply).toBe('Hemen Volkan ile bağlantı kuruyorum. 🤙');
     expect(reply).not.toContain('[[HANDOFF]]');
   });
 
   it('sadece etiket varsa reply boş kalır', () => {
-    const { reply, handoff } = parseReply('[[HANDOFF]]');
+    const { reply, handoff } = parseHandoff('[[HANDOFF]]');
     expect(handoff).toBe(true);
     expect(reply).toBe('');
   });
 
   it('etiket ortada bile doğru çalışır', () => {
-    const { reply, handoff } = parseReply('Teşekkürler [[HANDOFF]] görüşelim.');
+    const { reply, handoff } = parseHandoff('Teşekkürler [[HANDOFF]] görüşelim.');
     expect(handoff).toBe(true);
-    expect(reply).toBe('Teşekkürler  görüşelim.');
+    expect(reply).toBe('Teşekkürler görüşelim.');
   });
 });
 
-// ─── Webhook secret validation ─────────────────────────────────────────────────
+// ─── WhatsApp CTA (handoff) ─────────────────────────────────────────────────────
 
-describe('Webhook secret doğrulama', () => {
-  it('secret eşleşirse 200 dönmeli', () => {
-    const secret = 'test-secret-123';
-    const provided = 'test-secret-123';
-    expect(provided === secret).toBe(true);
-  });
-
-  it('secret yanlışsa 401 dönmeli', () => {
-    const secret = 'test-secret-123';
-    const provided: string = 'wrong-secret';
-    expect(provided === secret).toBe(false);
-  });
-
-  it('secret yoksa 401 dönmeli', () => {
-    const secret = 'test-secret-123';
-    const provided = null;
-    expect(provided === secret).toBe(false);
+describe('WhatsApp CTA', () => {
+  it('doğru numara + ön-dolu mesajla wa.me linki üretir', () => {
+    const cta = buildWhatsappCta('Volkan’a yaz', 'Merhaba! Ön kayıt hakkında.');
+    expect(cta.label).toBe('Volkan’a yaz');
+    expect(cta.url).toContain(`https://wa.me/${WHATSAPP_NUMBER}?text=`);
+    expect(WHATSAPP_NUMBER).toBe('905332411015');
+    expect(decodeURIComponent(cta.url.split('text=')[1])).toBe('Merhaba! Ön kayıt hakkında.');
   });
 });
 
-// ─── Chatwoot event filtering ──────────────────────────────────────────────────
+// ─── Widget isteği doğrulama (/api/agent) ──────────────────────────────────────
 
-describe('Chatwoot event filtreleme', () => {
-  it('message_created dışındaki event\'ler yoksayılır', () => {
-    const shouldHandle = (event: string) => event === 'message_created';
-    expect(shouldHandle('conversation_created')).toBe(false);
-    expect(shouldHandle('message_updated')).toBe(false);
-    expect(shouldHandle('message_created')).toBe(true);
+describe('Widget isteği doğrulama', () => {
+  // /api/agent gövde doğrulamasını yansıtır: conversation_id + content zorunlu.
+  const valid = (b: { conversation_id?: unknown; content?: unknown }) =>
+    typeof b.conversation_id === 'string' &&
+    b.conversation_id.trim().length > 0 &&
+    b.conversation_id.length <= 100 &&
+    typeof b.content === 'string' &&
+    b.content.trim().length > 0;
+
+  it('conversation_id + content varsa geçerli', () => {
+    expect(valid({ conversation_id: 'abc-123', content: 'Merhaba' })).toBe(true);
   });
 
-  it('outgoing mesajlar (message_type=1) yoksayılır', () => {
-    const shouldHandle = (messageType: number) => messageType === 0;
-    expect(shouldHandle(0)).toBe(true);   // incoming = customer
-    expect(shouldHandle(1)).toBe(false);  // outgoing = bot/agent
+  it('boş content reddedilir', () => {
+    expect(valid({ conversation_id: 'abc-123', content: '   ' })).toBe(false);
   });
 
-  it('insan devraldıktan sonra bot susar', () => {
-    const shouldRespond = (status: string, hasAssignee: boolean) =>
-      !(status === 'open' && hasAssignee);
-    expect(shouldRespond('pending', false)).toBe(true);
-    expect(shouldRespond('open', false)).toBe(true);
-    expect(shouldRespond('open', true)).toBe(false); // human assigned → silent
+  it('conversation_id yoksa reddedilir', () => {
+    expect(valid({ content: 'Merhaba' })).toBe(false);
   });
 });
 

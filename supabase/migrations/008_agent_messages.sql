@@ -1,9 +1,8 @@
--- Volkite · Ajan konuşma geçmişi
+-- Volkite · Ajan konuşma hafızası (kendi web sohbet widget'ımız)
 --
--- Chatwoot agent bot token'ı mesaj listeleme API'sine erişemiyor
--- ("Access to this endpoint is not authorized for bots"). Bu yüzden ajan
--- geçmişi burada tutuyoruz: her webhook'ta gelen kullanıcı mesajı ve bizim
--- ürettiğimiz cevap conversation_id ile kaydedilir, sonraki turda replay edilir.
+-- Widget her mesajda tarayıcıda üretilen conversation_id'yi gönderir; gelen
+-- kullanıcı mesajı ve ajan cevabı buraya yazılır, sonraki turda created_at
+-- sırasıyla okunup Claude'a replay edilir. Böylece bağlam korunur.
 
 create table if not exists agent_messages (
   id              bigint generated always as identity primary key,
@@ -15,7 +14,7 @@ create table if not exists agent_messages (
 
 -- Konuşma bazlı kronolojik okuma için
 create index if not exists agent_messages_conv_idx
-  on agent_messages (conversation_id, id);
+  on agent_messages (conversation_id, created_at);
 
 -- Yalnızca service_role (ajan endpoint'i) erişir; RLS açık, public policy yok.
 alter table agent_messages enable row level security;
