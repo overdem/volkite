@@ -507,56 +507,83 @@ export async function POST(req: NextRequest) {
   let rawReply = '';
   const MAX_ITER = 5;
 
-  for (let iter = 0; iter < MAX_ITER; iter++) {
-    const aiRes = await anthropic.messages.create({
-      model: AGENT_MODEL,
-      max_tokens: 400,
-      system: [
-        { type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } },
-        { type: 'text', text: kb },
-        { type: 'text', text: `# SİTE DİLİ\no anki site dili (locale): ${locale} — ${LOCALE_NAME[locale] ?? 'English'}. İlk cevabını bu dilde ver; sonra kullanıcının yazdığı dile uy.` },
-      ],
-      tools: TOOLS,
-      messages: msgs,
-    });
+  const extractText = (content: Anthropic.ContentBlock[]) =>
+    content
+      .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+      .map((b) => b.text)
+      .join('\n')
+      .trim();
 
-    if (aiRes.stop_reason === 'end_turn' || aiRes.stop_reason === 'stop_sequence') {
-      rawReply = aiRes.content
-        .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-        .map((b) => b.text)
-        .join('\n')
-        .trim();
+  try {
+    for (let iter = 0; iter < MAX_ITER; iter++) {
+      const aiRes = await anthropic.messages.create({
+        model: AGENT_MODEL,
+        max_tokens: 600,
+        system: [
+          { type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } },
+          { type: 'text', text: kb },
+          { type: 'text', text: `# SİTE DİLİ\no anki site dili (locale): ${locale} — ${LOCALE_NAME[locale] ?? 'English'}. İlk cevabını bu dilde ver; sonra kullanıcının yazdığı dile uy.` },
+        ],
+        tools: TOOLS,
+        messages: msgs,
+      });
+
+      // end_turn / stop_sequence / max_tokens → final text (max_tokens = kapanmamış
+      // ama elimizdeki kısmi metni kullan, boş cevap döndürme).
+      if (
+        aiRes.stop_reason === 'end_turn' ||
+        aiRes.stop_reason === 'stop_sequence' ||
+        aiRes.stop_reason === 'max_tokens'
+      ) {
+        rawReply = extractText(aiRes.content);
+        break;
+      }
+
+      if (aiRes.stop_reason === 'tool_use') {
+        const toolBlocks = aiRes.content.filter(
+          (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use'
+        );
+
+        const toolResults = await Promise.all(
+          toolBlocks.map(async (block) => {
+            const result = await executeTool(block.name, block.input as Record<string, unknown>);
+            return {
+              type: 'tool_result' as const,
+              tool_use_id: block.id,
+              content: JSON.stringify(result),
+            };
+          })
+        );
+
+        msgs.push({ role: 'assistant', content: aiRes.content });
+        msgs.push({ role: 'user', content: toolResults });
+        continue;
+      }
+
       break;
     }
-
-    if (aiRes.stop_reason === 'tool_use') {
-      const toolBlocks = aiRes.content.filter(
-        (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use'
-      );
-
-      const toolResults = await Promise.all(
-        toolBlocks.map(async (block) => {
-          const result = await executeTool(block.name, block.input as Record<string, unknown>);
-          return {
-            type: 'tool_result' as const,
-            tool_use_id: block.id,
-            content: JSON.stringify(result),
-          };
-        })
-      );
-
-      msgs.push({ role: 'assistant', content: aiRes.content });
-      msgs.push({ role: 'user', content: toolResults });
-      continue;
-    }
-
-    break;
+  } catch (e) {
+    console.log('claude error:', e);
+    // rawReply boş kalır → aşağıda WhatsApp'a yönlendiren nazik fallback döner.
   }
 
   const { reply, handoff } = parseHandoff(rawReply);
 
+  // Boş cevap (API hatası / beklenmedik durum) → kullanıcıyı boşta bırakma:
+  // nazik bir mesaj + WhatsApp CTA dön.
   if (!reply) {
-    return NextResponse.json({ reply: '', handoff: false });
+    const fb = WA_CTA[locale] ?? WA_CTA.tr;
+    const fallbackText: Record<string, string> = {
+      tr: 'Şu an cevap veremedim, kusura bakma 🤙 Dilersen Volkan’a doğrudan WhatsApp’tan yazabilirsin.',
+      en: 'Sorry, I couldn’t respond just now 🤙 You can message Volkan directly on WhatsApp.',
+      bg: 'Извинявай, в момента не успях да отговоря 🤙 Можеш да пишеш на Волкан в WhatsApp.',
+      ro: 'Scuze, nu am putut răspunde acum 🤙 Îi poți scrie direct lui Volkan pe WhatsApp.',
+    };
+    return NextResponse.json({
+      reply: fallbackText[locale] ?? fallbackText.tr,
+      handoff: true,
+      whatsapp: buildWhatsappCta(fb.label, fb.prefill),
+    });
   }
 
   // d. persist the assistant reply
