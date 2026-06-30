@@ -4,7 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 import { fetchWindForecast } from '@/lib/openmeteo';
 import { scoreDay } from '@/lib/wind';
 import type { WindBand } from '@/lib/wind';
-import { buildClaudeMessages, type StoredMessage } from '@/lib/chatwoot';
+import { buildClaudeMessages, type StoredMessage } from '@/lib/agent-history';
+import { parseHandoff, buildWhatsappCta, type WhatsappCta } from '@/lib/handoff';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -15,8 +16,18 @@ function supabase() {
   );
 }
 
-const CW_BASE = process.env.CHATWOOT_BASE_URL ?? 'https://app.chatwoot.com';
-const BOT_TOKEN = process.env.CHATWOOT_BOT_TOKEN ?? '';
+// Limits to keep the public endpoint safe.
+const MAX_CONTENT_LEN = 2000;
+const MAX_CONV_ID_LEN = 100;
+const MAX_HISTORY = 40; // most recent turns replayed to Claude
+
+// WhatsApp CTA copy per language (shown on [[HANDOFF]]).
+const WA_CTA: Record<string, { label: string; prefill: string }> = {
+  tr: { label: 'WhatsApp’tan Volkan’a yaz', prefill: 'Merhaba! Volkite kitesurf ön kaydım hakkında yazıyorum.' },
+  en: { label: 'Message Volkan on WhatsApp', prefill: 'Hi! I’m writing about my Volkite kitesurf booking.' },
+  bg: { label: 'Пиши на Волкан в WhatsApp', prefill: 'Здравейте! Пиша относно моята резервация за кайтсърф във Volkite.' },
+  ro: { label: 'Scrie-i lui Volkan pe WhatsApp', prefill: 'Bună! Scriu despre rezervarea mea de kitesurf la Volkite.' },
+};
 
 // Static persona — cache_control: ephemeral keeps this in Anthropic's prompt cache
 const SYSTEM_STATIC = `
@@ -273,19 +284,9 @@ async function buildKnowledge(): Promise<string> {
   return lines.join('\n');
 }
 
-// ─── Chatwoot helper ──────────────────────────────────────────────────────────
-
-async function cw(path: string, body: Record<string, unknown>) {
-  return fetch(`${CW_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', api_access_token: BOT_TOKEN },
-    body: JSON.stringify(body),
-  });
-}
-
 // ─── Conversation history (Supabase) ───────────────────────────────────────────
-// Chatwoot bot tokens can't read the messages API, so we persist the thread
-// ourselves and replay it to Claude on every turn.
+// The widget sends a conversation_id; we persist the thread and replay it to
+// Claude on every turn so context is preserved.
 
 async function loadHistory(convId: string): Promise<StoredMessage[]> {
   try {
@@ -293,7 +294,9 @@ async function loadHistory(convId: string): Promise<StoredMessage[]> {
       .from('agent_messages')
       .select('role, content')
       .eq('conversation_id', convId)
-      .order('id', { ascending: true });
+      .order('created_at', { ascending: true })
+      .order('id', { ascending: true })
+      .limit(MAX_HISTORY);
     if (error) {
       console.log('history load failed:', error.message);
       return [];
@@ -322,67 +325,41 @@ async function saveMessages(
 }
 
 // ─── POST handler ──────────────────────────────────────────────────────────────
+// Direct call from our web chat widget: { conversation_id, content }.
 
 export async function POST(req: NextRequest) {
-  if (req.nextUrl.searchParams.get('secret') !== process.env.AGENT_SHARED_SECRET) {
-    return NextResponse.json({ ok: false }, { status: 401 });
+  let body: { conversation_id?: unknown; content?: unknown; locale?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const event = (await req.json()) as Record<string, any>;
+  const convId = typeof body.conversation_id === 'string' ? body.conversation_id.trim() : '';
+  const content = typeof body.content === 'string' ? body.content.trim() : '';
+  const locale = typeof body.locale === 'string' ? body.locale : 'tr';
 
-  console.log('CHATWOOT EVENT:', JSON.stringify(event));
-
-  if (event['event'] !== 'message_created') {
-    console.log('skip: event !== message_created (got:', event['event'], ')');
-    return NextResponse.json({ ok: true });
+  if (!convId || convId.length > MAX_CONV_ID_LEN) {
+    return NextResponse.json({ error: 'invalid_conversation_id' }, { status: 400 });
   }
-
-  // Chatwoot top-level message_type is "incoming"/"outgoing"/"activity" (string).
-  // Numeric 0 = incoming, 1 = outgoing, 2 = activity (fallback for older payloads).
-  // Also accept if first message in the messages array has numeric type 0.
-  const msgType = event['message_type'];
-  const isIncoming =
-    msgType === 'incoming' ||
-    msgType === 0 ||
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (event['messages'] as any[])?.[0]?.message_type === 0;
-
-  if (!isIncoming) {
-    console.log('skip: not incoming (message_type=', msgType, '— only incoming processed)');
-    return NextResponse.json({ ok: true });
+  if (!content) {
+    return NextResponse.json({ error: 'empty_content' }, { status: 400 });
   }
+  const userContent = content.slice(0, MAX_CONTENT_LEN);
 
-  const accountId = event['account']?.id ?? event['conversation']?.account_id;
-  const convId = event['conversation']?.id;
-  if (!convId || !accountId) {
-    console.log('skip: missing ids (convId=', convId, 'accountId=', accountId, ')');
-    return NextResponse.json({ ok: true });
-  }
+  // a. persist the incoming user message
+  await saveMessages(convId, [{ role: 'user', content: userContent }]);
 
-  if (event['conversation']?.status === 'open' && event['conversation']?.meta?.assignee) {
-    console.log('skip: human assignee present (conv=', convId, ')');
-    return NextResponse.json({ ok: true });
-  }
+  // b. load the conversation history (chronological)
+  const storedHistory = await loadHistory(convId);
 
-  // Replay the full thread to Claude: load persisted history from Supabase
-  // (bot tokens can't read Chatwoot's messages API) and append the new message.
-  const convKey = String(convId);
-  const currentContent = (event['content'] ?? '') as string;
-  const storedHistory = await loadHistory(convKey);
-  const baseMessages: Anthropic.MessageParam[] = buildClaudeMessages(storedHistory, currentContent);
-
-  if (baseMessages.length === 0) {
-    console.log('skip: no usable message content (conv=', convId, ')');
-    return NextResponse.json({ ok: true });
-  }
-
+  // c. build the Claude messages array (system prompt stays constant)
+  const baseMessages: Anthropic.MessageParam[] = buildClaudeMessages(storedHistory, userContent);
   const kb = await buildKnowledge();
 
   // Agentic loop — handles tool calls
   const msgs: Anthropic.MessageParam[] = [...baseMessages];
-  let finalReply = '';
-  let handoff = false;
+  let rawReply = '';
   const MAX_ITER = 5;
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
@@ -398,13 +375,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (aiRes.stop_reason === 'end_turn' || aiRes.stop_reason === 'stop_sequence') {
-      finalReply = aiRes.content
+      rawReply = aiRes.content
         .filter((b): b is Anthropic.TextBlock => b.type === 'text')
         .map((b) => b.text)
         .join('\n')
         .trim();
-      handoff = finalReply.includes('[[HANDOFF]]');
-      finalReply = finalReply.replace('[[HANDOFF]]', '').trim();
       break;
     }
 
@@ -432,33 +407,21 @@ export async function POST(req: NextRequest) {
     break;
   }
 
-  if (!finalReply) {
-    // Still persist the incoming message so context isn't lost on the next turn.
-    await saveMessages(convKey, [{ role: 'user', content: currentContent }]);
-    return NextResponse.json({ ok: true });
+  const { reply, handoff } = parseHandoff(rawReply);
+
+  if (!reply) {
+    return NextResponse.json({ reply: '', handoff: false });
   }
 
-  // Persist this turn (user message + our reply) for the next webhook.
-  await saveMessages(convKey, [
-    { role: 'user', content: currentContent },
-    { role: 'assistant', content: finalReply },
-  ]);
+  // d. persist the assistant reply
+  await saveMessages(convId, [{ role: 'assistant', content: reply }]);
 
-  await cw(`/api/v1/accounts/${accountId}/conversations/${convId}/messages`, {
-    content: finalReply,
-    message_type: 'outgoing',
-  });
-
+  // e. on handoff, attach a WhatsApp CTA
+  let whatsapp: WhatsappCta | undefined;
   if (handoff) {
-    await cw(`/api/v1/accounts/${accountId}/conversations/${convId}/toggle_status`, {
-      status: 'open',
-    });
-    await cw(`/api/v1/accounts/${accountId}/conversations/${convId}/messages`, {
-      content: '🤖→👤 Bot devretti: müşteri rezervasyon/ön kayıt aşamasında.',
-      message_type: 'outgoing',
-      private: true,
-    });
+    const cta = WA_CTA[locale] ?? WA_CTA.tr;
+    whatsapp = buildWhatsappCta(cta.label, cta.prefill);
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ reply, handoff, whatsapp });
 }

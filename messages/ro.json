@@ -323,7 +323,9 @@
     "status": "De obicei răspunde în câteva minute",
     "launcher": "Întreabă / Rezervă",
     "placeholder": "Întreabă orice...",
-    "soon": "Asistentul nostru vine în curând! Deocamdată contactează-ne prin telefon sau WhatsApp."
+    "greeting": "Bună! 🤙 Întreabă orice — kitesurf, pachete, vânt sau rezervare.",
+    "send": "Trimite",
+    "error": "A apărut o problemă, încearcă din nou. Sau WhatsApp: +90 533 241 10 15"
   },
   "meta": {
     "title": "Volkite Şcoala de Kitesurf | Gökçeada",

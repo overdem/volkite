@@ -1,10 +1,9 @@
 // Agent conversation history → Claude messages.
 //
-// Chatwoot agent bot tokens cannot read the messages API ("not authorized for
-// bots"), and the message_created webhook only carries the latest message. So
-// we persist history ourselves in Supabase (agent_messages) and replay the full
-// thread to Claude on every turn. This module shapes stored rows into a valid
-// Claude `messages` array.
+// Our web chat widget sends a browser-generated conversation_id with every
+// message. We persist the thread in Supabase (agent_messages) and replay it to
+// Claude on each turn so context is preserved. This module shapes stored rows
+// into a valid Claude `messages` array.
 
 export type ClaudeRole = 'user' | 'assistant';
 export type ClaudeMessage = { role: ClaudeRole; content: string };
