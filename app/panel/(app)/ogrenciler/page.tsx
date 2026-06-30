@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createAdminClient, getUserRole } from '@/lib/supabase-server';
+import { levelLabel, levelShort, levelColor } from '@/lib/level';
 import NewStudentForm from './NewStudentForm';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -11,11 +12,6 @@ const STATUS_COLOR: Record<string, string> = {
   prospect: 'bg-gray-100 text-gray-600',
   active: 'bg-green-100 text-green-800',
   completed: 'bg-blue-100 text-blue-800',
-};
-const LEVEL_TR: Record<string, string> = {
-  beginner: 'Başlangıç',
-  intermediate: 'Orta',
-  advanced: 'İleri',
 };
 
 export default async function OgrencilerPage() {
@@ -61,13 +57,18 @@ export default async function OgrencilerPage() {
                 className="block bg-white rounded-2xl p-4 shadow-sm active:opacity-70"
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-[#07283b]">{String(s.name)}</h3>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${levelColor(String(s.level ?? ''))}`}>
+                      {levelShort(String(s.level ?? ''))}
+                    </span>
+                    <h3 className="font-bold text-[#07283b]">{String(s.name)}</h3>
+                  </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLOR[String(s.status)] ?? ''}`}>
                     {STATUS_LABEL[String(s.status)] ?? String(s.status)}
                   </span>
                 </div>
                 <p className="text-xs text-[#3a5563] mt-0.5">
-                  {LEVEL_TR[String(s.level)] ?? String(s.level ?? '—')} · {String(s.contact ?? '—')}
+                  {levelLabel(String(s.level ?? ''))} · {String(s.contact ?? '—')}
                 </p>
               </Link>
             </li>
@@ -112,8 +113,15 @@ export default async function OgrencilerPage() {
           <tbody className="divide-y divide-[#e4e9ee]">
             {students.map((s) => (
               <tr key={String(s.id)} className="hover:bg-[#f5f7f9]">
-                <td className="px-6 py-3 font-medium text-[#07283b]">{String(s.name)}</td>
-                <td className="px-6 py-3 text-[#3a5563]">{LEVEL_TR[String(s.level)] ?? String(s.level ?? '—')}</td>
+                <td className="px-6 py-3 font-medium text-[#07283b]">
+                  <span className="inline-flex items-center gap-2">
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${levelColor(String(s.level ?? ''))}`}>
+                      {levelShort(String(s.level ?? ''))}
+                    </span>
+                    {String(s.name)}
+                  </span>
+                </td>
+                <td className="px-6 py-3 text-[#3a5563]">{levelLabel(String(s.level ?? ''))}</td>
                 <td className="px-6 py-3 text-[#3a5563]">{String(s.contact ?? '—')}</td>
                 <td className="px-6 py-3 text-[#3a5563] uppercase">{String(s.language ?? '—')}</td>
                 <td className="px-6 py-3">

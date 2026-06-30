@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase-server';
+import { levelShort, levelColor } from '@/lib/level';
 
 export default async function HocaToday({ instructorId }: { instructorId: string }) {
   const db = createAdminClient();
@@ -62,10 +63,12 @@ export default async function HocaToday({ instructorId }: { instructorId: string
             className="block bg-white rounded-2xl p-4 shadow-sm active:opacity-70 transition-opacity"
           >
             <div className="flex items-center justify-between mb-1">
-              <h2 className="font-bold text-[#07283b]">{String(s.name)}</h2>
-              <span className="text-xs uppercase tracking-wider text-[#8497a1] capitalize">
-                {String(s.level ?? '—')}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${levelColor(String(s.level ?? ''))}`}>
+                  {levelShort(String(s.level ?? ''))}
+                </span>
+                <h2 className="font-bold text-[#07283b]">{String(s.name)}</h2>
+              </div>
             </div>
             {next ? (
               <p className="text-sm text-[#3a5563]">

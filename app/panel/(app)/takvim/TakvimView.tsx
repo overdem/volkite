@@ -4,6 +4,7 @@ import { useState, useMemo, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { scoreHour, type WindBand, type HourBucket } from '@/lib/wind';
 import { istanbulToUtc, utcToIstanbulHourKey, type WindData, type HourSlot } from '@/lib/openmeteo';
+import { levelShort, levelColor, levelLabel } from '@/lib/level';
 import { createSession, cancelSession } from '../../actions';
 
 type Student = { id: string; name: string; level: string; instructorId: string | null };
@@ -12,6 +13,7 @@ type SessionItem = {
   id: string;
   studentId: string;
   studentName: string;
+  studentLevel: string | null;
   instructorId: string | null;
   scheduledAt: string;
   durationHours: number;
@@ -119,16 +121,20 @@ export default function TakvimView({
             >
               <option value="">Seç…</option>
               {students.map((s) => (
-                <option key={s.id} value={s.id}>{s.name} · {s.level}</option>
+                <option key={s.id} value={s.id}>{levelShort(s.level)} · {s.name}</option>
               ))}
             </select>
           </div>
-          {band && (
+          {band && selected && (
             <div className="bg-[#eef1f4] rounded-lg p-3 text-xs text-[#3a5563]">
-              <div className="font-bold text-[#07283b]">
-                {selected?.name} · {selected?.level}
+              <div className="flex items-center gap-2 font-bold text-[#07283b]">
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${levelColor(selected.level)}`}>
+                  {levelShort(selected.level)}
+                </span>
+                <span>{selected.name}</span>
+                <span className="text-[10px] text-[#8497a1] font-normal">({levelLabel(selected.level)})</span>
               </div>
-              <div>İdeal {band.ideal_kn}kn · {band.min_kn}–{band.max_kn}kn · hamle ≤ {band.max_gust_kn}kn</div>
+              <div className="mt-1">İdeal {band.ideal_kn}kn · {band.min_kn}–{band.max_kn}kn · hamle ≤ {band.max_gust_kn}kn</div>
             </div>
           )}
         </div>
@@ -255,7 +261,10 @@ function DayBlock({
               </div>
               {session ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#062131] bg-white border border-[#14b8cf]/40 px-2 py-1 rounded-full">
+                  <span className="text-xs font-bold text-[#062131] bg-white border border-[#14b8cf]/40 px-2 py-1 rounded-full flex items-center gap-1.5">
+                    <span className={`text-[9px] font-bold px-1 py-0 rounded ${levelColor(session.studentLevel)}`}>
+                      {levelShort(session.studentLevel)}
+                    </span>
                     {session.studentName}
                     {session.status === 'done' && ' ✓'}
                   </span>

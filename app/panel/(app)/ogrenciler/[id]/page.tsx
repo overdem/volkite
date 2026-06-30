@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase-server';
+import { levelLabel, levelShort, levelColor } from '@/lib/level';
 import StudentTabs from './StudentTabs';
 
 async function getStudent(id: string) {
@@ -35,10 +36,13 @@ export default async function StudentDetailPage({
 
   return (
     <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#07283b]">{data.student.name}</h1>
-        <p className="text-sm text-[#8497a1] mt-0.5">
-          {data.student.level ?? 'seviye belirsiz'} &middot; {data.student.contact ?? '—'}
+      <div className="mb-6 flex items-center gap-3 flex-wrap">
+        <span className={`text-xs font-bold px-2 py-1 rounded ${levelColor(data.student.level as string | null)}`}>
+          {levelShort(data.student.level as string | null)}
+        </span>
+        <h1 className="text-2xl font-bold text-[#07283b]">{data.student.name as string}</h1>
+        <p className="text-sm text-[#8497a1]">
+          {levelLabel(data.student.level as string | null)} &middot; {(data.student.contact as string | null) ?? '—'}
         </p>
       </div>
 

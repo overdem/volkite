@@ -48,7 +48,7 @@ export default async function TakvimPage() {
 
   let sessQ = db
     .from('sessions')
-    .select('id, student_id, instructor_id, scheduled_at, duration_hours, status, note, students(name)')
+    .select('id, student_id, instructor_id, scheduled_at, duration_hours, status, note, students(name, level)')
     .gte('scheduled_at', fromIso)
     .lte('scheduled_at', to.toISOString())
     .in('status', ['planned', 'done'])
@@ -56,16 +56,20 @@ export default async function TakvimPage() {
   if (role === 'instructor') sessQ = sessQ.eq('instructor_id', userId);
   const { data: rawSessions } = await sessQ;
 
-  const sessions = (rawSessions ?? []).map((s) => ({
-    id: String(s.id),
-    studentId: String(s.student_id),
-    studentName: (s.students as unknown as { name?: string } | null)?.name ?? '—',
-    instructorId: s.instructor_id ? String(s.instructor_id) : null,
-    scheduledAt: String(s.scheduled_at),
-    durationHours: Number(s.duration_hours ?? 1.5),
-    status: String(s.status),
-    note: (s.note as string | null) ?? null,
-  }));
+  const sessions = (rawSessions ?? []).map((s) => {
+    const st = s.students as unknown as { name?: string; level?: string } | null;
+    return {
+      id: String(s.id),
+      studentId: String(s.student_id),
+      studentName: st?.name ?? '—',
+      studentLevel: st?.level ?? null,
+      instructorId: s.instructor_id ? String(s.instructor_id) : null,
+      scheduledAt: String(s.scheduled_at),
+      durationHours: Number(s.duration_hours ?? 1.5),
+      status: String(s.status),
+      note: (s.note as string | null) ?? null,
+    };
+  });
 
   // Open-Meteo
   const [current, hourly] = await Promise.all([fetchWind(), fetchHourlyForecast()]);
