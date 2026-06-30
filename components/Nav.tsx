@@ -59,7 +59,7 @@ export default function Nav() {
     >
       {/* Logo */}
       <a href={isLanding ? '#top' : '/'} aria-label="Volkite Kiteboard Okulu" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
-        <Image src="/images/volkite-logo-white.svg" alt="Volkite" height={28} width={112} style={{ height: '28px', width: 'auto' }} priority />
+        <Image src="/images/volkite-logo-white.svg" alt="Volkite" height={44} width={210} style={{ height: '44px', width: 'auto' }} priority />
       </a>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>

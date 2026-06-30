@@ -19,7 +19,7 @@ export default function Footer() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 'clamp(32px,5vw,60px)', marginBottom: '48px' }}>
           <div>
             <div style={{ marginBottom: '12px' }}>
-              <Image src="/images/volkite-logo-white.svg" alt="Volkite" height={28} width={112} style={{ height: '28px', width: 'auto' }} />
+              <Image src="/images/volkite-logo-white.svg" alt="Volkite" height={48} width={228} style={{ height: '48px', width: 'auto' }} />
             </div>
             <p style={{ fontSize: '14px', lineHeight: 1.65, color: '#9fc0cf', maxWidth: '260px' }}>{t('tag')}</p>
             <div style={{ display: 'flex', gap: '14px', marginTop: '20px' }}>
