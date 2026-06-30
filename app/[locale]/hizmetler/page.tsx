@@ -60,12 +60,6 @@ export default async function HizmetlerPage({
         {/* Hero */}
         <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)' }}>
           <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-            <Link
-              href="/"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#9fc0cf', textDecoration: 'none', fontSize: '14px', fontWeight: 700, marginBottom: '40px' }}
-            >
-              {t('back')}
-            </Link>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
               {t('kicker')}
             </div>
