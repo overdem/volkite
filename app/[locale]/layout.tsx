@@ -64,8 +64,8 @@ export default async function LocaleLayout({
       <body className="min-h-full font-body antialiased">
         <NextIntlClientProvider messages={messages}>
           {children}
+          <ChatWidget />
         </NextIntlClientProvider>
-        <ChatWidget />
       </body>
     </html>
   );
