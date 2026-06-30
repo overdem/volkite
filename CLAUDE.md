@@ -42,7 +42,9 @@ Faza özel:
 
 **Faz 0 — İskelet & altyapı.** Next.js 15 (App Router, TS, Tailwind) + next-intl (tr/en/bg/ro) + Supabase bağlantısı + GitHub repo + GitHub Actions CI + design token'lar (`volkite-build-brief.md` §2) + `.env`. `/` render oluyor, CI yeşil. → ONAY.
 
-**Faz 1 — Herkese açık site (statik, tek sayfa).** Anasayfa Claude Design export'uyla birebir: nav→hero(canlı rüzgâr chip)→stats→hakkımızda→eğitimler→trust→hizmetler→galeri→spot→yorumlar→konaklama→mutfak→sss→instagram→rezervasyon(lead form)→footer→chat widget. 4 dil + responsive + a11y. Önce hardcoded içerik (tasarımın sözlüğünden). → ONAY.
+**Faz 1 — Herkese açık site (statik, tek sayfa landing).** Anasayfa Claude Design export'uyla birebir: nav→hero(canlı rüzgâr chip)→stats→hakkımızda→eğitimler→trust→hizmetler→galeri→spot→yorumlar→konaklama→mutfak→sss→instagram→rezervasyon(lead form)→footer→chat widget. 4 dil + responsive + a11y. Önce hardcoded içerik (tasarımın sözlüğünden). → ONAY.
+
+**Faz 1B — Detay alt sayfalar (SEO).** `volkite-icerik.md` içeriğinden, aynı tasarım diliyle (DESIGN-TOKENS.md): `/egitimler` (3 program tam müfredat + fiyat), `/hizmetler` (tüm hizmet + masaj fiyatları), `/spot-ruzgar` (rüzgâr + alan + neden Gökçeada), `/hakkimizda` (tarihçe + ekip), `/mutfak`. Dinamik veri (paket/hizmet/faq) Supabase'den, statik metin next-intl. Landing'deki ilgili bölümler bu sayfalara "devamını oku" ile bağlanır. hreflang + eski URL 301'leri bu sayfalara. → ONAY. *(Faz 1–3'ten bağımsız; istediğin sırada koşulabilir — şimdi koşmak mantıklı çünkü içerik hazır.)*
 
 **Faz 2 — Supabase içerik.** Şema + seed (gerçek fiyatlar: 10s paket 700€, saatlik 80€, kiralama 80€, depolama 5€/gün; konaklama 25€/15€) + RLS + site canlı veriden okuyor + i18n (TR/EN tam, BG/RO EN'e fallback) + eski URL 301'leri + SEO/hreflang/doğrulama metaları. → ONAY.
 

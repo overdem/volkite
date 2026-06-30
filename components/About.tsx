@@ -22,9 +22,9 @@ export default function About() {
             </a>
             <Link
               href="/hakkimizda"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 800, color: '#07283b', borderBottom: '3px solid rgba(7,40,59,.25)', paddingBottom: '4px', textDecoration: 'none', opacity: 0.75 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(20,184,207,.14)', border: '1px solid rgba(20,184,207,.5)', color: '#14b8cf', fontWeight: 800, padding: '13px 24px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
             >
-              {t('read_more')}
+              {t('read_more')} →
             </Link>
           </div>
         </div>
