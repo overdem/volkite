@@ -20,42 +20,66 @@ export default function MediaUploader({ students }: { students: Student[] }) {
     setError('');
     setDone(false);
     setProgress(0);
-    if (!studentId) {
-      setError('Öğrenci seçin');
-      return;
-    }
-    if (!file) {
-      setError('Dosya seçin');
-      return;
-    }
+    if (!studentId) { setError('Öğrenci seçin'); return; }
+    if (!file) { setError('Dosya seçin'); return; }
+
     startTransition(async () => {
       try {
-        const fd = new FormData();
-        fd.append('studentId', studentId);
-        fd.append('type', type);
-        fd.append('file', file);
+        // 1) Presign
+        const presignRes = await fetch('/api/admin/upload?step=presign', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            studentId,
+            filename: file.name,
+            contentType: file.type || 'application/octet-stream',
+          }),
+        });
+        const presign: { uploadUrl?: string; key?: string; error?: string } = await presignRes
+          .json()
+          .catch(() => ({ error: `Presign yanıtı bozuk (${presignRes.status})` }));
+        if (!presignRes.ok || !presign.uploadUrl || !presign.key) {
+          setError(presign.error ?? `Presign başarısız (${presignRes.status})`);
+          return;
+        }
 
-        const xhr = new XMLHttpRequest();
-        xhr.upload.onprogress = (ev) => {
-          if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100));
-        };
-
-        const result: { ok?: boolean; error?: string } = await new Promise((resolve) => {
-          xhr.onload = () => {
-            try {
-              resolve(JSON.parse(xhr.responseText));
-            } catch {
-              resolve({ error: `Sunucu yanıtı geçersiz (${xhr.status})` });
-            }
+        // 2) Doğrudan R2'ye PUT — R2 CORS açık olmalı
+        const putOk: { ok: boolean; status: number; statusText: string } = await new Promise((resolve) => {
+          const xhr = new XMLHttpRequest();
+          xhr.upload.onprogress = (ev) => {
+            if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100));
           };
-          xhr.onerror = () => resolve({ error: 'Ağ hatası' });
-          xhr.open('POST', '/api/admin/upload');
-          xhr.send(fd);
+          xhr.onload = () => resolve({ ok: xhr.status >= 200 && xhr.status < 300, status: xhr.status, statusText: xhr.statusText });
+          xhr.onerror = () => resolve({ ok: false, status: 0, statusText: 'CORS ya da ağ hatası' });
+          xhr.open('PUT', presign.uploadUrl!);
+          xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+          xhr.send(file);
         });
 
-        if (!result.ok) {
-          setError(result.error ?? 'Bilinmeyen hata');
+        if (!putOk.ok) {
+          if (putOk.status === 0) {
+            setError(
+              'R2 CORS engeli. Cloudflare R2 dashboard → bucket → Settings → CORS Policy ekle. ' +
+              '(Tarayıcı konsolu detay verir.)'
+            );
+          } else {
+            setError(`R2 yüklemesi başarısız: ${putOk.status} ${putOk.statusText}`);
+          }
           setProgress(0);
+          return;
+        }
+
+        // 3) Commit (DB kaydı)
+        const commitRes = await fetch('/api/admin/upload?step=commit', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ studentId, key: presign.key, type }),
+        });
+        const commit: { ok?: boolean; error?: string } = await commitRes
+          .json()
+          .catch(() => ({ error: `Commit yanıtı bozuk (${commitRes.status})` }));
+        if (!commitRes.ok || !commit.ok) {
+          setError(commit.error ?? `Commit başarısız (${commitRes.status})`);
           return;
         }
 
@@ -63,12 +87,11 @@ export default function MediaUploader({ students }: { students: Student[] }) {
         setFile(null);
         setStudentId('');
         setProgress(0);
-        // Reset file input
-        const fileInput = document.getElementById('media-file-input') as HTMLInputElement | null;
-        if (fileInput) fileInput.value = '';
+        const fi = document.getElementById('media-file-input') as HTMLInputElement | null;
+        if (fi) fi.value = '';
         router.refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Hata');
+        setError(err instanceof Error ? err.message : 'Beklenmeyen hata');
         setProgress(0);
       }
     });
@@ -125,7 +148,7 @@ export default function MediaUploader({ students }: { students: Student[] }) {
       )}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          <p className="text-sm text-red-700">{error}</p>
+          <p className="text-sm text-red-700 whitespace-pre-wrap">{error}</p>
         </div>
       )}
       {done && <p className="text-sm text-green-700">✓ Yüklendi ve öğrenciye atandı</p>}
@@ -136,9 +159,6 @@ export default function MediaUploader({ students }: { students: Student[] }) {
       >
         {pending ? `Yükleniyor… ${progress}%` : 'Yükle ve Ata'}
       </button>
-      <p className="text-xs text-[#8497a1]">
-        Maks. dosya boyutu: ~50 MB. Daha büyük videolar için Cloudflare R2 CORS ile doğrudan yükleme gerekli (ileride).
-      </p>
     </form>
   );
 }

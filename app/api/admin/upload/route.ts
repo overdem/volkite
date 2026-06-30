@@ -1,13 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getUserRole, createAdminClient } from '@/lib/supabase-server';
-import { uploadObject, buildMediaKey, r2Configured } from '@/lib/r2';
+import { signedUploadUrl, buildMediaKey, r2Configured } from '@/lib/r2';
 
-// Vercel function body limiti yükselt (büyük foto/video için)
-export const maxDuration = 60;
-
-// multipart/form-data: file, studentId, type
-// → 200 { ok: true, mediaId, key }
-// Server üzerinden R2'ye yükler (CORS gerekmez).
+// İki aşamalı: önce presign al → tarayıcıdan doğrudan R2'ye PUT (CORS gerekli, Vercel body limiti yok).
+//
+// 1) POST /api/admin/upload?step=presign  body: { studentId, filename, contentType, type }
+//    → 200 { uploadUrl, key }
+// 2) POST /api/admin/upload?step=commit   body: { studentId, key, type }
+//    → 200 { ok, mediaId }
 export async function POST(req: NextRequest) {
   const { role, userId } = await getUserRole();
   if (role !== 'admin' || !userId) {
@@ -20,49 +20,51 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let form: FormData;
-  try {
-    form = await req.formData();
-  } catch {
-    return NextResponse.json({ error: 'multipart/form-data bekleniyor' }, { status: 400 });
+  const step = req.nextUrl.searchParams.get('step') ?? 'presign';
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Geçersiz JSON' }, { status: 400 });
   }
 
-  const file = form.get('file');
-  const studentId = String(form.get('studentId') ?? '');
-  const type = String(form.get('type') ?? 'photo') === 'video' ? 'video' : 'photo';
-
-  if (!(file instanceof File)) {
-    return NextResponse.json({ error: 'Dosya gerekli' }, { status: 400 });
-  }
-  if (!studentId) {
-    return NextResponse.json({ error: 'studentId gerekli' }, { status: 400 });
-  }
-
-  const key = buildMediaKey(studentId, file.name);
-  const ab = await file.arrayBuffer();
-  const ct = file.type || 'application/octet-stream';
-
-  const ok = await uploadObject(key, ab, ct);
-  if (!ok) {
-    return NextResponse.json({ error: 'R2 yüklemesi başarısız oldu (sunucu logunu kontrol et)' }, { status: 500 });
+  if (step === 'presign') {
+    const studentId = String(body.studentId ?? '');
+    const filename = String(body.filename ?? '');
+    const contentType = String(body.contentType ?? 'application/octet-stream');
+    if (!studentId || !filename) {
+      return NextResponse.json({ error: 'studentId ve filename gerekli' }, { status: 400 });
+    }
+    const key = buildMediaKey(studentId, filename);
+    const uploadUrl = await signedUploadUrl(key, contentType);
+    if (!uploadUrl) {
+      return NextResponse.json({ error: 'Presigned URL üretilemedi' }, { status: 500 });
+    }
+    return NextResponse.json({ uploadUrl, key });
   }
 
-  const db = createAdminClient();
-  const { data: media, error } = await db
-    .from('student_media')
-    .insert({
-      student_id: studentId,
-      type,
-      r2_key: key,
-      assigned_by: userId,
-      downloadable: false,
-    })
-    .select('id')
-    .single();
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (step === 'commit') {
+    const studentId = String(body.studentId ?? '');
+    const key = String(body.key ?? '');
+    const type = body.type === 'video' ? 'video' : 'photo';
+    if (!studentId || !key) {
+      return NextResponse.json({ error: 'studentId ve key gerekli' }, { status: 400 });
+    }
+    const db = createAdminClient();
+    const { data: media, error } = await db
+      .from('student_media')
+      .insert({
+        student_id: studentId,
+        type,
+        r2_key: key,
+        assigned_by: userId,
+        downloadable: false,
+      })
+      .select('id')
+      .single();
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true, mediaId: media.id });
   }
 
-  return NextResponse.json({ ok: true, mediaId: media.id, key });
+  return NextResponse.json({ error: 'Bilinmeyen step' }, { status: 400 });
 }
