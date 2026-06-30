@@ -3,7 +3,6 @@ import { createAuthClient, createAdminClient } from '@/lib/supabase-server';
 import { logout } from '../actions';
 import PanelNav from '../PanelNav';
 import type { Metadata } from 'next';
-
 export const metadata: Metadata = { title: 'Volkite Panel', robots: 'noindex' };
 
 async function getPendingCount() {
@@ -30,9 +29,8 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   const pendingCount = await getPendingCount();
 
   return (
-    <html lang="tr" className="h-full">
-      <body className="h-full flex font-body antialiased bg-[#eef1f4]">
-        <aside className="w-56 shrink-0 flex flex-col bg-[#062131] text-[#dceaf0]">
+    <div className="h-full flex font-body bg-[#eef1f4]">
+      <aside className="w-56 shrink-0 flex flex-col bg-[#062131] text-[#dceaf0]">
           <div className="px-5 py-6 border-b border-white/10">
             <span className="font-display text-xl tracking-wider text-[#14b8cf]">VOLKITE</span>
             <p className="text-xs text-[#9fc0cf] mt-0.5">Hoca Paneli</p>
@@ -51,7 +49,6 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         </aside>
 
         <main className="flex-1 overflow-auto">{children}</main>
-      </body>
-    </html>
+    </div>
   );
 }
