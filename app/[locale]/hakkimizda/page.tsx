@@ -80,10 +80,10 @@ export default async function HakkimizdaPage({
               Volkite Kiteboard Okulu olarak 21. yılımızı kutluyoruz! Biz eksilmeyen sporcu ruhumuz ve 21 senelik eğitmenlik deneyimimizle her geçen yıl kendimizi daha da geliştirerek, öğrencilerimize en iyi kitesurf deneyimini sunmayı hedefliyoruz.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563', marginBottom: '20px' }}>
-              Gökçeada'nın eşsiz rüzgarları ve turkuaz sularında, deneyimli eğitmen kadromuzla binlerce öğrenciye kitesurf sevgisini aşıladık. IKO (International Kiteboarding Organization) sertifikalı eğitmenlerimizle, güvenli ve eğlenceli bir öğrenme ortamı sunuyoruz.
+              Gökçeada’nın eşsiz rüzgarları ve turkuaz sularında, deneyimli eğitmen kadromuzla binlerce öğrenciye kitesurf sevgisini aşıladık. IKO (International Kiteboarding Organization) sertifikalı eğitmenlerimizle, güvenli ve eğlenceli bir öğrenme ortamı sunuyoruz.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
-              Türkiye'nin kitesurf başkenti Gökçeada'da, Kefaloz Koyu'nun sakin sularında 2000 yılından bu yana faaliyet gösteriyoruz. Hem yeni başlayanlar hem de deneyimli sporcular için kapsamlı programlarımız ile rüzgarın ve özgürlüğün tadını çıkarmanızı sağlıyoruz.
+              Türkiye’nin kitesurf başkenti Gökçeada’da, Kefaloz Koyu’nun sakin sularında 2000 yılından bu yana faaliyet gösteriyoruz. Hem yeni başlayanlar hem de deneyimli sporcular için kapsamlı programlarımız ile rüzgarın ve özgürlüğün tadını çıkarmanızı sağlıyoruz.
             </p>
           </div>
         </section>
@@ -132,18 +132,18 @@ export default async function HakkimizdaPage({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 'clamp(36px,5vw,64px)', alignItems: 'start' }}>
               <div>
                 <div style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: '36px', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '28px', left: '28px', fontSize: '64px', lineHeight: 1, color: '#14b8cf', opacity: 0.3, fontFamily: 'Anton, Impact, sans-serif' }}>"</div>
+                  <div style={{ position: 'absolute', top: '28px', left: '28px', fontSize: '64px', lineHeight: 1, color: '#14b8cf', opacity: 0.3, fontFamily: 'Anton, Impact, sans-serif' }}>“</div>
                   <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.8, marginBottom: '20px', paddingTop: '24px' }}>
-                    1977 yılında İstanbul'da doğdum. Gençliğimden beri deniz ve rüzgar benim için sadece doğa unsurları değil, yaşam biçiminin parçasıydı. Windsürf ile başlayan su sporları serüvenim, kitesurf ile bambaşka bir boyut kazandı.
+                    1977 yılında İstanbul’da doğdum. Gençliğimden beri deniz ve rüzgar benim için sadece doğa unsurları değil, yaşam biçiminin parçasıydı. Windsürf ile başlayan su sporları serüvenim, kitesurf ile bambaşka bir boyut kazandı.
                   </p>
                   <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.8, marginBottom: '20px' }}>
-                    2000 yılında Gökçeada'ya ilk geldiğimde, adanın kitesurf için sahip olduğu potansiyeli hemen fark ettim. Poyraz rüzgarı, sığ ve güvenli koy, el değmemiş doğa... Bunun bir okul için mükemmel zemin olduğunu anlamak çok sürmedi.
+                    2000 yılında Gökçeada’ya ilk geldiğimde, adanın kitesurf için sahip olduğu potansiyeli hemen fark ettim. Poyraz rüzgarı, sığ ve güvenli koy, el değmemiş doğa... Bunun bir okul için mükemmel zemin olduğunu anlamak çok sürmedi.
                   </p>
                   <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.8, marginBottom: '20px' }}>
-                    IKO eğitmenlik lisansımı aldıktan sonra Volkite'i kurdum. İlk yıllarda küçük gruplarla başladık. Zamanla büyüdük, ekibimizi geliştirdik. Ama hiçbir zaman değişmeyen bir şey var: her öğrenciye verdiğimiz özel ilgi ve güvenliği ön planda tutma anlayışımız.
+                    IKO eğitmenlik lisansımı aldıktan sonra Volkite’i kurdum. İlk yıllarda küçük gruplarla başladık. Zamanla büyüdük, ekibimizi geliştirdik. Ama hiçbir zaman değişmeyen bir şey var: her öğrenciye verdiğimiz özel ilgi ve güvenliği ön planda tutma anlayışımız.
                   </p>
                   <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.8 }}>
-                    21 yılda 2 000'den fazla öğrenci yetiştirdik. Bazıları bugün milli takımda yarışıyor, bazıları dünya turuna çıkmış kiter'lar oldu. Hepsinin yolculuğuna ortak olmuş olmak, bu işi yapmaya devam etmemin en büyük sebebi.
+                    21 yılda 2 000’den fazla öğrenci yetiştirdik. Bazıları bugün milli takımda yarışıyor, bazıları dünya turuna çıkmış kiter’lar oldu. Hepsinin yolculuğuna ortak olmuş olmak, bu işi yapmaya devam etmemin en büyük sebebi.
                   </p>
                   <div style={{ marginTop: '28px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,.1)' }}>
                     <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '22px', color: '#fbf6ec' }}>Volkan Günel</div>

@@ -139,7 +139,7 @@ export default async function EgitimlerPage({
               Neden Volkite?
             </div>
             <p style={{ fontSize: '18px', lineHeight: 1.8, color: '#3a5563', marginBottom: '20px' }}>
-              Daha fazla ertelemeden, hayatına yeni bir pencere aç! Volkite olarak kitesurf öğrenmeyi hem güvenli hem de çok eğlenceli hale getirmek için buradayız. IKO sertifikalı eğitmenlerimiz ve Gökçeada'nın eşsiz doğasıyla seni bekliyoruz.
+              Daha fazla ertelemeden, hayatına yeni bir pencere aç! Volkite olarak kitesurf öğrenmeyi hem güvenli hem de çok eğlenceli hale getirmek için buradayız. IKO sertifikalı eğitmenlerimiz ve Gökçeada’nın eşsiz doğasıyla seni bekliyoruz.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
               Her seviyeye uygun programlarımızla, sıfır deneyimden profesyonel sürüşe uzanan yolculuğun her adımında yanındayız. Küçük gruplar, birebir dikkat ve gerçek bir sporcu deneyimi — bunlar Volkite farkı.

@@ -116,7 +116,7 @@ export default async function MutfakPage({
               {t('desc')}
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563', marginBottom: '20px' }}>
-              Cafe On Shore, Kefaloz Koyu'na sıfır konumda, kitesurf okulunun hemen yanı başında yer alıyor. Sabah kahvaltısından gece birlikte biten günlere kadar her saatte açık — ders aralarında, akşam sohbetlerinde, doğum günlerinde.
+              Cafe On Shore, Kefaloz Koyu’na sıfır konumda, kitesurf okulunun hemen yanı başında yer alıyor. Sabah kahvaltısından gece birlikte biten günlere kadar her saatte açık — ders aralarında, akşam sohbetlerinde, doğum günlerinde.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
               Mutfağımızı Big Mama Deniz Gönül yönetiyor. Şeflerimiz Sezen ve Zeynep, mevsimsel malzemelerle her gün taze pişiriyor. Menü sabit değil — hava nasılsa, rüzgar ne diyorsa, bugünün özel yemeği de ona göre şekilleniyor.
