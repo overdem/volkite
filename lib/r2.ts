@@ -46,6 +46,25 @@ export async function signedUploadUrl(key: string, contentType: string): Promise
   }
 }
 
+// R2'den nesneyi Buffer olarak indir (filigran üretimi için)
+export async function getObjectBuffer(key: string): Promise<Buffer | null> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET;
+  if (!client || !bucket) return null;
+  try {
+    const out = await client.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+    if (!out.Body) return null;
+    const chunks: Uint8Array[] = [];
+    for await (const chunk of out.Body as AsyncIterable<Uint8Array>) {
+      chunks.push(chunk);
+    }
+    return Buffer.concat(chunks);
+  } catch (err) {
+    console.error('R2 getObject failed:', err);
+    return null;
+  }
+}
+
 // Sunucu üzerinden doğrudan R2'ye yükle (CORS gerekmez)
 export async function uploadObject(
   key: string,

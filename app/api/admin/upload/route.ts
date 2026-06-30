@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getUserRole, createAdminClient } from '@/lib/supabase-server';
-import { signedUploadUrl, buildMediaKey, r2Configured } from '@/lib/r2';
+import { signedUploadUrl, buildMediaKey, r2Configured, getObjectBuffer, uploadObject } from '@/lib/r2';
+import { generateWatermarkedPreview, previewKeyFor } from '@/lib/watermark';
 
 // İki aşamalı: önce presign al → tarayıcıdan doğrudan R2'ye PUT (CORS gerekli, Vercel body limiti yok).
 //
@@ -63,7 +64,30 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ ok: true, mediaId: media.id });
+
+    // Foto için filigranlı önizleme üret (video için MVP'de atla)
+    let watermarkStatus: 'ok' | 'skipped' | 'error' = 'skipped';
+    if (type === 'photo') {
+      try {
+        const original = await getObjectBuffer(key);
+        if (original) {
+          const preview = await generateWatermarkedPreview(original);
+          const previewKey = previewKeyFor(key);
+          const ok = await uploadObject(previewKey, preview, 'image/jpeg');
+          if (ok) {
+            await db.from('student_media').update({ preview_key: previewKey }).eq('id', media.id);
+            watermarkStatus = 'ok';
+          } else {
+            watermarkStatus = 'error';
+          }
+        }
+      } catch (err) {
+        console.error('Watermark pipeline failed:', err);
+        watermarkStatus = 'error';
+      }
+    }
+
+    return NextResponse.json({ ok: true, mediaId: media.id, watermark: watermarkStatus });
   }
 
   return NextResponse.json({ error: 'Bilinmeyen step' }, { status: 400 });

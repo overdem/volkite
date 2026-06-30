@@ -63,29 +63,31 @@ type MediaItem = {
 };
 
 function MediaCard({ media }: { media: MediaItem }) {
-  const previewUrl = media.preview_key
-    ? `https://${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${media.preview_key}`
-    : null;
+  // Önizleme imzalı URL ile API üzerinden gelir (sahiplik kontrolü server tarafında)
+  const previewUrl = media.preview_key ? `/api/student/preview/${media.id}` : null;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm overflow-hidden group">
       {/* Preview */}
-      <div className="aspect-square bg-[#eef1f4] relative flex items-center justify-center">
+      <div className="aspect-square bg-[#eef1f4] relative flex items-center justify-center select-none">
         {previewUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={previewUrl}
             alt="Medya önizleme"
-            className="w-full h-full object-cover"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            className="w-full h-full object-cover pointer-events-none"
           />
         ) : (
           <span className="text-4xl">{media.type === 'video' ? '🎬' : '📷'}</span>
         )}
 
-        {/* Lock overlay for non-downloadable */}
+        {/* Kilit rozeti — non-downloadable */}
         {!media.downloadable && (
-          <div className="absolute inset-0 bg-[#062131]/60 flex items-center justify-center">
-            <span className="text-2xl">🔒</span>
+          <div className="absolute top-2 right-2 bg-[#062131]/85 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+            <span>🔒</span>
+            <span>Kilitli</span>
           </div>
         )}
       </div>
