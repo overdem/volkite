@@ -6,6 +6,7 @@ import { scoreDay } from '@/lib/wind';
 import type { WindBand } from '@/lib/wind';
 import { buildClaudeMessages, type StoredMessage } from '@/lib/agent-history';
 import { parseHandoff, buildWhatsappCta, type WhatsappCta } from '@/lib/handoff';
+import { getSystemPrompt } from '@/lib/agent-prompt';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -40,8 +41,8 @@ const WA_CTA: Record<string, { label: string; prefill: string }> = {
   ro: { label: 'Scrie-i lui Volkan pe WhatsApp', prefill: 'Bună! Scriu despre rezervarea mea de kitesurf la Volkite.' },
 };
 
-// Static persona — kaynak: volkite-web-ajan.md §1 (Volkan'ın resmi metni).
-// cache_control: ephemeral keeps this in Anthropic's prompt cache.
+// Fallback persona — kaynak: volkite-web-ajan.md §1. Canlı prompt Supabase
+// ai_prompts (key='web-agent') tablosundan gelir; Supabase erişilemezse buraya düşülür.
 const SYSTEM_STATIC = `
 # KİMLİK
 Sen Volkite'ın dijital asistanısın. Gökçeada Kefaloz koyundaki kitesurf okulumuzun sesisin — kurucu Volkan Günel ve ekibin sıcak, samimi "biz/okulumuz" ağzıyla konuşursun. Ege misafirperverliği: içten, rahat, davetkâr, asla zorlayıcı değil. Ara ara hafif bir 🤙 kullanabilirsin, abartma.
@@ -392,7 +393,7 @@ export async function POST(req: NextRequest) {
 
   // c. build the Claude messages array (system prompt stays constant)
   const baseMessages: Anthropic.MessageParam[] = buildClaudeMessages(storedHistory, userContent);
-  const kb = await buildKnowledge();
+  const [systemPrompt, kb] = await Promise.all([getSystemPrompt(SYSTEM_STATIC), buildKnowledge()]);
 
   // Agentic loop — handles tool calls
   const msgs: Anthropic.MessageParam[] = [...baseMessages];
@@ -404,7 +405,7 @@ export async function POST(req: NextRequest) {
       model: AGENT_MODEL,
       max_tokens: 400,
       system: [
-        { type: 'text', text: SYSTEM_STATIC, cache_control: { type: 'ephemeral' } },
+        { type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } },
         { type: 'text', text: kb },
         { type: 'text', text: `# SİTE DİLİ\no anki site dili (locale): ${locale} — ${LOCALE_NAME[locale] ?? 'English'}. İlk cevabını bu dilde ver; sonra kullanıcının yazdığı dile uy.` },
       ],
