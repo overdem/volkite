@@ -1,5 +1,28 @@
 -- Volkite · Takvim modülü — sessions (planlanan/yapılan dersler)
 
+-- ─── Helper fonksiyonlar (006'da da tanımlıdır; idempotent) ─────────────────
+create or replace function is_admin()
+returns boolean language sql stable security definer as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin' and active = true
+  );
+$$;
+
+create or replace function is_instructor()
+returns boolean language sql stable security definer as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'instructor' and active = true
+  );
+$$;
+
+create or replace function current_student_id()
+returns uuid language sql stable security definer as $$
+  select id from public.students where email = auth.email() limit 1;
+$$;
+
+-- ─── sessions tablosu ──────────────────────────────────────────────────────
 create table if not exists sessions (
   id                 uuid primary key default gen_random_uuid(),
   student_id         uuid references students(id) on delete cascade not null,
