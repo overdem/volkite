@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   updateStudent, updateLesson, addPayment, togglePaymentPaid, toggleMediaDownloadable,
   completeSession, cancelSession,
@@ -67,7 +68,7 @@ function SessionsTab({ sessions, lessons }: { sessions: SessionItem[]; lessons: 
         </h3>
         {planned.length === 0 ? (
           <div className="bg-white rounded-2xl p-6 text-center text-sm text-[#8497a1] shadow-sm">
-            Henüz planlanmış ders yok. <a href="/panel/takvim" className="text-[#14b8cf] font-bold">Takvim'den planla →</a>
+            Henüz planlanmış ders yok. <Link href="/panel/takvim" className="text-[#14b8cf] font-bold">Takvim’den planla →</Link>
           </div>
         ) : (
           <div className="space-y-2">

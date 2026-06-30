@@ -96,19 +96,19 @@ export default async function SpotRuzgarPage({
         <section style={{ background: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '24px' }}>
-              Gökçeada'yı Keşfet
+              Gökçeada’yı Keşfet
             </div>
             <p style={{ fontSize: '20px', lineHeight: 1.8, color: '#3a5563', marginBottom: '24px', fontStyle: 'italic' }}>
-              Evden çıkıp maceraya atılmak istiyorsan, Gökçeada tam sana göre. Türkiye'nin en büyük adası, en az kalabalık köyü, en güçlü poyrazı.
+              Evden çıkıp maceraya atılmak istiyorsan, Gökçeada tam sana göre. Türkiye’nin en büyük adası, en az kalabalık köyü, en güçlü poyrazı.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563', marginBottom: '20px' }}>
-              Kefaloz Koyu'na ayak bastığında, rüzgarın seni nasıl karşıladığını hissedersin. Poyraz her sabah aynı sadakatle eser — güneş doğduğunda başlar, gün batar bitmez güçlenir. Bu güvenilir döngü, kitesurf öğrenmek için dünyanın en iyi koşullarından birini yaratır.
+              Kefaloz Koyu’na ayak bastığında, rüzgarın seni nasıl karşıladığını hissedersin. Poyraz her sabah aynı sadakatle eser — güneş doğduğunda başlar, gün batar bitmez güçlenir. Bu güvenilir döngü, kitesurf öğrenmek için dünyanın en iyi koşullarından birini yaratır.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563', marginBottom: '20px' }}>
               Onshore rüzgar demek, suyun içinde kaybolsan bile kıyıya döneceğin anlamına gelir. 50 metre boyunca sığ su demek, ilk düşüşlerinde ayağa kolayca kalkabileceğin anlamına gelir. 4 km trafiksiz koy demek, sadece gökyüzüne ve ufka odaklanabileceğin anlamına gelir.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
-              Sezon Nisan'dan Kasım'a kadar sürer. Temmuz-Ekim yüksek sezondur: en güçlü ve en istikrarlı rüzgarlar, en uzun günler, en canlı ada hayatı.
+              Sezon Nisan’dan Kasım’a kadar sürer. Temmuz-Ekim yüksek sezondur: en güçlü ve en istikrarlı rüzgarlar, en uzun günler, en canlı ada hayatı.
             </p>
           </div>
         </section>
@@ -187,7 +187,7 @@ export default async function SpotRuzgarPage({
               Günlük Rüzgar Döngüsü
             </div>
             <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.5vw,44px)', lineHeight: 0.98, color: '#07283b', marginBottom: '40px' }}>
-              Gökçeada'da Bir Kite Günü Nasıl Geçer?
+              Gökçeada’da Bir Kite Günü Nasıl Geçer?
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
               {dailyPattern.map((slot, i) => (
