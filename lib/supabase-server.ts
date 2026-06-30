@@ -30,3 +30,43 @@ export function createAdminClient() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
+
+export type UserRole = 'admin' | 'instructor' | 'student' | null;
+
+// Giriş yapan kullanıcının rolünü döner. Personel ise profiles.role; değilse student.
+export async function getUserRole(): Promise<{ userId: string | null; email: string | null; role: UserRole; active: boolean }> {
+  const supabase = await createAuthClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { userId: null, email: null, role: null, active: false };
+
+  // profiles üzerinden personel mi?
+  const db = createAdminClient();
+  const { data: profile } = await db
+    .from('profiles')
+    .select('role, active')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (profile) {
+    return {
+      userId: user.id,
+      email: user.email ?? null,
+      role: (profile.role as 'admin' | 'instructor'),
+      active: profile.active !== false,
+    };
+  }
+
+  // profiles satırı yok → öğrenci olabilir (email students tablosunda mı?)
+  if (user.email) {
+    const { data: student } = await db
+      .from('students')
+      .select('id')
+      .eq('email', user.email)
+      .maybeSingle();
+    if (student) {
+      return { userId: user.id, email: user.email, role: 'student', active: true };
+    }
+  }
+
+  return { userId: user.id, email: user.email ?? null, role: null, active: false };
+}

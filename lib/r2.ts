@@ -1,4 +1,4 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 function getR2Client(): S3Client | null {
@@ -14,7 +14,7 @@ function getR2Client(): S3Client | null {
   });
 }
 
-// Generate a short-lived signed download URL (15 min)
+// 15 dakikalık indirme URL'i
 export async function signedDownloadUrl(key: string): Promise<string | null> {
   const client = getR2Client();
   const bucket = process.env.R2_BUCKET;
@@ -28,6 +28,41 @@ export async function signedDownloadUrl(key: string): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+// 10 dakikalık upload URL'i (admin medya yüklemesi için)
+export async function signedUploadUrl(key: string, contentType: string): Promise<string | null> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET;
+  if (!client || !bucket) return null;
+  try {
+    return await getSignedUrl(
+      client,
+      new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType }),
+      { expiresIn: 600 }
+    );
+  } catch {
+    return null;
+  }
+}
+
+export async function deleteObject(key: string): Promise<boolean> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET;
+  if (!client || !bucket) return false;
+  try {
+    await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// students/<studentId>/<uuid>.<ext>
+export function buildMediaKey(studentId: string, filename: string): string {
+  const ext = filename.includes('.') ? filename.split('.').pop()!.toLowerCase() : 'bin';
+  const uuid = crypto.randomUUID();
+  return `students/${studentId}/${uuid}.${ext}`;
 }
 
 export function r2Configured(): boolean {

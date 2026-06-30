@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { createAuthClient, createAdminClient } from '@/lib/supabase-server';
+import { createAuthClient, createAdminClient, getUserRole } from '@/lib/supabase-server';
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
@@ -13,6 +13,18 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   });
   if (error) return { error: error.message };
+
+  // Rol bazlı yönlendirme
+  const { role, active } = await getUserRole();
+  if (!active || !role) {
+    await supabase.auth.signOut();
+    return { error: 'Hesabınız aktif değil veya yetki bulunamadı.' };
+  }
+  if (role === 'student') {
+    await supabase.auth.signOut();
+    return { error: 'Öğrenciler /ogrenci adresinden giriş yapmalıdır.' };
+  }
+  // admin ve instructor (hoca) panele girer
   redirect('/panel');
 }
 
@@ -156,8 +168,133 @@ export async function toggleMediaDownloadable(
   downloadable: boolean,
   studentId: string
 ) {
+  const { role } = await getUserRole();
+  if (role !== 'admin') return { error: 'Yetkisiz' };
   const db = createAdminClient();
   await db.from('student_media').update({ downloadable }).eq('id', mediaId);
   revalidatePath(`/panel/ogrenciler/${studentId}`);
+  revalidatePath('/panel/medya');
   return { ok: true };
+}
+
+export async function setMediaDownloadable(mediaId: string, downloadable: boolean) {
+  const { role } = await getUserRole();
+  if (role !== 'admin') return { error: 'Yetkisiz' };
+  const db = createAdminClient();
+  await db.from('student_media').update({ downloadable }).eq('id', mediaId);
+  revalidatePath('/panel/medya');
+  return { ok: true };
+}
+
+export async function deleteMedia(mediaId: string) {
+  const { role } = await getUserRole();
+  if (role !== 'admin') return { error: 'Yetkisiz' };
+  const db = createAdminClient();
+  const { data: m } = await db.from('student_media').select('r2_key').eq('id', mediaId).maybeSingle();
+  await db.from('student_media').delete().eq('id', mediaId);
+  if (m?.r2_key) {
+    const { deleteObject } = await import('@/lib/r2');
+    await deleteObject(m.r2_key as string);
+  }
+  revalidatePath('/panel/medya');
+  return { ok: true };
+}
+
+// ─── Instructors (admin only) ────────────────────────────────────────────────
+
+export async function createInstructor(formData: FormData) {
+  const { role } = await getUserRole();
+  if (role !== 'admin') return { error: 'Yetkisiz' };
+
+  const email = String(formData.get('email') ?? '').trim();
+  const password = String(formData.get('password') ?? '');
+  const name = String(formData.get('name') ?? '').trim();
+  if (!email || !password || !name) return { error: 'Tüm alanlar zorunlu' };
+  if (password.length < 8) return { error: 'Şifre en az 8 karakter olmalı' };
+
+  const db = createAdminClient();
+  const { data: created, error: authErr } = await db.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  });
+  if (authErr || !created?.user) return { error: authErr?.message ?? 'Auth oluşturulamadı' };
+
+  const { error: profErr } = await db
+    .from('profiles')
+    .insert({ id: created.user.id, name, role: 'instructor', active: true });
+  if (profErr) {
+    // rollback auth
+    await db.auth.admin.deleteUser(created.user.id);
+    return { error: profErr.message };
+  }
+  revalidatePath('/panel/hocalar');
+  return { ok: true };
+}
+
+export async function toggleInstructorActive(profileId: string, active: boolean) {
+  const { role } = await getUserRole();
+  if (role !== 'admin') return { error: 'Yetkisiz' };
+  const db = createAdminClient();
+  await db.from('profiles').update({ active }).eq('id', profileId);
+  revalidatePath('/panel/hocalar');
+  return { ok: true };
+}
+
+export async function deleteInstructor(profileId: string) {
+  const { role } = await getUserRole();
+  if (role !== 'admin') return { error: 'Yetkisiz' };
+  const db = createAdminClient();
+  // Önce öğrencilerin atamasını boşalt
+  await db.from('students').update({ assigned_instructor: null }).eq('assigned_instructor', profileId);
+  await db.from('profiles').delete().eq('id', profileId);
+  await db.auth.admin.deleteUser(profileId);
+  revalidatePath('/panel/hocalar');
+  return { ok: true };
+}
+
+// ─── Hoca: kendi öğrencisini ekle ─────────────────────────────────────────────
+
+export async function createStudentForInstructor(formData: FormData) {
+  const { role, userId } = await getUserRole();
+  if (!userId || (role !== 'admin' && role !== 'instructor')) return { error: 'Yetkisiz' };
+
+  const name = String(formData.get('name') ?? '').trim();
+  if (!name) return { error: 'Ad gerekli' };
+
+  const contact = String(formData.get('contact') ?? '').trim() || null;
+  const email = String(formData.get('email') ?? '').trim() || null;
+  const level = String(formData.get('level') ?? '').trim() || null;
+  const language = String(formData.get('language') ?? '').trim() || null;
+  // Hoca kendine atar; admin manuel seçebilir ama bu form her ikisi için de basit
+  const assigned = String(formData.get('assigned_instructor') ?? '').trim() || (role === 'instructor' ? userId : null);
+
+  const db = createAdminClient();
+  const { data: student, error } = await db
+    .from('students')
+    .insert({
+      name,
+      contact,
+      email,
+      level,
+      language,
+      assigned_instructor: assigned,
+      status: 'active',
+    })
+    .select('id')
+    .single();
+  if (error) return { error: error.message };
+
+  // 5 ders oluştur
+  const lessons = LESSON_TITLES.map((title, i) => ({
+    student_id: student.id,
+    lesson_no: i + 1,
+    title,
+    status: 'pending',
+  }));
+  await db.from('lesson_progress').insert(lessons);
+
+  revalidatePath('/panel/ogrenciler');
+  revalidatePath('/panel');
+  return { ok: true, studentId: student.id };
 }

@@ -1,4 +1,5 @@
-import { createAdminClient } from '@/lib/supabase-server';
+import { createAdminClient, getUserRole } from '@/lib/supabase-server';
+import HocaToday from './_views/HocaToday';
 
 async function getStats() {
   const db = createAdminClient();
@@ -38,21 +39,26 @@ const STATUS_COLOR: Record<string, string> = {
   cancelled: 'bg-red-100 text-red-700',
 };
 
-export default async function DashboardPage() {
+export default async function PanelHomePage() {
+  const { role, userId } = await getUserRole();
+
+  if (role === 'instructor' && userId) {
+    return <HocaToday instructorId={userId} />;
+  }
+
+  // admin → Dashboard
   const [stats, recent] = await Promise.all([getStats(), getRecentBookings()]);
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold text-[#07283b] mb-6">Dashboard</h1>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <StatCard label="Aktif Öğrenci" value={stats.activeStudents} />
         <StatCard label="Bekleyen Ön Kayıt" value={stats.pendingBookings} highlight />
         <StatCard label="Son 30 Gün Onay" value={stats.confirmedLast30} />
       </div>
 
-      {/* Recent bookings */}
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-[#e4e9ee]">
           <h2 className="font-semibold text-[#07283b]">Son Ön Kayıtlar</h2>

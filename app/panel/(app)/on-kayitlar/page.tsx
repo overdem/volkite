@@ -1,4 +1,5 @@
-import { createAdminClient } from '@/lib/supabase-server';
+import { redirect } from 'next/navigation';
+import { createAdminClient, getUserRole } from '@/lib/supabase-server';
 import BookingActions from './BookingActions';
 
 async function getBookings() {
@@ -26,6 +27,8 @@ const LABEL_TR: Record<string, string> = {
 };
 
 export default async function OnKayitlarPage() {
+  const { role } = await getUserRole();
+  if (role !== 'admin') redirect('/panel');
   const bookings = await getBookings();
 
   return (

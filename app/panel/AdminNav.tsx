@@ -7,10 +7,13 @@ const NAV = [
   { href: '/panel', label: 'Dashboard', exact: true },
   { href: '/panel/on-kayitlar', label: 'Ön Kayıtlar' },
   { href: '/panel/ogrenciler', label: 'Öğrenciler' },
+  { href: '/panel/hocalar', label: 'Hocalar' },
+  { href: '/panel/odemeler', label: 'Ödemeler' },
+  { href: '/panel/medya', label: 'Medya' },
   { href: '/panel/ayarlar', label: 'Ayarlar' },
 ];
 
-export default function PanelNav({ pendingCount }: { pendingCount: number }) {
+export default function AdminNav({ pendingCount }: { pendingCount: number }) {
   const pathname = usePathname();
 
   return (
