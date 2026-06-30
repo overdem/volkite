@@ -35,7 +35,7 @@ const dailyPattern = [
     zaman: '11:00 – 13:00',
     hiz: '18–22 kn',
     durum: 'Ana rüzgar saati',
-    detay: 'Poyrazın en verimli dilimi. Yeni başlayanlar ve orta seviyeler için ideal. IKO eğitimlerinin büyük bölümü bu saatlerde.',
+    detay: 'Poyrazın en verimli dilimi. Yeni başlayanlar ve orta seviyeler için ideal. Eğitimlerin büyük bölümü bu saatlerde.',
     color: '#14b8cf',
   },
   {
