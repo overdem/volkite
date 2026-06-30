@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
-  mapChatwootMessages,
   normalizeForClaude,
   buildClaudeMessages,
-  type CwApiMessage,
+  type StoredMessage,
 } from '@/lib/chatwoot';
 
 // ─── [[HANDOFF]] parsing ───────────────────────────────────────────────────────
@@ -101,55 +100,33 @@ describe('Bilgi tabanı formatı', () => {
   });
 });
 
-// ─── Konuşma geçmişi eşleme (bağlam korunumu) ──────────────────────────────────
+// ─── Konuşma geçmişi (bağlam korunumu) ─────────────────────────────────────────
 
-describe('Chatwoot geçmişi → Claude mesajları', () => {
-  it('incoming → user, outgoing → assistant olarak eşler', () => {
-    const raw: CwApiMessage[] = [
-      { id: 1, message_type: 0, content: 'Merhaba', created_at: 100 },
-      { id: 2, message_type: 1, content: 'Selam! Kitesurf mü?', created_at: 200 },
-      { id: 3, message_type: 0, content: 'Evet, ilk defa', created_at: 300 },
+describe('Supabase geçmişi → Claude mesajları', () => {
+  it('saklanan rolleri olduğu gibi geçirir', () => {
+    const history: StoredMessage[] = [
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Selam! Kitesurf mü?' },
     ];
-    expect(mapChatwootMessages(raw)).toEqual([
+    expect(buildClaudeMessages(history, 'Evet, ilk defa')).toEqual([
       { role: 'user', content: 'Merhaba' },
       { role: 'assistant', content: 'Selam! Kitesurf mü?' },
       { role: 'user', content: 'Evet, ilk defa' },
     ]);
   });
 
-  it('private not ve activity/template mesajlarını atlar', () => {
-    const raw: CwApiMessage[] = [
-      { id: 1, message_type: 0, content: 'Merhaba', created_at: 100 },
-      { id: 2, message_type: 1, content: 'iç not', private: true, created_at: 150 },
-      { id: 3, message_type: 2, content: 'Conversation was resolved', created_at: 160 },
-      { id: 4, message_type: 3, content: 'template', created_at: 170 },
-      { id: 5, message_type: 1, content: 'Nasıl yardımcı olabilirim?', created_at: 200 },
-    ];
-    expect(mapChatwootMessages(raw)).toEqual([
+  it('geçersiz rol ve boş içerikli satırları eler', () => {
+    const history: StoredMessage[] = [
       { role: 'user', content: 'Merhaba' },
-      { role: 'assistant', content: 'Nasıl yardımcı olabilirim?' },
-    ]);
-  });
-
-  it('kronolojik sıralar (created_at karışık gelirse)', () => {
-    const raw: CwApiMessage[] = [
-      { id: 3, message_type: 0, content: 'üçüncü', created_at: 300 },
-      { id: 1, message_type: 0, content: 'birinci', created_at: 100 },
-      { id: 2, message_type: 1, content: 'ikinci', created_at: 200 },
+      { role: 'system', content: 'yoksay' },
+      { role: 'assistant', content: '   ' },
+      { role: 'assistant', content: 'Buyur' },
     ];
-    expect(mapChatwootMessages(raw).map((m) => m.content)).toEqual([
-      'birinci',
-      'ikinci',
-      'üçüncü',
+    expect(buildClaudeMessages(history, 'devam')).toEqual([
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Buyur' },
+      { role: 'user', content: 'devam' },
     ]);
-  });
-
-  it('boş içerikli mesajları eler', () => {
-    const raw: CwApiMessage[] = [
-      { id: 1, message_type: 0, content: '   ', created_at: 100 },
-      { id: 2, message_type: 0, content: 'gerçek', created_at: 200 },
-    ];
-    expect(mapChatwootMessages(raw)).toEqual([{ role: 'user', content: 'gerçek' }]);
   });
 
   it('baştaki assistant turlarını düşürür (ilk tur user olmalı)', () => {
@@ -175,12 +152,12 @@ describe('Chatwoot geçmişi → Claude mesajları', () => {
   });
 
   it('TÜM geçmiş gider: "ilk defa" + "önümüzdeki hafta" aynı dizide', () => {
-    const raw: CwApiMessage[] = [
-      { id: 1, message_type: 0, content: 'İlk defa kitesurf yapacağım', created_at: 100 },
-      { id: 2, message_type: 1, content: 'Harika! Ne zaman gelmeyi düşünüyorsun?', created_at: 200 },
+    const history: StoredMessage[] = [
+      { role: 'user', content: 'İlk defa kitesurf yapacağım' },
+      { role: 'assistant', content: 'Harika! Ne zaman gelmeyi düşünüyorsun?' },
     ];
-    // İkinci kullanıcı mesajı webhook ile geldi, henüz API'de indekslenmemiş olabilir.
-    const msgs = buildClaudeMessages(raw, 'Önümüzdeki hafta');
+    // Güncel mesaj cevaptan sonra kaydedildiği için henüz geçmişte değil.
+    const msgs = buildClaudeMessages(history, 'Önümüzdeki hafta');
     expect(msgs).toEqual([
       { role: 'user', content: 'İlk defa kitesurf yapacağım' },
       { role: 'assistant', content: 'Harika! Ne zaman gelmeyi düşünüyorsun?' },
@@ -189,12 +166,12 @@ describe('Chatwoot geçmişi → Claude mesajları', () => {
   });
 
   it('güncel mesaj zaten geçmişteyse tekrar eklenmez', () => {
-    const raw: CwApiMessage[] = [
-      { id: 1, message_type: 0, content: 'Merhaba', created_at: 100 },
-      { id: 2, message_type: 1, content: 'Selam', created_at: 200 },
-      { id: 3, message_type: 0, content: 'Fiyat ne kadar?', created_at: 300 },
+    const history: StoredMessage[] = [
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Selam' },
+      { role: 'user', content: 'Fiyat ne kadar?' },
     ];
-    const msgs = buildClaudeMessages(raw, 'Fiyat ne kadar?');
+    const msgs = buildClaudeMessages(history, 'Fiyat ne kadar?');
     expect(msgs.filter((m) => m.content === 'Fiyat ne kadar?')).toHaveLength(1);
     expect(msgs).toHaveLength(3);
   });

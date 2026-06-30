@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { fetchWindForecast } from '@/lib/openmeteo';
 import { scoreDay } from '@/lib/wind';
 import type { WindBand } from '@/lib/wind';
-import { buildClaudeMessages, type CwApiMessage } from '@/lib/chatwoot';
+import { buildClaudeMessages, type StoredMessage } from '@/lib/chatwoot';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -283,27 +283,41 @@ async function cw(path: string, body: Record<string, unknown>) {
   });
 }
 
-// Pull the FULL message history for a conversation so Claude sees the whole
-// thread on every turn. Returns [] on failure so the caller can fall back to
-// the single triggering message.
-async function fetchConversationMessages(
-  accountId: number | string,
-  convId: number | string
-): Promise<CwApiMessage[]> {
+// ─── Conversation history (Supabase) ───────────────────────────────────────────
+// Chatwoot bot tokens can't read the messages API, so we persist the thread
+// ourselves and replay it to Claude on every turn.
+
+async function loadHistory(convId: string): Promise<StoredMessage[]> {
   try {
-    const res = await fetch(
-      `${CW_BASE}/api/v1/accounts/${accountId}/conversations/${convId}/messages`,
-      { headers: { api_access_token: BOT_TOKEN } }
-    );
-    if (!res.ok) {
-      console.log('cw history fetch failed:', res.status);
+    const { data, error } = await supabase()
+      .from('agent_messages')
+      .select('role, content')
+      .eq('conversation_id', convId)
+      .order('id', { ascending: true });
+    if (error) {
+      console.log('history load failed:', error.message);
       return [];
     }
-    const data = (await res.json()) as { payload?: CwApiMessage[] };
-    return data.payload ?? [];
+    return (data as StoredMessage[]) ?? [];
   } catch (e) {
-    console.log('cw history fetch error:', e);
+    console.log('history load error:', e);
     return [];
+  }
+}
+
+async function saveMessages(
+  convId: string,
+  rows: { role: 'user' | 'assistant'; content: string }[]
+): Promise<void> {
+  const clean = rows.filter((r) => r.content.trim().length > 0);
+  if (clean.length === 0) return;
+  try {
+    const { error } = await supabase()
+      .from('agent_messages')
+      .insert(clean.map((r) => ({ conversation_id: convId, role: r.role, content: r.content })));
+    if (error) console.log('history save failed:', error.message);
+  } catch (e) {
+    console.log('history save error:', e);
   }
 }
 
@@ -351,11 +365,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  // Pull the full conversation history from Chatwoot (the webhook payload only
-  // carries the latest message), then replay the whole thread to Claude.
+  // Replay the full thread to Claude: load persisted history from Supabase
+  // (bot tokens can't read Chatwoot's messages API) and append the new message.
+  const convKey = String(convId);
   const currentContent = (event['content'] ?? '') as string;
-  const rawMessages = await fetchConversationMessages(accountId, convId);
-  const baseMessages: Anthropic.MessageParam[] = buildClaudeMessages(rawMessages, currentContent);
+  const storedHistory = await loadHistory(convKey);
+  const baseMessages: Anthropic.MessageParam[] = buildClaudeMessages(storedHistory, currentContent);
 
   if (baseMessages.length === 0) {
     console.log('skip: no usable message content (conv=', convId, ')');
@@ -417,7 +432,17 @@ export async function POST(req: NextRequest) {
     break;
   }
 
-  if (!finalReply) return NextResponse.json({ ok: true });
+  if (!finalReply) {
+    // Still persist the incoming message so context isn't lost on the next turn.
+    await saveMessages(convKey, [{ role: 'user', content: currentContent }]);
+    return NextResponse.json({ ok: true });
+  }
+
+  // Persist this turn (user message + our reply) for the next webhook.
+  await saveMessages(convKey, [
+    { role: 'user', content: currentContent },
+    { role: 'assistant', content: finalReply },
+  ]);
 
   await cw(`/api/v1/accounts/${accountId}/conversations/${convId}/messages`, {
     content: finalReply,
