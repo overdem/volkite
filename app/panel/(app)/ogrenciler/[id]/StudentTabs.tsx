@@ -112,10 +112,10 @@ function SessionCard({ session, lessons, editable }: { session: SessionItem; les
   const [note, setNote] = useState('');
 
   const dt = new Date(session.scheduled_at);
-  const dateLabel = dt.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'long' });
-  const timeLabel = dt.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  const dateLabel = dt.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'Europe/Istanbul' });
+  const timeLabel = dt.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' });
   const completedLabel = session.completed_at
-    ? new Date(session.completed_at).toLocaleDateString('tr-TR')
+    ? new Date(session.completed_at).toLocaleDateString('tr-TR', { timeZone: 'Europe/Istanbul' })
     : null;
 
   function complete() {

@@ -74,10 +74,10 @@ export default async function OgrenciPage() {
         <div className="bg-[#14b8cf]/10 border border-[#14b8cf]/30 rounded-2xl p-5 mb-6">
           <p className="text-xs uppercase tracking-wider text-[#14b8cf] font-bold mb-1">Sıradaki Ders</p>
           <p className="text-lg font-bold text-[#07283b]">
-            {new Date(nextSession.scheduled_at).toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            {new Date(nextSession.scheduled_at).toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Istanbul' })}
           </p>
           <p className="text-sm text-[#3a5563]">
-            {new Date(nextSession.scheduled_at).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+            {new Date(nextSession.scheduled_at).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })}
             {' · '}{nextSession.duration_hours} saat
           </p>
           <p className="text-xs text-[#8497a1] mt-2">
@@ -157,9 +157,9 @@ export default async function OgrenciPage() {
                 >
                   <div>
                     <div className="text-sm font-bold text-[#07283b]">
-                      {dt.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short' })}
+                      {dt.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Istanbul' })}
                       {' · '}
-                      {dt.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                      {dt.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })}
                     </div>
                     <div className="text-xs text-[#8497a1]">
                       {isDone ? `Yapıldı${s.wind_kn ? ` · ${s.wind_kn}kn` : ''}` : 'Planlandı'}

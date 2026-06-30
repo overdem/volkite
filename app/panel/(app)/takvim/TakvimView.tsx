@@ -3,7 +3,7 @@
 import { useState, useMemo, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { scoreHour, type WindBand, type HourBucket } from '@/lib/wind';
-import type { WindData, HourSlot } from '@/lib/openmeteo';
+import { istanbulToUtc, utcToIstanbulHourKey, type WindData, type HourSlot } from '@/lib/openmeteo';
 import { createSession, cancelSession } from '../../actions';
 
 type Student = { id: string; name: string; level: string; instructorId: string | null };
@@ -71,16 +71,13 @@ export default function TakvimView({
   const trustDates = dates.slice(0, 3);
   const trendDates = dates.slice(3);
 
-  // Belirli saatte planlanan session var mı (öğrenci+saat)
-  const sessionAt = (iso: string) => sessions.find((s) => s.scheduledAt.slice(0, 13) === iso.slice(0, 13));
-
   function planAt(iso: string) {
     if (!studentId) { setError('Önce öğrenci seç'); return; }
     setError('');
     startTransition(async () => {
       const res = await createSession({
         studentId,
-        scheduledAt: new Date(iso).toISOString(),
+        scheduledAt: istanbulToUtc(iso), // Istanbul yerel → UTC
         durationHours: 1.5,
       });
       if (res?.error) setError(res.error);
@@ -145,7 +142,7 @@ export default function TakvimView({
           date={date}
           hours={byDay.get(date) ?? []}
           band={band}
-          sessions={sessions.filter((s) => s.scheduledAt.startsWith(date))}
+          sessions={sessions.filter((s) => utcToIstanbulHourKey(s.scheduledAt).startsWith(date))}
           onPlan={planAt}
           onCancel={cancel}
           pending={pending}
@@ -238,7 +235,7 @@ function DayBlock({
         {hours.map((h) => {
           const bucket: HourBucket = band ? scoreHour(h, band) : 'red';
           const color = BUCKET_COLOR[bucket];
-          const session = sessions.find((s) => s.scheduledAt.slice(0, 13) === h.iso.slice(0, 13));
+          const session = sessions.find((s) => utcToIstanbulHourKey(s.scheduledAt) === h.iso.slice(0, 13));
           return (
             <div
               key={h.iso}

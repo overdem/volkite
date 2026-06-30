@@ -12,13 +12,39 @@ export interface DayForecast {
 }
 
 export interface HourSlot {
-  iso: string;          // "2026-06-30T10:00"
+  iso: string;          // "2026-06-30T10:00" — Istanbul yerel saati
   date: string;         // "2026-06-30"
   hour: number;         // 10
   speed_kn: number;
   gust_kn: number;
   dir: string;
   in_trust_window: boolean; // 3 gün içi mi (güvenilir tahmin)
+}
+
+// Open-Meteo Istanbul yerel saati döner (timezone=Europe/Istanbul).
+// Istanbul UTC+3, DST yok (2016'dan beri). UTC ISO döner.
+export function istanbulToUtc(istanbulIso: string): string {
+  // "2026-06-30T10:00" → "2026-06-30T10:00:00+03:00" → ISO UTC
+  const withSec = istanbulIso.length === 16 ? istanbulIso + ':00' : istanbulIso;
+  return new Date(withSec + '+03:00').toISOString();
+}
+
+// UTC ISO timestamp → Istanbul yerel saat anahtarı "YYYY-MM-DDTHH"
+export function utcToIstanbulHourKey(utcIso: string): string {
+  const d = new Date(utcIso);
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Istanbul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    hour12: false,
+  });
+  const parts = fmt.formatToParts(d);
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '00';
+  // hour'24'lük: gece yarısı bazı runtime'larda "24" döner — normalize et
+  const h = get('hour') === '24' ? '00' : get('hour');
+  return `${get('year')}-${get('month')}-${get('day')}T${h.padStart(2, '0')}`;
 }
 
 const DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
