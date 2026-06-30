@@ -1,4 +1,10 @@
 import { describe, it, expect } from 'vitest';
+import {
+  mapChatwootMessages,
+  normalizeForClaude,
+  buildClaudeMessages,
+  type CwApiMessage,
+} from '@/lib/chatwoot';
 
 // ─── [[HANDOFF]] parsing ───────────────────────────────────────────────────────
 
@@ -92,5 +98,110 @@ describe('Bilgi tabanı formatı', () => {
     ];
     const formatted = rows.map((r) => `${r.label}: ${r.price}`).join(', ');
     expect(formatted).toBe('Özel ders: 700€, 2 kişilik grup: 600€');
+  });
+});
+
+// ─── Konuşma geçmişi eşleme (bağlam korunumu) ──────────────────────────────────
+
+describe('Chatwoot geçmişi → Claude mesajları', () => {
+  it('incoming → user, outgoing → assistant olarak eşler', () => {
+    const raw: CwApiMessage[] = [
+      { id: 1, message_type: 0, content: 'Merhaba', created_at: 100 },
+      { id: 2, message_type: 1, content: 'Selam! Kitesurf mü?', created_at: 200 },
+      { id: 3, message_type: 0, content: 'Evet, ilk defa', created_at: 300 },
+    ];
+    expect(mapChatwootMessages(raw)).toEqual([
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Selam! Kitesurf mü?' },
+      { role: 'user', content: 'Evet, ilk defa' },
+    ]);
+  });
+
+  it('private not ve activity/template mesajlarını atlar', () => {
+    const raw: CwApiMessage[] = [
+      { id: 1, message_type: 0, content: 'Merhaba', created_at: 100 },
+      { id: 2, message_type: 1, content: 'iç not', private: true, created_at: 150 },
+      { id: 3, message_type: 2, content: 'Conversation was resolved', created_at: 160 },
+      { id: 4, message_type: 3, content: 'template', created_at: 170 },
+      { id: 5, message_type: 1, content: 'Nasıl yardımcı olabilirim?', created_at: 200 },
+    ];
+    expect(mapChatwootMessages(raw)).toEqual([
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Nasıl yardımcı olabilirim?' },
+    ]);
+  });
+
+  it('kronolojik sıralar (created_at karışık gelirse)', () => {
+    const raw: CwApiMessage[] = [
+      { id: 3, message_type: 0, content: 'üçüncü', created_at: 300 },
+      { id: 1, message_type: 0, content: 'birinci', created_at: 100 },
+      { id: 2, message_type: 1, content: 'ikinci', created_at: 200 },
+    ];
+    expect(mapChatwootMessages(raw).map((m) => m.content)).toEqual([
+      'birinci',
+      'ikinci',
+      'üçüncü',
+    ]);
+  });
+
+  it('boş içerikli mesajları eler', () => {
+    const raw: CwApiMessage[] = [
+      { id: 1, message_type: 0, content: '   ', created_at: 100 },
+      { id: 2, message_type: 0, content: 'gerçek', created_at: 200 },
+    ];
+    expect(mapChatwootMessages(raw)).toEqual([{ role: 'user', content: 'gerçek' }]);
+  });
+
+  it('baştaki assistant turlarını düşürür (ilk tur user olmalı)', () => {
+    const normalized = normalizeForClaude([
+      { role: 'assistant', content: 'Hoş geldin!' },
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Buyur' },
+    ]);
+    expect(normalized[0]).toEqual({ role: 'user', content: 'Merhaba' });
+    expect(normalized).toHaveLength(2);
+  });
+
+  it('ardışık aynı-rol turlarını birleştirir', () => {
+    const normalized = normalizeForClaude([
+      { role: 'user', content: 'Merhaba' },
+      { role: 'user', content: 'orada mısın?' },
+      { role: 'assistant', content: 'Buradayım' },
+    ]);
+    expect(normalized).toEqual([
+      { role: 'user', content: 'Merhaba\norada mısın?' },
+      { role: 'assistant', content: 'Buradayım' },
+    ]);
+  });
+
+  it('TÜM geçmiş gider: "ilk defa" + "önümüzdeki hafta" aynı dizide', () => {
+    const raw: CwApiMessage[] = [
+      { id: 1, message_type: 0, content: 'İlk defa kitesurf yapacağım', created_at: 100 },
+      { id: 2, message_type: 1, content: 'Harika! Ne zaman gelmeyi düşünüyorsun?', created_at: 200 },
+    ];
+    // İkinci kullanıcı mesajı webhook ile geldi, henüz API'de indekslenmemiş olabilir.
+    const msgs = buildClaudeMessages(raw, 'Önümüzdeki hafta');
+    expect(msgs).toEqual([
+      { role: 'user', content: 'İlk defa kitesurf yapacağım' },
+      { role: 'assistant', content: 'Harika! Ne zaman gelmeyi düşünüyorsun?' },
+      { role: 'user', content: 'Önümüzdeki hafta' },
+    ]);
+  });
+
+  it('güncel mesaj zaten geçmişteyse tekrar eklenmez', () => {
+    const raw: CwApiMessage[] = [
+      { id: 1, message_type: 0, content: 'Merhaba', created_at: 100 },
+      { id: 2, message_type: 1, content: 'Selam', created_at: 200 },
+      { id: 3, message_type: 0, content: 'Fiyat ne kadar?', created_at: 300 },
+    ];
+    const msgs = buildClaudeMessages(raw, 'Fiyat ne kadar?');
+    expect(msgs.filter((m) => m.content === 'Fiyat ne kadar?')).toHaveLength(1);
+    expect(msgs).toHaveLength(3);
+  });
+
+  it('geçmiş boşsa tek user mesajına düşer', () => {
+    expect(buildClaudeMessages([], 'Merhaba')).toEqual([
+      { role: 'user', content: 'Merhaba' },
+    ]);
   });
 });
