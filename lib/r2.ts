@@ -46,6 +46,32 @@ export async function signedUploadUrl(key: string, contentType: string): Promise
   }
 }
 
+// Sunucu üzerinden doğrudan R2'ye yükle (CORS gerekmez)
+export async function uploadObject(
+  key: string,
+  body: ArrayBuffer | Uint8Array | Buffer,
+  contentType: string
+): Promise<boolean> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET;
+  if (!client || !bucket) return false;
+  try {
+    const buf = body instanceof Buffer ? body : Buffer.from(body as ArrayBuffer);
+    await client.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: buf,
+        ContentType: contentType,
+      })
+    );
+    return true;
+  } catch (err) {
+    console.error('R2 upload failed:', err);
+    return false;
+  }
+}
+
 export async function deleteObject(key: string): Promise<boolean> {
   const client = getR2Client();
   const bucket = process.env.R2_BUCKET;

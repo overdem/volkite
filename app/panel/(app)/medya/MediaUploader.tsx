@@ -19,48 +19,57 @@ export default function MediaUploader({ students }: { students: Student[] }) {
     e.preventDefault();
     setError('');
     setDone(false);
-    if (!studentId || !file) {
-      setError('Öğrenci ve dosya seçin');
+    setProgress(0);
+    if (!studentId) {
+      setError('Öğrenci seçin');
+      return;
+    }
+    if (!file) {
+      setError('Dosya seçin');
       return;
     }
     startTransition(async () => {
       try {
-        // 1. Presigned URL al
-        const presignRes = await fetch('/api/admin/upload', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            studentId,
-            filename: file.name,
-            contentType: file.type || 'application/octet-stream',
-            type,
-          }),
-        });
-        const presign = await presignRes.json();
-        if (!presignRes.ok) {
-          setError(presign.error ?? 'Yükleme URL alınamadı');
-          return;
-        }
+        const fd = new FormData();
+        fd.append('studentId', studentId);
+        fd.append('type', type);
+        fd.append('file', file);
 
-        // 2. R2'ye PUT
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (ev) => {
           if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100));
         };
-        await new Promise<void>((resolve, reject) => {
-          xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error('PUT failed: ' + xhr.status)));
-          xhr.onerror = () => reject(new Error('PUT network error'));
-          xhr.open('PUT', presign.uploadUrl);
-          xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-          xhr.send(file);
+
+        const result: { ok?: boolean; error?: string } = await new Promise((resolve) => {
+          xhr.onload = () => {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch {
+              resolve({ error: `Sunucu yanıtı geçersiz (${xhr.status})` });
+            }
+          };
+          xhr.onerror = () => resolve({ error: 'Ağ hatası' });
+          xhr.open('POST', '/api/admin/upload');
+          xhr.send(fd);
         });
+
+        if (!result.ok) {
+          setError(result.error ?? 'Bilinmeyen hata');
+          setProgress(0);
+          return;
+        }
 
         setDone(true);
         setFile(null);
+        setStudentId('');
         setProgress(0);
+        // Reset file input
+        const fileInput = document.getElementById('media-file-input') as HTMLInputElement | null;
+        if (fileInput) fileInput.value = '';
         router.refresh();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Hata');
+        setProgress(0);
       }
     });
   }
@@ -82,6 +91,9 @@ export default function MediaUploader({ students }: { students: Student[] }) {
               <option key={s.id} value={s.id}>{s.name}</option>
             ))}
           </select>
+          {students.length === 0 && (
+            <p className="text-xs text-red-600 mt-1">Önce öğrenci eklemelisin.</p>
+          )}
         </div>
         <div>
           <label className="block text-xs text-[#8497a1] mb-1">Tip</label>
@@ -97,6 +109,7 @@ export default function MediaUploader({ students }: { students: Student[] }) {
         <div>
           <label className="block text-xs text-[#8497a1] mb-1">Dosya</label>
           <input
+            id="media-file-input"
             type="file"
             accept={type === 'photo' ? 'image/*' : 'video/*'}
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
@@ -107,18 +120,25 @@ export default function MediaUploader({ students }: { students: Student[] }) {
       </div>
       {pending && progress > 0 && (
         <div className="w-full bg-[#eef1f4] rounded-full h-1.5">
-          <div className="bg-[#14b8cf] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
+          <div className="bg-[#14b8cf] h-1.5 rounded-full transition-all" style={{ width: `${progress}%` }} />
         </div>
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {done && <p className="text-sm text-green-700">Yüklendi ✓</p>}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
+      {done && <p className="text-sm text-green-700">✓ Yüklendi ve öğrenciye atandı</p>}
       <button
         type="submit"
-        disabled={pending}
-        className="bg-[#14b8cf] text-[#062131] font-bold px-5 py-2 rounded-lg text-sm hover:bg-[#0fa3b8] transition-colors disabled:opacity-60"
+        disabled={pending || students.length === 0}
+        className="bg-[#14b8cf] text-[#062131] font-bold px-5 py-2 rounded-lg text-sm hover:bg-[#0fa3b8] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {pending ? 'Yükleniyor…' : 'Yükle ve Ata'}
+        {pending ? `Yükleniyor… ${progress}%` : 'Yükle ve Ata'}
       </button>
+      <p className="text-xs text-[#8497a1]">
+        Maks. dosya boyutu: ~50 MB. Daha büyük videolar için Cloudflare R2 CORS ile doğrudan yükleme gerekli (ileride).
+      </p>
     </form>
   );
 }
