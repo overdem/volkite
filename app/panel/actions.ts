@@ -253,6 +253,112 @@ export async function deleteInstructor(profileId: string) {
   return { ok: true };
 }
 
+// ─── Sessions (planlanmış dersler) ───────────────────────────────────────────
+
+export async function createSession(input: {
+  studentId: string;
+  scheduledAt: string;       // ISO timestamp
+  durationHours?: number;
+  instructorId?: string;     // admin override
+  note?: string;
+}) {
+  const { role, userId } = await getUserRole();
+  if (!userId || (role !== 'admin' && role !== 'instructor')) return { error: 'Yetkisiz' };
+
+  const instructor_id = role === 'admin' ? (input.instructorId ?? userId) : userId;
+
+  const db = createAdminClient();
+  const { data, error } = await db
+    .from('sessions')
+    .insert({
+      student_id: input.studentId,
+      instructor_id,
+      scheduled_at: input.scheduledAt,
+      duration_hours: input.durationHours ?? 1.5,
+      status: 'planned',
+      note: input.note ?? null,
+      created_by: userId,
+    })
+    .select('id')
+    .single();
+  if (error) return { error: error.message };
+
+  revalidatePath('/panel/takvim');
+  revalidatePath('/panel');
+  revalidatePath(`/panel/ogrenciler/${input.studentId}`);
+  return { ok: true, sessionId: data.id };
+}
+
+export async function completeSession(input: {
+  sessionId: string;
+  lessonProgressId?: string;   // hangi müfredat dersi tamamlandı
+  windKn?: number;
+  note?: string;
+}) {
+  const { role, userId } = await getUserRole();
+  if (!userId || (role !== 'admin' && role !== 'instructor')) return { error: 'Yetkisiz' };
+
+  const db = createAdminClient();
+
+  // Session güncelle
+  const now = new Date().toISOString();
+  const { data: sess, error: sErr } = await db
+    .from('sessions')
+    .update({
+      status: 'done',
+      completed_at: now,
+      wind_kn: input.windKn ?? null,
+      note: input.note ?? null,
+      lesson_progress_id: input.lessonProgressId ?? null,
+    })
+    .eq('id', input.sessionId)
+    .select('student_id, instructor_id')
+    .single();
+  if (sErr) return { error: sErr.message };
+
+  // Hoca kendi olmayanı tamamlayamaz (RLS ek olarak server-side kontrol)
+  if (role === 'instructor' && sess.instructor_id !== userId) {
+    return { error: 'Yalnız kendi session\'ınızı tamamlayabilirsiniz' };
+  }
+
+  // İlgili müfredat dersini de "done" yap
+  if (input.lessonProgressId) {
+    await db
+      .from('lesson_progress')
+      .update({
+        status: 'done',
+        completed_at: now,
+        wind_kn: input.windKn ?? null,
+        instructor_id: userId,
+        instructor_notes: input.note ?? null,
+      })
+      .eq('id', input.lessonProgressId);
+  }
+
+  revalidatePath('/panel/takvim');
+  revalidatePath('/panel');
+  revalidatePath(`/panel/ogrenciler/${sess.student_id}`);
+  revalidatePath('/ogrenci');
+  return { ok: true };
+}
+
+export async function cancelSession(sessionId: string) {
+  const { role, userId } = await getUserRole();
+  if (!userId || (role !== 'admin' && role !== 'instructor')) return { error: 'Yetkisiz' };
+
+  const db = createAdminClient();
+  const { data: sess } = await db.from('sessions').select('instructor_id, student_id').eq('id', sessionId).single();
+  if (!sess) return { error: 'Session bulunamadı' };
+  if (role === 'instructor' && sess.instructor_id !== userId) {
+    return { error: 'Yalnız kendi session\'ınızı iptal edebilirsiniz' };
+  }
+
+  await db.from('sessions').update({ status: 'cancelled' }).eq('id', sessionId);
+  revalidatePath('/panel/takvim');
+  revalidatePath(`/panel/ogrenciler/${sess.student_id}`);
+  return { ok: true };
+}
+
 // ─── Hoca: kendi öğrencisini ekle ─────────────────────────────────────────────
 
 export async function createStudentForInstructor(formData: FormData) {

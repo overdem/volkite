@@ -1,33 +1,38 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { updateStudent, updateLesson, addPayment, togglePaymentPaid, toggleMediaDownloadable } from '../../../actions';
+import { useRouter } from 'next/navigation';
+import {
+  updateStudent, updateLesson, addPayment, togglePaymentPaid, toggleMediaDownloadable,
+  completeSession, cancelSession,
+} from '../../../actions';
 
 type Student = Record<string, unknown>;
-type Lesson = { id: string; lesson_no: number; title: string | null; status: string; hours: number | null; wind_kn: number | null; instructor_notes: string | null };
+type Lesson = { id: string; lesson_no: number; title: string | null; status: string; hours: number | null; wind_kn: number | null; instructor_notes: string | null; completed_at: string | null };
 type Payment = { id: string; amount_eur: number | null; type: string | null; method: string | null; paid: boolean; notes: string | null };
 type Accom = Record<string, unknown>;
 type Equip = Record<string, unknown>;
 type Media = { id: string; type: string | null; r2_key: string; thumb_key: string | null; preview_key: string | null; downloadable: boolean; created_at: string };
+type SessionItem = { id: string; scheduled_at: string; duration_hours: number | null; status: string; completed_at: string | null; wind_kn: number | null; note: string | null; lesson_progress_id: string | null };
 
 interface Props {
   studentId: string;
-  data: { student: Student; lessons: Lesson[]; payments: Payment[]; accommodation: Accom[]; equipment: Equip[]; media: Media[] };
+  data: { student: Student; lessons: Lesson[]; payments: Payment[]; accommodation: Accom[]; equipment: Equip[]; media: Media[]; sessions: SessionItem[] };
 }
 
-const TABS = ['Profil', 'Dersler', 'Ödemeler', 'Konaklama', 'Ekipman', 'Medya'];
+const TABS = ['Profil', 'Planlanmış', 'Dersler', 'Ödemeler', 'Konaklama', 'Ekipman', 'Medya'];
 
 export default function StudentTabs({ studentId, data }: Props) {
   const [tab, setTab] = useState(0);
 
   return (
     <div>
-      <div className="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm w-fit">
+      <div className="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm overflow-x-auto">
         {TABS.map((t, i) => (
           <button
             key={t}
             onClick={() => setTab(i)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
               tab === i ? 'bg-[#14b8cf] text-[#062131]' : 'text-[#8497a1] hover:text-[#07283b]'
             }`}
           >
@@ -37,11 +42,180 @@ export default function StudentTabs({ studentId, data }: Props) {
       </div>
 
       {tab === 0 && <ProfileTab student={data.student} studentId={studentId} />}
-      {tab === 1 && <LessonsTab lessons={data.lessons} />}
-      {tab === 2 && <PaymentsTab payments={data.payments} studentId={studentId} />}
-      {tab === 3 && <InfoTab title="Konaklama" items={data.accommodation} />}
-      {tab === 4 && <InfoTab title="Ekipman" items={data.equipment} />}
-      {tab === 5 && <MediaTab media={data.media} studentId={studentId} />}
+      {tab === 1 && <SessionsTab sessions={data.sessions} lessons={data.lessons} />}
+      {tab === 2 && <LessonsTab lessons={data.lessons} />}
+      {tab === 3 && <PaymentsTab payments={data.payments} studentId={studentId} />}
+      {tab === 4 && <InfoTab title="Konaklama" items={data.accommodation} />}
+      {tab === 5 && <InfoTab title="Ekipman" items={data.equipment} />}
+      {tab === 6 && <MediaTab media={data.media} studentId={studentId} />}
+    </div>
+  );
+}
+
+// ─── Sessions ────────────────────────────────────────────────────────────────
+
+function SessionsTab({ sessions, lessons }: { sessions: SessionItem[]; lessons: Lesson[] }) {
+  const planned = sessions.filter((s) => s.status === 'planned');
+  const done = sessions.filter((s) => s.status === 'done');
+  const cancelled = sessions.filter((s) => s.status === 'cancelled');
+
+  return (
+    <div className="space-y-6">
+      <section>
+        <h3 className="text-sm font-bold text-[#3a5563] uppercase tracking-wider mb-3">
+          Planlanmış ({planned.length})
+        </h3>
+        {planned.length === 0 ? (
+          <div className="bg-white rounded-2xl p-6 text-center text-sm text-[#8497a1] shadow-sm">
+            Henüz planlanmış ders yok. <a href="/panel/takvim" className="text-[#14b8cf] font-bold">Takvim'den planla →</a>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {planned.map((s) => (
+              <SessionCard key={s.id} session={s} lessons={lessons} editable />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {done.length > 0 && (
+        <section>
+          <h3 className="text-sm font-bold text-[#3a5563] uppercase tracking-wider mb-3">Yapılan ({done.length})</h3>
+          <div className="space-y-2">
+            {done.map((s) => (
+              <SessionCard key={s.id} session={s} lessons={lessons} editable={false} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {cancelled.length > 0 && (
+        <section>
+          <h3 className="text-sm font-bold text-[#8497a1] uppercase tracking-wider mb-3">İptal ({cancelled.length})</h3>
+          <div className="space-y-2 opacity-60">
+            {cancelled.map((s) => (
+              <SessionCard key={s.id} session={s} lessons={lessons} editable={false} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function SessionCard({ session, lessons, editable }: { session: SessionItem; lessons: Lesson[]; editable: boolean }) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false);
+  const [lessonId, setLessonId] = useState<string>(lessons.find((l) => l.status === 'pending')?.id ?? '');
+  const [windKn, setWindKn] = useState('');
+  const [note, setNote] = useState('');
+
+  const dt = new Date(session.scheduled_at);
+  const dateLabel = dt.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'long' });
+  const timeLabel = dt.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  const completedLabel = session.completed_at
+    ? new Date(session.completed_at).toLocaleDateString('tr-TR')
+    : null;
+
+  function complete() {
+    startTransition(async () => {
+      await completeSession({
+        sessionId: session.id,
+        lessonProgressId: lessonId || undefined,
+        windKn: windKn ? Number(windKn) : undefined,
+        note: note || undefined,
+      });
+      setOpen(false);
+      router.refresh();
+    });
+  }
+
+  function cancel() {
+    if (!confirm('Bu planlama iptal edilsin mi?')) return;
+    startTransition(async () => {
+      await cancelSession(session.id);
+      router.refresh();
+    });
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-[#14b8cf]/40">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1">
+          <div className="text-sm font-bold text-[#07283b]">{dateLabel} · {timeLabel}</div>
+          <div className="text-xs text-[#8497a1] mt-0.5">
+            {session.duration_hours}h
+            {session.wind_kn != null && ` · ${session.wind_kn}kn`}
+            {completedLabel && session.status === 'done' && ` · Yapıldı ${completedLabel}`}
+          </div>
+          {session.note && (
+            <div className="text-xs text-[#3a5563] mt-2 bg-[#eef1f4] rounded-lg px-2 py-1">{session.note}</div>
+          )}
+        </div>
+        {editable && (
+          <div className="flex flex-col gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              disabled={pending}
+              className="bg-[#14b8cf] text-[#062131] text-xs font-bold px-3 py-1 rounded-lg"
+            >
+              Tamamla
+            </button>
+            <button
+              type="button"
+              onClick={cancel}
+              disabled={pending}
+              className="text-xs text-red-600 hover:text-red-800"
+            >
+              İptal
+            </button>
+          </div>
+        )}
+      </div>
+      {open && (
+        <div className="mt-3 pt-3 border-t border-[#e4e9ee] space-y-2">
+          <div>
+            <label className="block text-xs text-[#8497a1] mb-1">Hangi müfredat dersi?</label>
+            <select
+              value={lessonId}
+              onChange={(e) => setLessonId(e.target.value)}
+              className="w-full border border-[#e4e9ee] rounded-lg px-3 py-1.5 text-sm"
+            >
+              <option value="">Bağlama (sadece session tamamla)</option>
+              {lessons.filter((l) => l.status === 'pending').map((l) => (
+                <option key={l.id} value={l.id}>{l.lesson_no}. {l.title}</option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              type="number"
+              step="0.5"
+              placeholder="Rüzgâr (kn)"
+              value={windKn}
+              onChange={(e) => setWindKn(e.target.value)}
+              className="border border-[#e4e9ee] rounded-lg px-3 py-1.5 text-sm"
+            />
+            <input
+              type="text"
+              placeholder="Not"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="border border-[#e4e9ee] rounded-lg px-3 py-1.5 text-sm"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={complete}
+            disabled={pending}
+            className="bg-[#14b8cf] text-[#062131] font-bold px-4 py-1.5 rounded-lg text-sm w-full disabled:opacity-60"
+          >
+            {pending ? 'Kaydediliyor…' : 'Tamamla & Müfredatı Güncelle'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -175,7 +349,14 @@ function LessonCard({ lesson }: { lesson: Lesson }) {
           <span className="w-7 h-7 rounded-full bg-[#eef1f4] text-[#8497a1] text-xs font-bold flex items-center justify-center">
             {lesson.lesson_no}
           </span>
-          <span className="font-medium text-[#07283b] text-sm">{lesson.title}</span>
+          <div>
+            <span className="font-medium text-[#07283b] text-sm">{lesson.title}</span>
+            {lesson.completed_at && (
+              <div className="text-[10px] text-[#8497a1] mt-0.5">
+                Tamamlandı: {new Date(lesson.completed_at).toLocaleDateString('tr-TR')}
+              </div>
+            )}
+          </div>
         </div>
         <label className="flex items-center gap-2 cursor-pointer">
           <input

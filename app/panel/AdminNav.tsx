@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 const NAV = [
   { href: '/panel', label: 'Dashboard', exact: true },
+  { href: '/panel/takvim', label: 'Takvim' },
   { href: '/panel/on-kayitlar', label: 'Ön Kayıtlar' },
   { href: '/panel/ogrenciler', label: 'Öğrenciler' },
   { href: '/panel/hocalar', label: 'Hocalar' },

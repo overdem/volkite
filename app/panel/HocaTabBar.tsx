@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 const TABS = [
   { href: '/panel', label: 'Bugün', exact: true, icon: '☀' },
+  { href: '/panel/takvim', label: 'Takvim', icon: '📅' },
   { href: '/panel/ogrenciler', label: 'Öğrenciler', icon: '👥' },
   { href: '/panel/ayarlar', label: 'Hesap', icon: '⚙' },
 ];

@@ -11,6 +11,16 @@ export interface DayForecast {
   in_forecast: boolean;
 }
 
+export interface HourSlot {
+  iso: string;          // "2026-06-30T10:00"
+  date: string;         // "2026-06-30"
+  hour: number;         // 10
+  speed_kn: number;
+  gust_kn: number;
+  dir: string;
+  in_trust_window: boolean; // 3 gün içi mi (güvenilir tahmin)
+}
+
 const DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 const FORECAST_DAYS = 14;
 
@@ -106,6 +116,52 @@ export async function fetchWindForecast(dateFrom: string, dateTo: string): Promi
     }
 
     return results;
+  } catch {
+    return [];
+  }
+}
+
+// Takvim için saatlik tahmin — 14 gün, 08:00–20:00 arası. 30 dk cache.
+// İlk 3 gün "kesin" (in_trust_window=true), sonrası "tahmini eğilim".
+export async function fetchHourlyForecast(): Promise<HourSlot[]> {
+  try {
+    const url =
+      `https://api.open-meteo.com/v1/forecast` +
+      `?latitude=40.17&longitude=25.84` +
+      `&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m` +
+      `&wind_speed_unit=kn&forecast_days=${FORECAST_DAYS}&timezone=Europe/Istanbul`;
+
+    const res = await fetch(url, { next: { revalidate: 1800 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+
+    const times: string[] = data?.hourly?.time ?? [];
+    const speeds: number[] = data?.hourly?.wind_speed_10m ?? [];
+    const gusts: number[] = data?.hourly?.wind_gusts_10m ?? [];
+    const dirs: number[] = data?.hourly?.wind_direction_10m ?? [];
+
+    const now = new Date();
+    const trustEnd = new Date(now);
+    trustEnd.setDate(now.getDate() + 3);
+    trustEnd.setHours(23, 59, 59, 999);
+
+    const out: HourSlot[] = [];
+    for (let i = 0; i < times.length; i++) {
+      const iso = times[i];
+      const hour = parseInt(iso.slice(11, 13), 10);
+      if (hour < 8 || hour > 20) continue;
+      const dt = new Date(iso);
+      out.push({
+        iso,
+        date: iso.slice(0, 10),
+        hour,
+        speed_kn: Math.round((speeds[i] ?? 0) * 10) / 10,
+        gust_kn: Math.round((gusts[i] ?? 0) * 10) / 10,
+        dir: toCompass(dirs[i] ?? 0),
+        in_trust_window: dt <= trustEnd,
+      });
+    }
+    return out;
   } catch {
     return [];
   }
