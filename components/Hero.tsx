@@ -20,13 +20,34 @@ export default function Hero({ wind }: HeroProps) {
         background: '#062131',
       }}
     >
-      {/* Background with Ken Burns */}
-      <div
+      {/* Video background */}
+      <video
+        className="hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/images/hero-kite.jpg"
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(135deg, #062131 0%, #07283b 50%, #0c3346 100%)',
-          animation: 'kenburns 18s ease-in-out infinite alternate',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+      >
+        <source src="/videos/hero-1.mp4" type="video/mp4" />
+      </video>
+      {/* Poster fallback for reduced-motion */}
+      <div
+        className="hero-poster"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'url(/images/hero-kite.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'none',
         }}
       />
       {/* Overlay */}
@@ -38,6 +59,12 @@ export default function Hero({ wind }: HeroProps) {
             'linear-gradient(180deg,rgba(6,33,49,.55) 0%,rgba(6,33,49,.25) 35%,rgba(6,33,49,.85) 100%)',
         }}
       />
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          .hero-video { display: none; }
+          .hero-poster { display: block !important; }
+        }
+      `}</style>
 
       {/* Live wind chip */}
       <div

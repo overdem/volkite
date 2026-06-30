@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
@@ -19,14 +20,18 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
 
+  // On the landing page use in-page anchors; from detail pages prefix with /
+  const isLanding = pathname === '/';
+  const a = (hash: string) => (isLanding ? hash : `/${hash}`);
+
   const navItems = [
-    { label: t('lessons'), href: '#egitimler' },
-    { label: t('services'), href: '#hizmetler' },
-    { label: t('spot'), href: '#spot' },
-    { label: t('gallery'), href: '#galeri' },
-    { label: t('kitchen'), href: '#mutfak' },
-    { label: t('faq'), href: '#sss' },
-    { label: t('contact'), href: '#rezervasyon' },
+    { label: t('lessons'), href: a('#egitimler') },
+    { label: t('services'), href: a('#hizmetler') },
+    { label: t('spot'), href: a('#spot') },
+    { label: t('gallery'), href: a('#galeri') },
+    { label: t('kitchen'), href: a('#mutfak') },
+    { label: t('faq'), href: a('#sss') },
+    { label: t('contact'), href: a('#rezervasyon') },
   ];
 
   function switchLocale(code: string) {
@@ -53,18 +58,8 @@ export default function Nav() {
       }}
     >
       {/* Logo */}
-      <a
-        href="#top"
-        style={{
-          fontFamily: 'Anton, Impact, sans-serif',
-          fontSize: '24px',
-          color: '#fbf6ec',
-          letterSpacing: '.04em',
-          textDecoration: 'none',
-        }}
-        aria-label="Volkite Kiteboard Okulu"
-      >
-        volkite
+      <a href={isLanding ? '#top' : '/'} aria-label="Volkite Kiteboard Okulu" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+        <Image src="/images/volkite-logo-white.svg" alt="Volkite" height={28} width={112} style={{ height: '28px', width: 'auto' }} priority />
       </a>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
