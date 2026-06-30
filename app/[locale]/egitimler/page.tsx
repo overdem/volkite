@@ -52,7 +52,7 @@ const baslagiclDersler = [
     baslik: 'Bağımsız Sürüş',
     sure: '~2 saat',
     icerik:
-      'Upwind sürüş, rüzgara karşı gitme teknikleri, dönüş ve yön değiştirme, bağımsız çıkış ve iniş, IKO sertifika değerlendirmesi.',
+      'Upwind sürüş, rüzgara karşı gitme teknikleri, dönüş ve yön değiştirme, bağımsız çıkış ve iniş, bağımsız kiteboardcu seviyesi.',
   },
 ];
 
@@ -139,7 +139,7 @@ export default async function EgitimlerPage({
               Neden Volkite?
             </div>
             <p style={{ fontSize: '18px', lineHeight: 1.8, color: '#3a5563', marginBottom: '20px' }}>
-              Daha fazla ertelemeden, hayatına yeni bir pencere aç! Volkite olarak kitesurf öğrenmeyi hem güvenli hem de çok eğlenceli hale getirmek için buradayız. IKO sertifikalı eğitmenlerimiz ve Gökçeada’nın eşsiz doğasıyla seni bekliyoruz.
+              Daha fazla ertelemeden, hayatına yeni bir pencere aç! Volkite olarak kitesurf öğrenmeyi hem güvenli hem de çok eğlenceli hale getirmek için buradayız. TYF (Yelken Federasyonu) Usta Öğretici belgeli eğitmenlerimiz ve Gökçeada’nın eşsiz doğasıyla seni bekliyoruz.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
               Her seviyeye uygun programlarımızla, sıfır deneyimden profesyonel sürüşe uzanan yolculuğun her adımında yanındayız. Küçük gruplar, birebir dikkat ve gerçek bir sporcu deneyimi — bunlar Volkite farkı.
@@ -198,7 +198,7 @@ export default async function EgitimlerPage({
                 </div>
               </div>
               <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.7, marginBottom: '32px', maxWidth: '700px' }}>
-                Hiç kitesurf deneyimi olmayan kişiler için tasarlanan kapsamlı başlangıç programı. 5 derste güvenli ve bağımsız bir kiter olarak suya çıkacaksın. IKO Level 1 sertifikasına uygun müfredat.
+                Hiç kitesurf deneyimi olmayan kişiler için tasarlanan kapsamlı başlangıç programı. 5 derste güvenli ve bağımsız bir kiter olarak suya çıkacaksın. Hedef: bağımsız kiteboardcu seviyesi.
               </p>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
@@ -390,7 +390,7 @@ export default async function EgitimlerPage({
               {t('group_note')}
             </p>
             <p style={{ color: '#bcd4de', fontSize: '15px', lineHeight: 1.7, maxWidth: '680px', margin: 0 }}>
-              Tüm eğitimlerimiz IKO (International Kiteboarding Organization) müfredatına uygundur. Programı tamamlayan öğrencilere uluslararası geçerlilikte IKO sertifikası verilmektedir.
+              Eğitimlerimiz TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli eğitmenler tarafından, Yelken Federasyonu standartlarında verilir. Programın hedefi: güvenli ve bağımsız kiteboardcu seviyesi.
             </p>
             <Link
               href="/#rezervasyon"

@@ -18,7 +18,7 @@ export async function generateMetadata({
 
 const historyItems = [
   { year: '2000', text: 'Volkite Kiteboard Okulu\'nun temelleri Gökçeada\'da atıldı. İlk uçurtmalar gökyüzüne bırakıldı.' },
-  { year: '2005', text: 'Okul, profesyonel eğitim altyapısını güçlendirdi; IKO sertifikalı eğitmen kadrosu oluşturuldu.' },
+  { year: '2005', text: 'Okul, profesyonel eğitim altyapısını güçlendirdi; TYF (Yelken Federasyonu) Usta Öğretici belgeli eğitmen kadrosu oluşturuldu.' },
   { year: '2007–2010', text: 'Uluslararası yarışmalara katılım başladı. Türkiye\'den ilk uluslararası kitesurf milli takım üyeleri yetiştirildi.' },
   { year: '2008', text: 'Kefaloz Koyu\'nda sabit okul alanı kuruldu; kamp ve konaklama hizmetleri başlatıldı.' },
   { year: '2010', text: 'Cafe On Shore açıldı. Sporcular için özel beslenme menüsü hazırlandı.' },
@@ -80,7 +80,7 @@ export default async function HakkimizdaPage({
               Volkite Kiteboard Okulu olarak 21. yılımızı kutluyoruz! Biz eksilmeyen sporcu ruhumuz ve 21 senelik eğitmenlik deneyimimizle her geçen yıl kendimizi daha da geliştirerek, öğrencilerimize en iyi kitesurf deneyimini sunmayı hedefliyoruz.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563', marginBottom: '20px' }}>
-              Gökçeada’nın eşsiz rüzgarları ve turkuaz sularında, deneyimli eğitmen kadromuzla binlerce öğrenciye kitesurf sevgisini aşıladık. IKO (International Kiteboarding Organization) sertifikalı eğitmenlerimizle, güvenli ve eğlenceli bir öğrenme ortamı sunuyoruz.
+              Gökçeada’nın eşsiz rüzgarları ve turkuaz sularında, deneyimli eğitmen kadromuzla binlerce öğrenciye kitesurf sevgisini aşıladık. TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli eğitmenlerimizle, güvenli ve eğlenceli bir öğrenme ortamı sunuyoruz.
             </p>
             <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
               Türkiye’nin kitesurf başkenti Gökçeada’da, Kefaloz Koyu’nun sakin sularında 2000 yılından bu yana faaliyet gösteriyoruz. Hem yeni başlayanlar hem de deneyimli sporcular için kapsamlı programlarımız ile rüzgarın ve özgürlüğün tadını çıkarmanızı sağlıyoruz.
@@ -140,14 +140,14 @@ export default async function HakkimizdaPage({
                     2000 yılında Gökçeada’ya ilk geldiğimde, adanın kitesurf için sahip olduğu potansiyeli hemen fark ettim. Poyraz rüzgarı, sığ ve güvenli koy, el değmemiş doğa... Bunun bir okul için mükemmel zemin olduğunu anlamak çok sürmedi.
                   </p>
                   <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.8, marginBottom: '20px' }}>
-                    IKO eğitmenlik lisansımı aldıktan sonra Volkite’i kurdum. İlk yıllarda küçük gruplarla başladık. Zamanla büyüdük, ekibimizi geliştirdik. Ama hiçbir zaman değişmeyen bir şey var: her öğrenciye verdiğimiz özel ilgi ve güvenliği ön planda tutma anlayışımız.
+                    TYF (Yelken Federasyonu) eğitmenlik belgemi aldıktan sonra Volkite’i kurdum. İlk yıllarda küçük gruplarla başladık. Zamanla büyüdük, ekibimizi geliştirdik. Ama hiçbir zaman değişmeyen bir şey var: her öğrenciye verdiğimiz özel ilgi ve güvenliği ön planda tutma anlayışımız.
                   </p>
                   <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.8 }}>
                     21 yılda 2 000’den fazla öğrenci yetiştirdik. Bazıları bugün milli takımda yarışıyor, bazıları dünya turuna çıkmış kiter’lar oldu. Hepsinin yolculuğuna ortak olmuş olmak, bu işi yapmaya devam etmemin en büyük sebebi.
                   </p>
                   <div style={{ marginTop: '28px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,.1)' }}>
                     <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '22px', color: '#fbf6ec' }}>Volkan Günel</div>
-                    <div style={{ color: '#14b8cf', fontWeight: 700, fontSize: '14px', marginTop: '4px' }}>Kurucu & Baş Eğitmen · IKO KB5 · TR / EN</div>
+                    <div style={{ color: '#14b8cf', fontWeight: 700, fontSize: '14px', marginTop: '4px' }}>Kurucu & Baş Eğitmen · TYF KB5 · TR / EN</div>
                   </div>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default async function HakkimizdaPage({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{ background: 'rgba(12,51,70,.5)', border: '1px solid rgba(255,255,255,.07)', borderRadius: '14px', padding: '24px' }}>
                   <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '10px' }}>Sertifikalar</div>
-                  <p style={{ color: '#9fc0cf', fontSize: '15px', lineHeight: 1.65 }}>IKO (International Kiteboarding Organization) KB5 — en yüksek eğitmen seviyesi. Tüm Volkite eğitmenleri IKO onaylı.</p>
+                  <p style={{ color: '#9fc0cf', fontSize: '15px', lineHeight: 1.65 }}>TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli; KB5 — en yüksek eğitmen seviyesi. Tüm Volkite eğitmenleri TYF belgeli.</p>
                 </div>
                 <div style={{ background: 'rgba(12,51,70,.5)', border: '1px solid rgba(255,255,255,.07)', borderRadius: '14px', padding: '24px' }}>
                   <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '10px' }}>Diller</div>
@@ -189,7 +189,7 @@ export default async function HakkimizdaPage({
                   <div style={{ fontWeight: 800, fontSize: '16px', color: '#07283b' }}>{member.name}</div>
                   <div style={{ color: '#14b8cf', fontWeight: 700, fontSize: '13px' }}>{member.role}</div>
                   {member.cert ? (
-                    <div style={{ color: '#3a5563', fontSize: '12px', marginTop: '2px', fontWeight: 600 }}>IKO {member.cert}</div>
+                    <div style={{ color: '#3a5563', fontSize: '12px', marginTop: '2px', fontWeight: 600 }}>TYF {member.cert}</div>
                   ) : null}
                   {member.langs ? (
                     <div style={{ color: '#3a5563', fontSize: '12px' }}>{member.langs}</div>
