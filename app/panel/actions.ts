@@ -372,21 +372,32 @@ export async function createStudentForInstructor(formData: FormData) {
   const email = String(formData.get('email') ?? '').trim() || null;
   const level = String(formData.get('level') ?? '').trim() || null;
   const language = String(formData.get('language') ?? '').trim() || null;
+  const gender = String(formData.get('gender') ?? '').trim() || null;
+  const birth_date = String(formData.get('birth_date') ?? '').trim() || null;
+  const weightRaw = String(formData.get('weight_kg') ?? '').trim();
+  const weight_kg = weightRaw ? Number(weightRaw) : null;
   // Hoca kendine atar; admin manuel seçebilir ama bu form her ikisi için de basit
   const assigned = String(formData.get('assigned_instructor') ?? '').trim() || (role === 'instructor' ? userId : null);
 
   const db = createAdminClient();
+  const payload: Record<string, unknown> = {
+    name,
+    contact,
+    email,
+    level,
+    language,
+    weight_kg,
+    assigned_instructor: assigned,
+    status: 'active',
+  };
+  // Yeni kolonlar (migration 010) — yalnız doluysa gönder ki migration
+  // uygulanmadan da öğrenci oluşturma çalışsın.
+  if (gender) payload.gender = gender;
+  if (birth_date) payload.birth_date = birth_date;
+
   const { data: student, error } = await db
     .from('students')
-    .insert({
-      name,
-      contact,
-      email,
-      level,
-      language,
-      assigned_instructor: assigned,
-      status: 'active',
-    })
+    .insert(payload)
     .select('id')
     .single();
   if (error) return { error: error.message };

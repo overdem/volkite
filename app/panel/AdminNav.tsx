@@ -7,6 +7,7 @@ const NAV = [
   { href: '/panel', label: 'Dashboard', exact: true },
   { href: '/panel/takvim', label: 'Takvim' },
   { href: '/panel/on-kayitlar', label: 'Ön Kayıtlar' },
+  { href: '/panel/sohbetler', label: 'Sohbetler' },
   { href: '/panel/ogrenciler', label: 'Öğrenciler' },
   { href: '/panel/hocalar', label: 'Hocalar' },
   { href: '/panel/odemeler', label: 'Ödemeler' },
