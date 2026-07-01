@@ -58,6 +58,14 @@ export default function NewStudentForm({ isInstructor, instructors, selfId }: Pr
         <F name="name" label="Ad Soyad" required />
         <F name="contact" label="Telefon" />
         <F name="email" label="E-posta" type="email" />
+        <F name="birth_date" label="Doğum Tarihi" type="date" />
+        <F name="weight_kg" label="Kilo (kg)" type="number" />
+        <Sel name="gender" label="Cinsiyet" options={[
+          { value: '', label: 'Belirtilmedi' },
+          { value: 'male', label: 'Erkek' },
+          { value: 'female', label: 'Kadın' },
+          { value: 'other', label: 'Diğer' },
+        ]} />
         <Sel name="level" label="Seviye" options={[
           { value: '', label: 'Seç…' },
           { value: 'beginner', label: 'Başlangıç' },

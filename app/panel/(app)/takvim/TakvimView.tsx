@@ -280,12 +280,17 @@ function DayBlock({
                   )}
                 </div>
               ) : (
-                bucket !== 'red' && studentSelected && (
+                // Rüzgâr sadece bilgi amaçlı — her saate atama yapılabilir (kırmızı dahil)
+                studentSelected && (
                   <button
                     type="button"
                     onClick={() => onPlan(h.iso)}
                     disabled={pending}
-                    className="text-xs font-bold bg-[#14b8cf] text-[#062131] px-3 py-1 rounded-full hover:bg-[#0fa3b8] disabled:opacity-60"
+                    className={`text-xs font-bold px-3 py-1 rounded-full disabled:opacity-60 ${
+                      bucket === 'red'
+                        ? 'bg-white text-[#062131] border border-[#14b8cf]/50 hover:bg-[#eef1f4]'
+                        : 'bg-[#14b8cf] text-[#062131] hover:bg-[#0fa3b8]'
+                    }`}
                   >
                     Planla
                   </button>

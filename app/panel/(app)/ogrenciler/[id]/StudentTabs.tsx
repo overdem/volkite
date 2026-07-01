@@ -244,6 +244,7 @@ function ProfileTab({ student, studentId }: { student: Student; studentId: strin
     ['contact', 'Telefon/WA', 'text'],
     ['email', 'E-posta', 'email'],
     ['nationality', 'Uyruk', 'text'],
+    ['birth_date', 'Doğum Tarihi', 'date'],
     ['weight_kg', 'Kilo (kg)', 'number'],
     ['emergency_contact', 'Acil İletişim', 'text'],
   ];
@@ -261,6 +262,19 @@ function ProfileTab({ student, studentId }: { student: Student; studentId: strin
           />
         </div>
       ))}
+      <div>
+        <label className="block text-xs text-[#8497a1] mb-1">Cinsiyet</label>
+        <select
+          name="gender"
+          defaultValue={student['gender'] as string ?? ''}
+          className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#14b8cf]"
+        >
+          <option value="">Belirtilmedi</option>
+          <option value="male">Erkek</option>
+          <option value="female">Kadın</option>
+          <option value="other">Diğer</option>
+        </select>
+      </div>
       <div>
         <label className="block text-xs text-[#8497a1] mb-1">Seviye</label>
         <select
