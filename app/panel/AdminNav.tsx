@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-const NAV = [
+export const NAV = [
   { href: '/panel', label: 'Dashboard', exact: true },
   { href: '/panel/takvim', label: 'Takvim' },
   { href: '/panel/on-kayitlar', label: 'Ön Kayıtlar' },

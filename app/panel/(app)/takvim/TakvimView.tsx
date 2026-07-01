@@ -3,9 +3,10 @@
 import { useState, useMemo, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { scoreHour, type WindBand, type HourBucket } from '@/lib/wind';
-import { istanbulToUtc, utcToIstanbulHourKey, type WindData, type HourSlot } from '@/lib/openmeteo';
-import { levelShort, levelColor, levelLabel } from '@/lib/level';
-import { createSession, cancelSession } from '../../actions';
+import { utcToIstanbulHourKey, type WindData, type HourSlot } from '@/lib/openmeteo';
+import { levelShort, levelColor } from '@/lib/level';
+import { cancelSession } from '../../actions';
+import SlotDialog from './SlotDialog';
 
 type Student = { id: string; name: string; level: string; instructorId: string | null };
 type Instructor = { id: string; name: string };
@@ -48,33 +49,13 @@ const BUCKET_LABEL: Record<HourBucket, string> = {
   red:    'Uygun değil',
 };
 
-
 export default function TakvimView({
   role, userId, students, instructors, bandByLevel, sessions, currentWind, hourly,
 }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [studentId, setStudentId] = useState<string>(students[0]?.id ?? '');
-  const [instructorId, setInstructorId] = useState<string>(
-    role === 'admin' ? (students[0]?.instructorId ?? instructors[0]?.id ?? '') : userId
-  );
-  const [error, setError] = useState('');
-  const [manualDate, setManualDate] = useState('');
-  const [manualTime, setManualTime] = useState('11:00');
-  const [manualMsg, setManualMsg] = useState('');
-
-  const selected = students.find((s) => s.id === studentId);
-  const band = selected ? bandByLevel[selected.level] : undefined;
-
-  // Admin öğrenci seçince varsayılan hoca = öğrencinin atandığı hoca (override edilebilir)
-  function onStudentChange(id: string) {
-    setStudentId(id);
-    setError('');
-    if (role === 'admin') {
-      const st = students.find((s) => s.id === id);
-      if (st?.instructorId) setInstructorId(st.instructorId);
-    }
-  }
+  // Atama artık slot-dialog'undan yapılır; global öğrenci/hoca seçimi yok.
+  const [dialog, setDialog] = useState<{ iso: string | null; mode: 'slot' | 'manual' } | null>(null);
 
   // Saatleri güne grupla
   const byDay = useMemo(() => {
@@ -86,6 +67,8 @@ export default function TakvimView({
     return map;
   }, [hourly]);
 
+  const hourByIso = useMemo(() => new Map(hourly.map((h) => [h.iso, h])), [hourly]);
+
   const instructorName = useMemo(() => {
     const m = new Map<string, string>();
     instructors.forEach((i) => m.set(i.id, i.name));
@@ -94,8 +77,21 @@ export default function TakvimView({
 
   // Saat başına slot = hoca sayısı (ileride 5+ olabilir). En az 1.
   const capacity = Math.max(1, instructors.length);
-  // Plan butonunun atayacağı hoca: admin dropdown'dan seçer, hoca kendisidir.
-  const planInstructorId = role === 'admin' ? instructorId : userId;
+
+  // Global öğrenci kalktı → satırları tek "genel bant"a göre renklendir.
+  // (Kişiye özel uygunluk, dialog'da öğrenci seçilince başlıkta görünür.)
+  const generalBand = useMemo<WindBand | undefined>(() => {
+    const bands = Object.values(bandByLevel);
+    if (bands.length === 0) return undefined;
+    return {
+      level: 'general',
+      min_kn: Math.min(...bands.map((b) => b.min_kn)),
+      max_kn: Math.max(...bands.map((b) => b.max_kn)),
+      max_gust_kn: Math.max(...bands.map((b) => b.max_gust_kn)),
+      ideal_kn: Math.round(bands.reduce((s, b) => s + b.ideal_kn, 0) / bands.length),
+      note_tr: null,
+    };
+  }, [bandByLevel]);
 
   const dates = useMemo(() => Array.from(byDay.keys()).sort(), [byDay]);
   const trustDates = dates.slice(0, 3);
@@ -111,49 +107,8 @@ export default function TakvimView({
     [sessions, forecastDateSet]
   );
 
-  function planAt(iso: string) {
-    if (!studentId) { setError('Önce öğrenci seç'); return; }
-    if (role === 'admin' && instructors.length > 0 && !instructorId) {
-      setError('Önce hoca seç');
-      return;
-    }
-    setError('');
-    startTransition(async () => {
-      const res = await createSession({
-        studentId,
-        scheduledAt: istanbulToUtc(iso), // Istanbul yerel → UTC
-        durationHours: 1.5,
-        instructorId: role === 'admin' ? (instructorId || undefined) : undefined,
-      });
-      if (res?.error) setError(res.error);
-      router.refresh();
-    });
-  }
-
-  function planManual() {
-    setManualMsg('');
-    if (!studentId) { setError('Önce öğrenci seç'); return; }
-    if (role === 'admin' && instructors.length > 0 && !instructorId) {
-      setError('Önce hoca seç');
-      return;
-    }
-    if (!manualDate || !manualTime) { setError('Tarih ve saat seç'); return; }
-    setError('');
-    const iso = `${manualDate}T${manualTime}`; // İstanbul yerel
-    startTransition(async () => {
-      const res = await createSession({
-        studentId,
-        scheduledAt: istanbulToUtc(iso),
-        durationHours: 1.5,
-        instructorId: role === 'admin' ? (instructorId || undefined) : undefined,
-      });
-      if (res?.error) { setError(res.error); return; }
-      const d = new Date(iso);
-      setManualMsg(
-        `Ders eklendi: ${d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })} ${manualTime}`
-      );
-      router.refresh();
-    });
+  function openSlot(iso: string) {
+    setDialog({ iso, mode: 'slot' });
   }
 
   function cancel(id: string) {
@@ -163,6 +118,12 @@ export default function TakvimView({
       router.refresh();
     });
   }
+
+  // Açık dialog için bağlam (slot modu): rüzgâr etiketi + renk
+  const dlgHour = dialog?.mode === 'slot' && dialog.iso ? hourByIso.get(dialog.iso) : undefined;
+  const dlgBucket = dlgHour && generalBand ? scoreHour(dlgHour, generalBand) : undefined;
+  const dlgWindLabel = dlgHour ? `${dlgHour.speed_kn} kn — ${dlgBucket ? BUCKET_LABEL[dlgBucket] : ''}` : undefined;
+  const dlgColor = dlgBucket ? { bg: BUCKET_COLOR[dlgBucket].bg, text: BUCKET_COLOR[dlgBucket].text } : undefined;
 
   return (
     <div className="p-4 md:p-8 space-y-4 md:space-y-6 pb-24">
@@ -174,96 +135,23 @@ export default function TakvimView({
         <WindChip wind={currentWind} />
       </header>
 
-      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-900 leading-snug">
-        ⚠️ Tahmin garanti değil — gerçek rüzgâr değişir.
-        <strong> İlk 3 gün</strong> güvenilir, sonrası <strong>eğilim</strong> gösterir.
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-900 leading-snug flex-1 min-w-[240px]">
+          ⚠️ Tahmin garanti değil — gerçek rüzgâr değişir.
+          <strong> İlk 3 gün</strong> güvenilir, sonrası <strong>eğilim</strong> gösterir.
+        </div>
+        <button
+          type="button"
+          onClick={() => setDialog({ iso: null, mode: 'manual' })}
+          className="bg-white border border-[#e4e9ee] text-[#07283b] font-bold text-sm px-4 py-2 rounded-lg hover:bg-[#eef1f4] whitespace-nowrap"
+        >
+          + İleri tarih ata
+        </button>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs text-[#8497a1] mb-1">Öğrenci</label>
-            <select
-              value={studentId}
-              onChange={(e) => onStudentChange(e.target.value)}
-              className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
-            >
-              <option value="">Seç…</option>
-              {students.map((s) => (
-                <option key={s.id} value={s.id}>{levelShort(s.level)} · {s.name}</option>
-              ))}
-            </select>
-          </div>
-          {role === 'admin' && (
-            <div>
-              <label className="block text-xs text-[#8497a1] mb-1">Hoca</label>
-              <select
-                value={instructorId}
-                onChange={(e) => setInstructorId(e.target.value)}
-                className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
-              >
-                <option value="">Seç…</option>
-                {instructors.map((i) => (
-                  <option key={i.id} value={i.id}>{i.name}</option>
-                ))}
-              </select>
-            </div>
-          )}
-          {band && selected && (
-            <div className="bg-[#eef1f4] rounded-lg p-3 text-xs text-[#3a5563]">
-              <div className="flex items-center gap-2 font-bold text-[#07283b]">
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${levelColor(selected.level)}`}>
-                  {levelShort(selected.level)}
-                </span>
-                <span>{selected.name}</span>
-                <span className="text-[10px] text-[#8497a1] font-normal">({levelLabel(selected.level)})</span>
-              </div>
-              <div className="mt-1">İdeal {band.ideal_kn}kn · {band.min_kn}–{band.max_kn}kn · hamle ≤ {band.max_gust_kn}kn</div>
-            </div>
-          )}
-        </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-      </div>
-
-      {/* Manuel tarih ile ata — forecast dışı ileri tarihler (ör. bir ay sonrası) */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
-        <div>
-          <p className="text-xs uppercase tracking-wider text-[#14b8cf] font-bold">İleri Tarih</p>
-          <h2 className="text-sm font-bold text-[#07283b]">Tarih seçerek ata (rüzgârdan bağımsız)</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label className="block text-xs text-[#8497a1] mb-1">Tarih</label>
-            <input
-              type="date"
-              value={manualDate}
-              min={new Date().toISOString().slice(0, 10)}
-              onChange={(e) => setManualDate(e.target.value)}
-              className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-[#8497a1] mb-1">Saat</label>
-            <input
-              type="time"
-              value={manualTime}
-              onChange={(e) => setManualTime(e.target.value)}
-              className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
-            />
-          </div>
-          <div className="flex items-end">
-            <button
-              type="button"
-              onClick={planManual}
-              disabled={pending}
-              className="w-full bg-[#14b8cf] text-[#062131] font-bold text-sm px-4 py-2 rounded-lg hover:bg-[#0fa3b8] disabled:opacity-60"
-            >
-              Ata
-            </button>
-          </div>
-        </div>
-        {manualMsg && <p className="text-sm text-green-700">{manualMsg}</p>}
-      </div>
+      <p className="text-xs text-[#8497a1]">
+        Bir saatteki <strong>+ Planla</strong>&apos;ya bas → öğrenci ve hocayı seç. Saat başına {capacity} slot (hoca sayısı).
+      </p>
 
       {/* İleri tarihli (forecast dışı) planlı dersler */}
       {futureSessions.length > 0 && (
@@ -310,16 +198,14 @@ export default function TakvimView({
           key={date}
           date={date}
           hours={byDay.get(date) ?? []}
-          band={band}
+          band={generalBand}
           sessions={sessions.filter((s) => utcToIstanbulHourKey(s.scheduledAt).startsWith(date))}
-          onPlan={planAt}
+          onPlan={openSlot}
           onCancel={cancel}
           pending={pending}
-          studentSelected={!!studentId}
           instructorName={instructorName}
           role={role}
           userId={userId}
-          selectedInstructorId={planInstructorId}
           capacity={capacity}
           trust
         />
@@ -334,16 +220,14 @@ export default function TakvimView({
               key={date}
               date={date}
               hours={byDay.get(date) ?? []}
-              band={band}
+              band={generalBand}
               sessions={sessions.filter((s) => utcToIstanbulHourKey(s.scheduledAt).startsWith(date))}
-              onPlan={planAt}
+              onPlan={openSlot}
               onCancel={cancel}
               pending={pending}
-              studentSelected={!!studentId}
               instructorName={instructorName}
               role={role}
               userId={userId}
-              selectedInstructorId={planInstructorId}
               capacity={capacity}
             />
           ))}
@@ -369,13 +253,28 @@ export default function TakvimView({
           </div>
         </section>
       )}
+
+      {dialog && (
+        <SlotDialog
+          onClose={() => setDialog(null)}
+          onDone={() => router.refresh()}
+          role={role}
+          students={students}
+          instructors={instructors}
+          iso={dialog.iso}
+          windLabel={dlgWindLabel}
+          bucketColor={dlgColor}
+          sessions={sessions}
+          mode={dialog.mode}
+        />
+      )}
     </div>
   );
 }
 
 function WindChip({ wind }: { wind: WindData | null }) {
   return (
-    <div className="inline-flex items-center gap-2 bg-[#062131] text-white px-3 py-2 rounded-full text-sm">
+    <div className="inline-flex items-center gap-2 bg-[#07283b] text-white px-3 py-2 rounded-full text-sm">
       <span className="w-2 h-2 rounded-full bg-green-400" />
       <span className="text-[#9fc0cf]">Şu an</span>
       <strong className="font-display text-[#14b8cf]">
@@ -387,8 +286,8 @@ function WindChip({ wind }: { wind: WindData | null }) {
 }
 
 function DayBlock({
-  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected,
-  instructorName, role, userId, selectedInstructorId, capacity, trust,
+  date, hours, band, sessions, onPlan, onCancel, pending,
+  instructorName, role, userId, capacity, trust,
 }: {
   date: string;
   hours: HourSlot[];
@@ -397,11 +296,9 @@ function DayBlock({
   onPlan: (iso: string) => void;
   onCancel: (id: string) => void;
   pending: boolean;
-  studentSelected: boolean;
   instructorName: Map<string, string>;
   role: 'admin' | 'instructor';
   userId: string;
-  selectedInstructorId: string;
   capacity: number;
   trust: boolean;
 }) {
@@ -428,22 +325,19 @@ function DayBlock({
         onPlan={onPlan}
         onCancel={onCancel}
         pending={pending}
-        studentSelected={studentSelected}
         instructorName={instructorName}
         role={role}
         userId={userId}
-        selectedInstructorId={selectedInstructorId}
         capacity={capacity}
       />
     </section>
   );
 }
 
-// Bir günün saatlik satırları — saat başına 3 slot (paralel hoca). DayBlock ve
-// genişletilmiş TrendDay tarafından paylaşılır.
+// Bir günün saatlik satırları — saat başına 'capacity' slot (paralel hoca).
+// DayBlock ve genişletilmiş TrendDay tarafından paylaşılır.
 function HourRows({
-  hours, band, sessions, onPlan, onCancel, pending, studentSelected,
-  instructorName, role, userId, selectedInstructorId, capacity,
+  hours, band, sessions, onPlan, onCancel, pending, instructorName, role, userId, capacity,
 }: {
   hours: HourSlot[];
   band: WindBand | undefined;
@@ -451,11 +345,9 @@ function HourRows({
   onPlan: (iso: string) => void;
   onCancel: (id: string) => void;
   pending: boolean;
-  studentSelected: boolean;
   instructorName: Map<string, string>;
   role: 'admin' | 'instructor';
   userId: string;
-  selectedInstructorId: string;
   capacity: number;
 }) {
   return (
@@ -468,8 +360,6 @@ function HourRows({
         );
         const used = hourSessions.length;
         const full = used >= capacity;
-        const selBusy = !!selectedInstructorId && hourSessions.some((s) => s.instructorId === selectedInstructorId);
-        const canPlan = studentSelected && !full && !selBusy;
 
         return (
           <div key={h.iso} className={`rounded-lg px-3 py-2 ${color.bg}`}>
@@ -489,7 +379,7 @@ function HourRows({
                 <span className={`text-[10px] font-bold ${used ? 'text-[#3a5563]' : 'text-[#8497a1]'}`}>
                   {used}/{capacity}
                 </span>
-                {canPlan && (
+                {!full ? (
                   <button
                     type="button"
                     onClick={() => onPlan(h.iso)}
@@ -502,11 +392,9 @@ function HourRows({
                   >
                     + Planla
                   </button>
+                ) : (
+                  <span className="text-[10px] text-[#8497a1]">dolu</span>
                 )}
-                {studentSelected && !full && selBusy && role === 'admin' && (
-                  <span className="text-[10px] text-[#8497a1]">seçili hoca dolu</span>
-                )}
-                {full && <span className="text-[10px] text-[#8497a1]">dolu</span>}
               </div>
             </div>
 
@@ -558,8 +446,7 @@ function HourRows({
 }
 
 function TrendDay({
-  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected,
-  instructorName, role, userId, selectedInstructorId, capacity,
+  date, hours, band, sessions, onPlan, onCancel, pending, instructorName, role, userId, capacity,
 }: {
   date: string;
   hours: HourSlot[];
@@ -568,11 +455,9 @@ function TrendDay({
   onPlan: (iso: string) => void;
   onCancel: (id: string) => void;
   pending: boolean;
-  studentSelected: boolean;
   instructorName: Map<string, string>;
   role: 'admin' | 'instructor';
   userId: string;
-  selectedInstructorId: string;
   capacity: number;
 }) {
   const [expanded, setExpanded] = useState(sessions.length > 0);
@@ -632,11 +517,9 @@ function TrendDay({
           onPlan={onPlan}
           onCancel={onCancel}
           pending={pending}
-          studentSelected={studentSelected}
           instructorName={instructorName}
           role={role}
           userId={userId}
-          selectedInstructorId={selectedInstructorId}
           capacity={capacity}
         />
       )}

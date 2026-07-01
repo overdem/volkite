@@ -31,7 +31,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   if (role === 'instructor') {
     return (
       <div className="min-h-screen flex flex-col font-body bg-[#eef1f4]">
-        <header className="bg-[#062131] text-[#dceaf0] px-4 py-3 flex items-center justify-between">
+        <header className="bg-[#07283b] text-[#dceaf0] px-4 py-3 flex items-center justify-between">
           <div>
             <span className="font-display text-lg tracking-wider text-[#14b8cf]">VOLKITE</span>
             <p className="text-[10px] text-[#9fc0cf] -mt-0.5">Hoca Paneli</p>
