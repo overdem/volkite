@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import AdminNav from './AdminNav';
+import { usePathname } from 'next/navigation';
+import AdminNav, { NAV } from './AdminNav';
 import { logout } from './actions';
 
 export default function AdminShell({
@@ -14,11 +15,16 @@ export default function AdminShell({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const activeLabel =
+    [...NAV].sort((a, b) => b.href.length - a.href.length).find((n) =>
+      n.exact ? pathname === n.href : pathname.startsWith(n.href)
+    )?.label ?? 'VOLKITE';
 
   return (
     <div className="min-h-screen md:h-full md:flex font-body bg-[#eef1f4]">
       {/* Mobile top bar */}
-      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-[#062131] text-[#dceaf0] px-4 py-3">
+      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-[#07283b] text-[#dceaf0] px-4 py-3">
         <button
           onClick={() => setOpen(true)}
           aria-label="Menüyü aç"
@@ -28,7 +34,7 @@ export default function AdminShell({
           <span className="block w-5 h-0.5 bg-[#dceaf0] rounded" />
           <span className="block w-5 h-0.5 bg-[#dceaf0] rounded" />
         </button>
-        <span className="font-display text-lg tracking-wider text-[#14b8cf]">VOLKITE</span>
+        <span className="font-bold text-[#dceaf0]">{activeLabel}</span>
         {pendingCount > 0 ? (
           <span className="bg-[#14b8cf] text-[#062131] text-xs font-bold px-1.5 py-0.5 rounded-full">
             {pendingCount}
@@ -49,7 +55,7 @@ export default function AdminShell({
 
       {/* Sidebar / drawer */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 z-50 w-64 md:w-56 shrink-0 flex flex-col bg-[#062131] text-[#dceaf0] transform transition-transform duration-200 ${
+        className={`fixed md:static inset-y-0 left-0 z-50 w-64 md:w-56 shrink-0 flex flex-col bg-[#07283b] text-[#dceaf0] transform transition-transform duration-200 ${
           open ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}
       >

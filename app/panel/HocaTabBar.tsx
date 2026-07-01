@@ -14,7 +14,7 @@ export default function HocaTabBar() {
   const pathname = usePathname();
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-50 bg-[#062131] border-t border-white/10 flex justify-around"
+      className="fixed bottom-0 inset-x-0 z-50 bg-[#07283b] border-t border-white/10 flex justify-around"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {TABS.map(({ href, label, exact, icon }) => {
