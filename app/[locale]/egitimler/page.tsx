@@ -112,8 +112,18 @@ export default async function EgitimlerPage({
       <main style={{ fontFamily: 'Manrope, sans-serif', color: '#07283b' }}>
         {/* Hero */}
         <section style={{ position: 'relative', color: '#fbf6ec', padding: 'clamp(110px,13vw,150px) clamp(20px,5vw,72px) clamp(60px,8vw,110px)', overflow: 'hidden' }}>
-          <Image src="/images/egitim-kurs-1.jpg" alt="Gökçeada kitesurf dersi — Volkite" fill style={{ objectFit: 'cover', objectPosition: 'center 45%' }} priority sizes="100vw" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.55) 0%,rgba(6,33,49,.9) 100%)' }} />
+          <Image
+            src="/images/egitim-hero.jpg"
+            alt="Gökçeada Kefaloz kitesurf — Volkite"
+            fill
+            style={{ objectFit: 'cover', objectPosition: 'center 42%', filter: 'saturate(1.22) contrast(1.1) brightness(1.06)' }}
+            priority
+            sizes="100vw"
+          />
+          {/* Sol taraf metin okunurluğu için scrim; sağ/orta fotoğraf canlı kalır */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg,rgba(6,33,49,.82) 0%,rgba(6,33,49,.45) 42%,rgba(6,33,49,.05) 72%,rgba(6,33,49,0) 100%)' }} />
+          {/* Altta ince koyulaşma — üst kısım açık */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.28) 0%,rgba(6,33,49,0) 30%,rgba(6,33,49,0) 60%,rgba(6,33,49,.55) 100%)' }} />
           <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
               {t('kicker')}
