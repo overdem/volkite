@@ -1,16 +1,18 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export default function Footer() {
   const t = useTranslations('footer');
   const nav = useTranslations('nav');
   const year = new Date().getFullYear();
 
+  // Sayfa rotaları — her sayfada çalışır (hash yerine gerçek route)
   const links = [
-    { href: '#egitimler', label: nav('lessons') },
-    { href: '#hizmetler', label: nav('services') },
-    { href: '#sss',       label: nav('faq') },
-    { href: '#rezervasyon', label: nav('contact') },
+    { href: '/egitimler', label: nav('lessons') },
+    { href: '/hizmetler', label: nav('services') },
+    { href: '/sss',       label: nav('faq') },
+    { href: '/#iletisim', label: nav('contact') },
   ];
 
   return (
@@ -41,9 +43,9 @@ export default function Footer() {
             </div>
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {links.map(({ href, label }) => (
-                <a key={href} href={href} className="footer-nav-link">
+                <Link key={href} href={href} className="footer-nav-link">
                   {label}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -54,7 +56,7 @@ export default function Footer() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <a href="tel:+905332411015" style={{ color: '#9fc0cf', textDecoration: 'none', fontSize: '15px' }}>+90 533 241 10 15</a>
-              <a href="mailto:info@volkite.com" style={{ color: '#9fc0cf', textDecoration: 'none', fontSize: '15px' }}>info@volkite.com</a>
+              <a href="mailto:volkite@volkite.com" style={{ color: '#9fc0cf', textDecoration: 'none', fontSize: '15px' }}>volkite@volkite.com</a>
               <p style={{ color: '#9fc0cf', fontSize: '14px', lineHeight: 1.5, margin: 0 }}>Eşelek Köyü, Köy Sokağı 104/1<br />Gökçeada, Çanakkale</p>
             </div>
           </div>

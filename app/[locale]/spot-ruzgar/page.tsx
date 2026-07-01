@@ -255,7 +255,7 @@ export default async function SpotRuzgarPage({
                   {t('live_wind_cta')}
                 </a>
                 <Link
-                  href="/#rezervasyon"
+                  href="/#iletisim"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#ff6a3d', color: '#fff', fontWeight: 800, padding: '13px 22px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
                 >
                   Kayıt Yaptır →
