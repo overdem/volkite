@@ -33,6 +33,7 @@ export default function GaleriPage() {
         <section style={{ background: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
           <div style={{ maxWidth: '1340px', margin: '0 auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '14px', marginBottom: '40px' }}>
+              <style>{`.vk-gitem:hover img { transform: scale(1.06); }`}</style>
               {[
                 ['/images/hero-beach.jpg',       'Kefaloz Koyundan drone'],
                 ['/images/egitim-kurs-1.jpg',    'Kitesurf dersi'],
@@ -51,15 +52,13 @@ export default function GaleriPage() {
                 ['/images/galeri-2.jpg',         'Volkite anı 2'],
                 ['/images/galeri-okul.jpg',      'Volkite okul hayatı'],
               ].map(([src, alt]) => (
-                <div key={src} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden' }}>
+                <div key={src} className="vk-gitem" style={{ position: 'relative', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden' }}>
                   <Image
                     src={src}
                     alt={alt}
                     fill
                     style={{ objectFit: 'cover', transition: 'transform .35s ease' }}
                     sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 300px"
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.06)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
                   />
                 </div>
               ))}
