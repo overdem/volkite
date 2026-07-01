@@ -35,7 +35,7 @@ export default async function HocalarPage() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-8">
       <header>
         <p className="text-xs uppercase tracking-wider text-[#14b8cf] font-bold">Hocalar</p>
         <h1 className="text-2xl font-bold text-[#07283b]">Personel Yönetimi</h1>
@@ -45,7 +45,7 @@ export default async function HocalarPage() {
 
       <section>
         <h2 className="font-semibold text-[#07283b] mb-3">Tüm Personel ({profiles?.length ?? 0})</h2>
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-[#eef1f4] text-[#8497a1] text-xs uppercase tracking-wider">
               <tr>

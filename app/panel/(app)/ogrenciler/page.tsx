@@ -85,7 +85,7 @@ export default async function OgrencilerPage() {
 
   // Admin desktop tablo
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#07283b]">Öğrenciler</h1>
         <span className="text-sm text-[#8497a1]">{students.length} kayıt</span>
@@ -97,7 +97,7 @@ export default async function OgrencilerPage() {
         selfId={userId ?? ''}
       />
 
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-[#eef1f4] text-[#8497a1] text-xs uppercase tracking-wider">
             <tr>

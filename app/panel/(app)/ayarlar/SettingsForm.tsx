@@ -117,7 +117,7 @@ function WindBandRow({ band }: { band: WindBand }) {
           {saved ? '✓' : pending ? '…' : 'Kaydet'}
         </button>
       </div>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {([['min_kn', 'Min (kn)'], ['max_kn', 'Max (kn)'], ['max_gust_kn', 'Max Hamle (kn)'], ['ideal_kn', 'İdeal (kn)']] as [string, string][]).map(([name, label]) => (
           <div key={name}>
             <label className="block text-xs text-[#8497a1] mb-1">{label}</label>

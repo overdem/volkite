@@ -14,17 +14,24 @@ const NAV = [
   { href: '/panel/ayarlar', label: 'Ayarlar' },
 ];
 
-export default function AdminNav({ pendingCount }: { pendingCount: number }) {
+export default function AdminNav({
+  pendingCount,
+  onNavigate,
+}: {
+  pendingCount: number;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex-1 px-3 py-4 space-y-0.5 text-sm">
+    <nav className="px-3 py-4 space-y-0.5 text-sm">
       {NAV.map(({ href, label, exact }) => {
         const active = exact ? pathname === href : pathname.startsWith(href);
         return (
           <Link
             key={href}
             href={href}
+            onClick={onNavigate}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
               active
                 ? 'bg-[#14b8cf]/15 text-white'

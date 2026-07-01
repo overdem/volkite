@@ -29,7 +29,7 @@ export default async function OdemelerPage({
   const totalDue = (rows ?? []).filter((r) => !r.paid).reduce((s, r) => s + Number(r.amount_eur ?? 0), 0);
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
       <header>
         <p className="text-xs uppercase tracking-wider text-[#14b8cf] font-bold">Ödemeler</p>
         <h1 className="text-2xl font-bold text-[#07283b]">Tüm Ödemeler</h1>
@@ -47,7 +47,7 @@ export default async function OdemelerPage({
         <Filter href="/panel/odemeler?paid=yes" label="Tahsil Edildi" active={paid === 'yes'} />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-[#eef1f4] text-[#8497a1] text-xs uppercase tracking-wider">
             <tr>

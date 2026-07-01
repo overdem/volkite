@@ -35,7 +35,7 @@ export default async function StudentDetailPage({
   if (!data.student) notFound();
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-6 flex items-center gap-3 flex-wrap">
         <span className={`text-xs font-bold px-2 py-1 rounded ${levelColor(data.student.level as string | null)}`}>
           {levelShort(data.student.level as string | null)}

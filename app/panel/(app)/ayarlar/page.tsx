@@ -41,7 +41,7 @@ export default async function AyarlarPage() {
   // Admin: tam ayarlar
   const { settings, bands } = await getData();
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <h1 className="text-2xl font-bold text-[#07283b] mb-6">Ayarlar</h1>
       <SettingsForm settings={settings} bands={bands} />
     </div>
