@@ -22,12 +22,15 @@ export default async function TakvimPage() {
   if (role === 'instructor') studentsQ = studentsQ.eq('assigned_instructor', userId);
   const { data: students } = await studentsQ;
 
-  // Hocalar (admin için kim adına planlandığını gösterir).
-  // Admin aynı zamanda hoca rolünde olabilir → kendine de atama yapabilsin diye
-  // admin profilleri de listeye dahil.
-  const { data: instructors } = role === 'admin'
-    ? await db.from('profiles').select('id, name').eq('active', true).in('role', ['admin', 'instructor']).order('name')
-    : { data: [] };
+  // Hocalar — her rol için gerekli: slot kapasitesi (= hoca sayısı) ve session
+  // çiplerinde hoca adı için. Admin aynı zamanda hoca rolünde olabildiğinden
+  // admin profilleri de dahil.
+  const { data: instructors } = await db
+    .from('profiles')
+    .select('id, name')
+    .eq('active', true)
+    .in('role', ['admin', 'instructor'])
+    .order('name');
 
   // wind_bands
   const { data: bands } = await db.from('wind_bands').select('*');
@@ -55,15 +58,16 @@ export default async function TakvimPage() {
   const to = new Date();
   to.setDate(to.getDate() + 90);
 
-  let sessQ = db
+  // Not: hoca da TÜM takvimi görür (slot doluluğunu bilmek için) — bu yüzden
+  // instructor_id filtresi yok. Kendi öğrencisine atama yapar, ama başkalarının
+  // planlarını da görebilir.
+  const { data: rawSessions } = await db
     .from('sessions')
     .select('id, student_id, instructor_id, scheduled_at, duration_hours, status, note, students(name, level)')
     .gte('scheduled_at', fromIso)
     .lte('scheduled_at', to.toISOString())
     .in('status', ['planned', 'done'])
     .order('scheduled_at');
-  if (role === 'instructor') sessQ = sessQ.eq('instructor_id', userId);
-  const { data: rawSessions } = await sessQ;
 
   const sessions = (rawSessions ?? []).map((s) => {
     const st = s.students as unknown as { name?: string; level?: string } | null;
