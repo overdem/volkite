@@ -92,10 +92,10 @@ const PROGRAMS: Program[] = [
 ];
 
 const ADVANTAGES = [
-  { icon: '🎓', title: 'Tecrübeli Eğitmen Kadrosu', desc: 'TYF (Yelken Federasyonu) en üst seviye KB5/KB4 belgeli, deneyimli eğitmenler.' },
-  { icon: '🎧', title: 'Telsiz Kask ile Konfor', desc: 'BB Talkin telsiz kask — sürerken eğitmenle çift yönlü, kesintisiz iletişim.' },
-  { icon: '💨', title: 'İdeal Rüzgâr', desc: 'Onshore (karaya esen) rüzgâr — kite düşse bile açığa sürüklenmezsin, güvendesin.' },
-  { icon: '🏝️', title: 'Trafikten İzole Alan', desc: '4 km trafiksiz koy, 600 m şamandıralı özel eğitim alanı, sığ ve güvenli su.' },
+  { img: '/images/egitim-kurs-3.jpg', title: 'Tecrübeli Eğitmen Kadrosu', desc: 'TYF (Yelken Federasyonu) en üst seviye KB5/KB4 belgeli, deneyimli eğitmenler.' },
+  { img: '/images/egitim-kurs-2.jpg', title: 'Telsiz Kask ile Konfor', desc: 'BB Talkin telsiz kask — sürerken eğitmenle çift yönlü, kesintisiz iletişim.' },
+  { img: '/images/spot-plaj.jpg', title: 'İdeal Rüzgâr', desc: 'Onshore (karaya esen) rüzgâr — kite düşse bile açığa sürüklenmezsin, güvendesin.' },
+  { img: '/images/spot-egitim-alani.jpg', title: 'Trafikten İzole Alan', desc: '4 km trafiksiz koy, 600 m şamandıralı özel eğitim alanı, sığ ve güvenli su.' },
 ];
 
 export default async function EgitimlerPage({
@@ -168,11 +168,16 @@ export default async function EgitimlerPage({
               {ADVANTAGES.map((adv) => (
                 <div
                   key={adv.title}
-                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: '30px 26px', textAlign: 'center' }}
+                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
                 >
-                  <div style={{ fontSize: '40px', marginBottom: '16px', lineHeight: 1 }}>{adv.icon}</div>
-                  <h3 style={{ fontSize: '17px', fontWeight: 800, marginBottom: '10px', color: '#fbf6ec' }}>{adv.title}</h3>
-                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#9fc0cf', margin: 0 }}>{adv.desc}</p>
+                  <div style={{ position: 'relative', aspectRatio: '4/3' }}>
+                    <Image src={adv.img} alt={adv.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 50vw, 300px" />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(12,51,70,0) 55%,rgba(12,51,70,.55) 100%)' }} />
+                  </div>
+                  <div style={{ padding: '22px 24px 26px' }}>
+                    <h3 style={{ fontSize: '17px', fontWeight: 800, marginBottom: '10px', color: '#fbf6ec' }}>{adv.title}</h3>
+                    <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#9fc0cf', margin: 0 }}>{adv.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -250,7 +255,8 @@ export default async function EgitimlerPage({
 
                     {p.goal && (
                       <div style={{ marginTop: '28px', display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(20,184,207,.1)', border: '1px solid rgba(20,184,207,.3)', borderRadius: '10px', padding: '10px 16px', fontSize: '14px', fontWeight: 700, color: '#14b8cf' }}>
-                        🎯 {p.goal}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        {p.goal}
                       </div>
                     )}
 
@@ -274,14 +280,18 @@ export default async function EgitimlerPage({
           <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '20px' }}>
               {[
-                { icon: '🪁', title: 'Ekipman Dahil', desc: 'Tüm eğitimlerde Slingshot kite, board, trapez, kask ve telsiz dahil. Sadece kişisel eşya + güneş gözlüğü getir.' },
-                { icon: '👥', title: 'Grup Modeli', desc: 'Arkadaşınla birlikte başlayabilirsin; seviyen açıldıkça ayrı ders almanı öneririz — herkesin gelişimi için en verimlisi.' },
-                { icon: '🏅', title: 'TYF Standardı', desc: 'Eğitimlerimiz TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli eğitmenlerle, federasyon standartlarında verilir.' },
+                { img: '/images/hizmet-slingshot2.jpg', title: 'Ekipman Dahil', desc: 'Tüm eğitimlerde Slingshot kite, board, trapez, kask ve telsiz dahil. Sadece kişisel eşya + güneş gözlüğü getir.' },
+                { img: '/images/egitim-kurs-1.jpg', title: 'Grup Modeli', desc: 'Arkadaşınla birlikte başlayabilirsin; seviyen açıldıkça ayrı ders almanı öneririz — herkesin gelişimi için en verimlisi.' },
+                { img: '/images/hizmet-tyf.jpg', title: 'TYF Standardı', desc: 'Eğitimlerimiz TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli eğitmenlerle, federasyon standartlarında verilir.' },
               ].map((n) => (
-                <div key={n.title} style={{ background: '#fff', border: '1px solid #ece1cc', borderRadius: '16px', padding: '26px' }}>
-                  <div style={{ fontSize: '30px', marginBottom: '12px' }}>{n.icon}</div>
-                  <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#07283b', marginBottom: '8px' }}>{n.title}</h3>
-                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#3a5563', margin: 0 }}>{n.desc}</p>
+                <div key={n.title} style={{ background: '#fff', border: '1px solid #ece1cc', borderRadius: '16px', overflow: 'hidden' }}>
+                  <div style={{ position: 'relative', aspectRatio: '16/10' }}>
+                    <Image src={n.img} alt={n.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 320px" />
+                  </div>
+                  <div style={{ padding: '22px 24px 26px' }}>
+                    <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#07283b', marginBottom: '8px' }}>{n.title}</h3>
+                    <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#3a5563', margin: 0 }}>{n.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
