@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
@@ -78,8 +79,10 @@ export default async function SpotRuzgarPage({
       <Nav />
       <main style={{ fontFamily: 'Manrope, sans-serif', color: '#07283b' }}>
         {/* Hero */}
-        <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+        <section style={{ position: 'relative', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)', overflow: 'hidden' }}>
+          <Image src="/images/hero-beach.jpg" alt="Gökçeada Kefaloz Koyu kitesurf spotu" fill style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority sizes="100vw" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.6) 0%,rgba(6,33,49,.85) 100%)' }} />
+          <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
               {t('kicker')}
             </div>
@@ -259,7 +262,8 @@ export default async function SpotRuzgarPage({
                 </Link>
               </div>
             </div>
-            <div style={{ position: 'relative', aspectRatio: '4/3', borderRadius: '18px', overflow: 'hidden', background: 'linear-gradient(135deg,#16384a 0%,#0c3346 100%)' }}>
+            <div style={{ position: 'relative', aspectRatio: '4/3', borderRadius: '18px', overflow: 'hidden' }}>
+              <Image src="/images/spot-egitim-alani.jpg" alt="Volkite eğitim alanı — Gökçeada Kefaloz" fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 50vw" />
               <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontFamily: 'monospace', fontSize: '13px', letterSpacing: '.1em', color: 'rgba(255,255,255,.3)', textTransform: 'uppercase' }}>
                 GÖKÇEADA
               </div>

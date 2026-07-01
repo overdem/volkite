@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
@@ -10,12 +11,16 @@ export default function Spot() {
   return (
     <section id="spot" style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(64px,8vw,120px) clamp(20px,5vw,72px)' }}>
       <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 'clamp(32px,5vw,64px)', alignItems: 'center' }}>
-        {/* Photo placeholder */}
-        <div style={{ position: 'relative', aspectRatio: '16/12', borderRadius: '18px', overflow: 'hidden', background: 'linear-gradient(135deg,#16384a 0%,#0c3346 100%)' }}>
+        {/* Photo */}
+        <div style={{ position: 'relative', aspectRatio: '16/12', borderRadius: '18px', overflow: 'hidden' }}>
+          <Image
+            src="/images/spot-kefaloz.jpg"
+            alt="Gökçeada Kefaloz Koyu kitesurf spotu"
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width:768px) 100vw, 50vw"
+          />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,0) 40%,rgba(6,33,49,.5) 100%)' }} />
-          <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontFamily: 'monospace', fontSize: '13px', letterSpacing: '.1em', color: 'rgba(255,255,255,.3)', textTransform: 'uppercase' }}>
-            KEFALOZ BAY
-          </div>
         </div>
 
         <div>
