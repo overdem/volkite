@@ -2,9 +2,8 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import { getPackages } from '@/lib/queries';
-import type { Locale } from '@/lib/queries';
 import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
 
 export async function generateMetadata({
   params,
@@ -19,83 +18,84 @@ export async function generateMetadata({
   };
 }
 
-const baslagiclDersler = [
+// ─── Programlar (fiyatlar yeni sitedeki gibi; içerik Volkan'ın resmi müfredatı) ──
+type Lesson = { no: string; baslik: string; sure: string; icerik: string };
+type Program = {
+  id: string;
+  tag: string;
+  accent: string; // hex
+  title: string;
+  dur: string;
+  price: string | null;
+  priceNote: string;
+  image: string;
+  desc: string;
+  goal?: string;
+  lessons: Lesson[];
+  cta: string;
+};
+
+const PROGRAMS: Program[] = [
   {
-    no: 'Ders 1',
-    baslik: 'Teori ve Güvenlik',
-    sure: '~2 saat',
-    icerik:
-      'Kite teorisi, rüzgar pencereleri, güvenlik sistemleri, ekipman tanıtımı, deniz ve hava koşullarını okuma, acil durum prosedürleri. Kara üzerinde uçurtma kontrolü.',
+    id: 'baslangic',
+    tag: 'Başlangıç',
+    accent: '#14b8cf',
+    title: 'Başlangıç Programı',
+    dur: '10 saat · 5 ders',
+    price: '700€',
+    priceNote: '2 kişilik grup: kişi başı 600€ · ek ders 80€/saat',
+    image: '/images/egitim-kurs-1.jpg',
+    desc: 'Hiç kitesurf deneyimi olmayanlar için tasarlanan kapsamlı program. 2\'şer saatlik 5 derste teoriden başlayıp güvenli ve bağımsız bir kiteboardcu seviyesine ulaşırsın. Günde 4 saatle çoğu kişi 2-3 günde board üstünde kaymaya başlar. Tüm ekipman, kask ve telsiz dahil.',
+    goal: 'Hedef: bağımsız kiteboardcu seviyesi',
+    lessons: [
+      { no: '1', baslik: 'Teori & Küçük Kite', sure: '50+50 dk', icerik: 'Kite tanımı, emniyet bilgisi, rüzgâr ve rüzgâr penceresi, küçük kite ile karada pratik, dört ipli kite kurulumu.' },
+      { no: '2', baslik: 'Kara–Deniz Geçişi', sure: '50+50 dk', icerik: 'Trapezle orta kite kontrolü, kite indirip-kaldırma, suya giriş, kite ile su üstünde kalkış, rüzgârla body drag, board ile ilk tanışma.' },
+      { no: '3', baslik: 'Deniz Eğitimine Devam', sure: '50+50 dk', icerik: 'Büyük kite kontrolü, board ile suda tanışma, pozisyon dengeleme, ilk waterstart denemeleri ve kısa sürüşler.' },
+      { no: '4', baslik: 'Board Eğitimine Devam', sure: '50+50 dk', icerik: 'Yalnız suya giriş, waterstart kalkışları, sürüşte pozisyon düzeltme, kontrollü sürüş ve duruşlar.' },
+      { no: '5', baslik: 'Kontrollü Sürüş', sure: '50+50 dk', icerik: 'İki yöne kontrollü sürüş, kontrollü duruşlar, dönüşler, vücut pozisyonu — bağımsız kiteboardcu seviyesi.' },
+    ],
+    cta: 'Kayıt Yaptır',
   },
   {
-    no: 'Ders 2',
-    baslik: 'Kite Kontrolü (Kara)',
-    sure: '~2 saat',
-    icerik:
-      'Bar ve güvenlik sistemleri kullanımı, güç üretme ve azaltma egzersizleri, tek elle kontrol, büyük uçurtma ile kara egzersizleri.',
+    id: 'kesif',
+    tag: 'Keşif & Devam',
+    accent: '#ff6a3d',
+    title: 'Keşif & Devam Programı',
+    dur: '4 saat · 2 ders',
+    price: null,
+    priceNote: 'Fiyat için bize sorun',
+    image: '/images/egitim-kurs-3.jpg',
+    desc: 'Rüzgârlı bir günde tamamlanabilen program. Vakti kısıtlı olanlar ya da başka yerde yarım kalan eğitimine kaldığı yerden devam etmek isteyenler için. Mevcut seviyeni değerlendirip en çok gelişim gereken alanlara odaklanıyoruz.',
+    lessons: [
+      { no: '1', baslik: 'Teori Eğitimi', sure: '50+50 dk', icerik: 'Kite tanımı, emniyet bilgisi, rüzgâr ve rüzgâr penceresi, küçük kite ile karada eğitim, dört ipli büyük kite kurulumu.' },
+      { no: '2', baslik: 'Kara–Deniz Eğitimine Geçiş', sure: '50+50 dk', icerik: 'Trapezle kite kontrolü, kite indirip-kaldırma, suya giriş, kite ile su üstünde kalkış, rüzgâr yönleriyle body drag.' },
+    ],
+    cta: 'Fiyat Al',
   },
   {
-    no: 'Ders 3',
-    baslik: 'Body Dragging',
-    sure: '~2 saat',
-    icerik:
-      'Suda kite kontrolü, body dragging tekniği (kolsuz ve kollu), rüzgar penceresinde konumlanma, düşüş ve kurtarma teknikleri.',
-  },
-  {
-    no: 'Ders 4',
-    baslik: 'Tahta ile İlk Denemeler',
-    sure: '~2 saat',
-    icerik:
-      'Tahtayı suda tutma, water start denemeleri, kısa mesafe sürüş, dönüş teknikleri, düşme ve kalkış pratikleri.',
-  },
-  {
-    no: 'Ders 5',
-    baslik: 'Bağımsız Sürüş',
-    sure: '~2 saat',
-    icerik:
-      'Upwind sürüş, rüzgara karşı gitme teknikleri, dönüş ve yön değiştirme, bağımsız çıkış ve iniş, bağımsız kiteboardcu seviyesi.',
+    id: 'ileri',
+    tag: 'İleri Seviye',
+    accent: '#3ee07a',
+    title: 'İleri Seviye Programı',
+    dur: 'saatlik',
+    price: '80€',
+    priceNote: 'saat başına · 2 kişilik grupta kişi başı için bize sorun',
+    image: '/images/egitim-kurs-5.jpg',
+    desc: 'Bağımsız sürüş yapabilen, atlama ve trick öğrenmek isteyen sporcular için. Freeride, oldschool ve newschool freestyle ile gelişimin devam eder. BB Talkin telsizle eğitmenle kesintisiz iletişim. Program kişisel hedeflerine göre özelleştirilir.',
+    lessons: [
+      { no: '1', baslik: 'Rüzgârüstü Sürüşler', sure: '50+50 dk', icerik: 'Stil geliştirme, doğru pozisyon, yön için kenar (edge) kontrolü, rüzgârüstü tırmanma, suya inmeden dönüşler.' },
+      { no: '2', baslik: 'İleri Sürüş', sure: '50 dk', icerik: 'İleri sürüş teknikleri ve ilk atlamalar (jumps).' },
+      { no: '3', baslik: 'Seçime Göre Eğitim', sure: '50 dk', icerik: 'Stil hareketleri, oturmadan waterstart, trick yön değiştirmeleri, freestyle hareketleri ve dalga sürüş teknikleri (opsiyonel).' },
+    ],
+    cta: 'İletişime Geç',
   },
 ];
 
-const kesifDersler = [
-  {
-    no: 'Ders 1',
-    baslik: 'Tekrar & Güçlendirme',
-    sure: '~2 saat',
-    icerik:
-      'Mevcut seviye değerlendirmesi, temel becerilerin pekiştirilmesi, body dragging ve water start tekrarı, kite kontrol hassasiyeti.',
-  },
-  {
-    no: 'Ders 2',
-    baslik: 'Serbest Sürüş & Yönlendirme',
-    sure: '~2 saat',
-    icerik:
-      'Upwind sürüş geliştirme, crosswind yolculuk, çeşitli koşullarda sürüş pratiği, kişisel gelişim hedefleri belirleme.',
-  },
-];
-
-const ileriDersler = [
-  {
-    no: 'Ders 1',
-    baslik: 'Jumping Temelleri',
-    sure: '~2 saat',
-    icerik:
-      'Atlama teorisi ve rüzgar penceresi, küçük hava alma pratikleri, güvenli iniş teknikleri, kite döngüleri.',
-  },
-  {
-    no: 'Ders 2',
-    baslik: 'Tricks & Maneuvers',
-    sure: '~2 saat',
-    icerik:
-      'Body drag tricks, board-off manevralar, railey & backroll giriş teknikleri, kişisel trick geliştirme.',
-  },
-  {
-    no: 'Ders 3',
-    baslik: 'Serbest Programlama',
-    sure: '~2 saat',
-    icerik:
-      'Öğrenci isteğine göre: downwinder, wave riding temelleri veya freestyle trick geliştirme. Kişisel videolu analiz.',
-  },
+const ADVANTAGES = [
+  { icon: '🎓', title: 'Tecrübeli Eğitmen Kadrosu', desc: 'TYF (Yelken Federasyonu) en üst seviye KB5/KB4 belgeli, deneyimli eğitmenler.' },
+  { icon: '🎧', title: 'Telsiz Kask ile Konfor', desc: 'BB Talkin telsiz kask — sürerken eğitmenle çift yönlü, kesintisiz iletişim.' },
+  { icon: '💨', title: 'İdeal Rüzgâr', desc: 'Onshore (karaya esen) rüzgâr — kite düşse bile açığa sürüklenmezsin, güvendesin.' },
+  { icon: '🏝️', title: 'Trafikten İzole Alan', desc: '4 km trafiksiz koy, 600 m şamandıralı özel eğitim alanı, sığ ve güvenli su.' },
 ];
 
 export default async function EgitimlerPage({
@@ -105,305 +105,208 @@ export default async function EgitimlerPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'lessons_page' });
-  const tLessons = await getTranslations({ locale, namespace: 'lessons' });
-
-  const packages = await getPackages(locale as Locale);
-
-  type Level = { tag: string; dur: string; title: string; desc: string; rows: { label: string; price: string }[]; cta: string };
-  const levels: Level[] = packages ?? (tLessons.raw('levels') as Level[]);
-
-  const advantages = t.raw('advantages') as string[];
 
   return (
     <>
       <Nav />
       <main style={{ fontFamily: 'Manrope, sans-serif', color: '#07283b' }}>
         {/* Hero */}
-        <section style={{ position: 'relative', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)', overflow: 'hidden' }}>
-          <Image src="/images/egitim-kurs-1.jpg" alt="Gökçeada kitesurf dersi — Volkite" fill style={{ objectFit: 'cover', objectPosition: 'center 50%' }} priority sizes="100vw" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.6) 0%,rgba(6,33,49,.88) 100%)' }} />
+        <section style={{ position: 'relative', color: '#fbf6ec', padding: 'clamp(110px,13vw,150px) clamp(20px,5vw,72px) clamp(60px,8vw,110px)', overflow: 'hidden' }}>
+          <Image src="/images/egitim-kurs-1.jpg" alt="Gökçeada kitesurf dersi — Volkite" fill style={{ objectFit: 'cover', objectPosition: 'center 45%' }} priority sizes="100vw" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.55) 0%,rgba(6,33,49,.9) 100%)' }} />
           <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
               {t('kicker')}
             </div>
-            <h1 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(40px,6vw,84px)', lineHeight: 0.95, marginBottom: '22px' }}>
+            <h1 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(42px,7vw,96px)', lineHeight: 0.92, marginBottom: '22px', textShadow: '0 4px 30px rgba(0,0,0,.4)' }}>
               {t('h1')}
             </h1>
-            <p style={{ color: '#9fc0cf', fontSize: 'clamp(15px,1.8vw,18px)', lineHeight: 1.6, maxWidth: '600px' }}>
+            <p style={{ color: '#dceaf0', fontSize: 'clamp(16px,1.9vw,20px)', lineHeight: 1.6, maxWidth: '620px', marginBottom: '30px' }}>
               {t('subtitle')}
             </p>
-          </div>
-        </section>
-
-        {/* Opening text */}
-        <section style={{ background: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '24px' }}>
-              Neden Volkite?
-            </div>
-            <p style={{ fontSize: '18px', lineHeight: 1.8, color: '#3a5563', marginBottom: '20px' }}>
-              Daha fazla ertelemeden, hayatına yeni bir pencere aç! Volkite olarak kitesurf öğrenmeyi hem güvenli hem de çok eğlenceli hale getirmek için buradayız. TYF (Yelken Federasyonu) Usta Öğretici belgeli eğitmenlerimiz ve Gökçeada’nın eşsiz doğasıyla seni bekliyoruz.
-            </p>
-            <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#3a5563' }}>
-              Her seviyeye uygun programlarımızla, sıfır deneyimden profesyonel sürüşe uzanan yolculuğun her adımında yanındayız. Küçük gruplar, birebir dikkat ve gerçek bir sporcu deneyimi — bunlar Volkite farkı.
-            </p>
-          </div>
-        </section>
-
-        {/* Advantages */}
-        <section style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
-              {t('advantages_title')}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '18px' }}>
-              {advantages.map((adv, i) => (
-                <div
-                  key={i}
-                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '16px', padding: '26px 24px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}
-                >
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(20,184,207,.12)', border: '2px solid #14b8cf', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                      <path d="M1 5l3.5 3.5L11 1" stroke="#14b8cf" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#fbf6ec', fontWeight: 600, margin: 0 }}>{adv}</p>
+            {/* Quick price pills */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+              {[
+                ['Başlangıç 10 saat', '700€'],
+                ['2 kişilik grup / kişi', '600€'],
+                ['İleri / saat', '80€'],
+              ].map(([label, price]) => (
+                <div key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,.1)', border: '1px solid rgba(255,255,255,.2)', borderRadius: '999px', padding: '8px 16px', backdropFilter: 'blur(6px)' }}>
+                  <span style={{ fontSize: '13px', color: '#dceaf0' }}>{label}</span>
+                  <span style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '16px', color: '#14b8cf' }}>{price}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Programs with lesson tables */}
-        <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
+        {/* Intro */}
+        <section style={{ background: '#fbf6ec', padding: 'clamp(56px,7vw,90px) clamp(20px,5vw,72px)' }}>
+          <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'center' }}>
+            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '20px' }}>
+              Daha Fazla Ertelemeden
+            </div>
+            <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(28px,4vw,48px)', lineHeight: 1, color: '#07283b', marginBottom: '22px' }}>
+              HAYATINA YENİ BİR PENCERE AÇ
+            </h2>
+            <p style={{ fontSize: '18px', lineHeight: 1.8, color: '#3a5563' }}>
+              Volkite olarak kitesurf öğrenmeyi hem güvenli hem de çok eğlenceli hale getirmek için buradayız. Her seviyeye uygun programlarımızla, sıfır deneyimden profesyonel sürüşe uzanan yolculuğun her adımında yanındayız. Küçük gruplar, birebir dikkat ve gerçek bir sporcu deneyimi — bunlar Volkite farkı.
+            </p>
+          </div>
+        </section>
+
+        {/* Advantages — icon cards */}
+        <section style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
           <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
+            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px', textAlign: 'center' }}>
+              Eğitim Avantajları
+            </div>
+            <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.5vw,46px)', lineHeight: 1, marginBottom: '48px', textAlign: 'center' }}>
+              NEDEN VOLKITE?
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: '20px' }}>
+              {ADVANTAGES.map((adv) => (
+                <div
+                  key={adv.title}
+                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: '30px 26px', textAlign: 'center' }}
+                >
+                  <div style={{ fontSize: '40px', marginBottom: '16px', lineHeight: 1 }}>{adv.icon}</div>
+                  <h3 style={{ fontSize: '17px', fontWeight: 800, marginBottom: '10px', color: '#fbf6ec' }}>{adv.title}</h3>
+                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#9fc0cf', margin: 0 }}>{adv.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Programs — visual cards with stepper */}
+        <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px', textAlign: 'center' }}>
               Programlar
             </div>
-            <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(30px,4vw,52px)', lineHeight: 0.98, marginBottom: '56px' }}>
-              Tüm Eğitim Paketleri
+            <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(30px,4vw,54px)', lineHeight: 0.98, marginBottom: '56px', textAlign: 'center' }}>
+              SANA UYGUN PROGRAMI SEÇ
             </h2>
 
-            {/* Başlangıç Paketi */}
-            <div style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: 'clamp(28px,4vw,48px)', marginBottom: '32px' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '28px' }}>
-                <div>
-                  <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#14b8cf', background: 'rgba(20,184,207,.12)', padding: '6px 14px', borderRadius: '999px', display: 'inline-block', marginBottom: '16px' }}>
-                    Başlangıç
-                  </span>
-                  <h3 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.5vw,42px)', margin: 0 }}>
-                    Başlangıç Paketi — 10 Saat
-                  </h3>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '36px', color: '#14b8cf' }}>700€</div>
-                  <div style={{ color: '#9fc0cf', fontSize: '13px' }}>2 kişilik grup: kişi başı 600€</div>
-                </div>
-              </div>
-              <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.7, marginBottom: '32px', maxWidth: '700px' }}>
-                Hiç kitesurf deneyimi olmayan kişiler için tasarlanan kapsamlı başlangıç programı. 5 derste güvenli ve bağımsız bir kiter olarak suya çıkacaksın. Hedef: bağımsız kiteboardcu seviyesi.
-              </p>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,.15)' }}>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Ders</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase' }}>Başlık</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Süre</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase' }}>İçerik</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {baslagiclDersler.map((ders, i) => (
-                      <tr key={ders.no} style={{ borderBottom: i < baslagiclDersler.length - 1 ? '1px solid rgba(255,255,255,.06)' : 'none' }}>
-                        <td style={{ padding: '16px', color: '#14b8cf', fontFamily: 'Anton, Impact, sans-serif', fontSize: '16px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.no}</td>
-                        <td style={{ padding: '16px', color: '#fbf6ec', fontWeight: 700, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.baslik}</td>
-                        <td style={{ padding: '16px', color: '#9fc0cf', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.sure}</td>
-                        <td style={{ padding: '16px', color: '#bcd4de', lineHeight: 1.6, verticalAlign: 'top' }}>{ders.icerik}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div style={{ marginTop: '24px' }}>
-                <Link
-                  href="/#rezervasyon"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#ff6a3d', color: '#fff', fontWeight: 800, padding: '13px 24px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
-                >
-                  Kayıt Yaptır →
-                </Link>
-              </div>
-            </div>
-
-            {/* Keşif & Devam */}
-            <div style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: 'clamp(28px,4vw,48px)', marginBottom: '32px' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '28px' }}>
-                <div>
-                  <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#ff6a3d', background: 'rgba(255,106,61,.12)', padding: '6px 14px', borderRadius: '999px', display: 'inline-block', marginBottom: '16px' }}>
-                    Orta Seviye
-                  </span>
-                  <h3 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.5vw,42px)', margin: 0 }}>
-                    Keşif & Devam — 4 Saat
-                  </h3>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ color: '#9fc0cf', fontSize: '15px', fontWeight: 600 }}>Fiyat için bize sorun</div>
-                </div>
-              </div>
-              <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.7, marginBottom: '32px', maxWidth: '700px' }}>
-                Temel becerileri öğrenmiş, ancak bazı konularda daha fazla pratik yapmak isteyen kiterlar için. Mevcut seviyeni değerlendirip, en çok gelişim ihtiyacın olan alanlara odaklanıyoruz.
-              </p>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,.15)' }}>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Ders</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase' }}>Başlık</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Süre</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase' }}>İçerik</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {kesifDersler.map((ders, i) => (
-                      <tr key={ders.no} style={{ borderBottom: i < kesifDersler.length - 1 ? '1px solid rgba(255,255,255,.06)' : 'none' }}>
-                        <td style={{ padding: '16px', color: '#14b8cf', fontFamily: 'Anton, Impact, sans-serif', fontSize: '16px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.no}</td>
-                        <td style={{ padding: '16px', color: '#fbf6ec', fontWeight: 700, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.baslik}</td>
-                        <td style={{ padding: '16px', color: '#9fc0cf', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.sure}</td>
-                        <td style={{ padding: '16px', color: '#bcd4de', lineHeight: 1.6, verticalAlign: 'top' }}>{ders.icerik}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div style={{ marginTop: '24px' }}>
-                <Link
-                  href="/#rezervasyon"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,106,61,.14)', border: '1px solid rgba(255,106,61,.5)', color: '#ff8a64', fontWeight: 800, padding: '13px 24px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
-                >
-                  Fiyat Al →
-                </Link>
-              </div>
-            </div>
-
-            {/* İleri Seviye */}
-            <div style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: 'clamp(28px,4vw,48px)' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '28px' }}>
-                <div>
-                  <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#9fc0cf', background: 'rgba(159,192,207,.12)', padding: '6px 14px', borderRadius: '999px', display: 'inline-block', marginBottom: '16px' }}>
-                    İleri Seviye
-                  </span>
-                  <h3 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.5vw,42px)', margin: 0 }}>
-                    İleri Seviye Eğitim
-                  </h3>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '36px', color: '#14b8cf' }}>80€</div>
-                  <div style={{ color: '#9fc0cf', fontSize: '13px' }}>saat başına</div>
-                </div>
-              </div>
-              <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.7, marginBottom: '32px', maxWidth: '700px' }}>
-                Bağımsız kitesurf yapabilen, atlama ve trick öğrenmek isteyen sporcular için. Kişisel hedeflerine göre özelleştirilen program. Freestyle, wave riding veya downwinder — seçim senin.
-              </p>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,.15)' }}>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Ders</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase' }}>Başlık</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Süre</th>
-                      <th style={{ textAlign: 'left', padding: '12px 16px', color: '#14b8cf', fontWeight: 800, fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase' }}>İçerik</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ileriDersler.map((ders, i) => (
-                      <tr key={ders.no} style={{ borderBottom: i < ileriDersler.length - 1 ? '1px solid rgba(255,255,255,.06)' : 'none' }}>
-                        <td style={{ padding: '16px', color: '#14b8cf', fontFamily: 'Anton, Impact, sans-serif', fontSize: '16px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.no}</td>
-                        <td style={{ padding: '16px', color: '#fbf6ec', fontWeight: 700, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.baslik}</td>
-                        <td style={{ padding: '16px', color: '#9fc0cf', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{ders.sure}</td>
-                        <td style={{ padding: '16px', color: '#bcd4de', lineHeight: 1.6, verticalAlign: 'top' }}>{ders.icerik}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div style={{ marginTop: '24px' }}>
-                <Link
-                  href="/#rezervasyon"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(20,184,207,.14)', border: '1px solid rgba(20,184,207,.5)', color: '#14b8cf', fontWeight: 800, padding: '13px 24px', borderRadius: '11px', textDecoration: 'none', fontSize: '15px' }}
-                >
-                  İletişime Geç →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Package cards from messages/Supabase */}
-        <section style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
-              Hızlı Karşılaştırma
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '28px' }}>
-              {levels.map((item) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+              {PROGRAMS.map((p) => (
                 <div
-                  key={item.tag}
-                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: '34px', display: 'flex', flexDirection: 'column', gap: '16px' }}
+                  key={p.id}
+                  id={p.id}
+                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '22px', overflow: 'hidden', scrollMarginTop: '80px' }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#14b8cf', background: 'rgba(20,184,207,.12)', padding: '6px 14px', borderRadius: '999px' }}>
-                      {item.tag}
-                    </span>
-                    <span style={{ fontSize: '13px', color: '#9fc0cf', fontWeight: 700 }}>{item.dur}</span>
-                  </div>
-                  <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '30px', letterSpacing: '.01em', margin: 0 }}>
-                    {item.title}
-                  </h2>
-                  <p style={{ color: '#bcd4de', fontSize: '15px', lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px 0', borderTop: '1px solid rgba(255,255,255,.08)', borderBottom: '1px solid rgba(255,255,255,.08)' }}>
-                    {item.rows.map((r) => (
-                      <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', fontSize: '14px' }}>
-                        <span style={{ color: '#9fc0cf' }}>{r.label}</span>
-                        <span style={{ fontWeight: 800, color: '#fbf6ec' }}>{r.price}</span>
+                  {/* Image banner */}
+                  <div style={{ position: 'relative', height: 'clamp(160px,22vw,240px)' }}>
+                    <Image src={p.image} alt={p.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:1100px) 100vw, 1050px" />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(12,51,70,.25) 0%,rgba(12,51,70,.92) 100%)' }} />
+                    <div style={{ position: 'absolute', left: 'clamp(24px,4vw,44px)', bottom: '22px', right: 'clamp(24px,4vw,44px)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '12px' }}>
+                      <div>
+                        <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#062131', background: p.accent, padding: '5px 14px', borderRadius: '999px', display: 'inline-block', marginBottom: '12px' }}>
+                          {p.tag}
+                        </span>
+                        <h3 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.6vw,44px)', margin: 0, lineHeight: 1, textShadow: '0 2px 16px rgba(0,0,0,.5)' }}>
+                          {p.title}
+                        </h3>
+                        <div style={{ fontSize: '13px', color: '#dceaf0', marginTop: '6px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.08em' }}>{p.dur}</div>
                       </div>
-                    ))}
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        {p.price ? (
+                          <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(30px,4vw,44px)', color: '#fff', lineHeight: 1 }}>{p.price}</div>
+                        ) : (
+                          <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '20px', color: '#fff', lineHeight: 1.1 }}>Fiyat için<br />sorun</div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <Link
-                    href="/#rezervasyon"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 800, color: '#ff8a64', textDecoration: 'none', fontSize: '15px' }}
-                  >
-                    {item.cta} →
-                  </Link>
+
+                  {/* Body */}
+                  <div style={{ padding: 'clamp(26px,4vw,44px)' }}>
+                    <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.75, marginBottom: '10px', maxWidth: '760px' }}>{p.desc}</p>
+                    <p style={{ color: '#9fc0cf', fontSize: '13px', marginBottom: '32px' }}>{p.priceNote}</p>
+
+                    {/* Lesson stepper */}
+                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {p.lessons.map((ders, i) => (
+                        <div key={ders.no} style={{ display: 'flex', gap: '18px', paddingBottom: i < p.lessons.length - 1 ? '24px' : 0, position: 'relative' }}>
+                          {/* connector line */}
+                          {i < p.lessons.length - 1 && (
+                            <span style={{ position: 'absolute', left: '19px', top: '40px', bottom: 0, width: '2px', background: 'rgba(255,255,255,.1)' }} />
+                          )}
+                          {/* number */}
+                          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(20,184,207,.14)', border: `2px solid ${p.accent}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'Anton, Impact, sans-serif', fontSize: '18px', color: p.accent, zIndex: 1 }}>
+                            {ders.no}
+                          </div>
+                          <div style={{ flex: 1, paddingTop: '2px' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#fbf6ec', margin: 0 }}>{ders.baslik}</h4>
+                              <span style={{ fontSize: '11px', fontWeight: 700, color: '#9fc0cf', background: 'rgba(255,255,255,.06)', padding: '3px 9px', borderRadius: '999px', letterSpacing: '.04em' }}>{ders.sure}</span>
+                            </div>
+                            <p style={{ fontSize: '14.5px', lineHeight: 1.65, color: '#bcd4de', margin: 0 }}>{ders.icerik}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {p.goal && (
+                      <div style={{ marginTop: '28px', display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(20,184,207,.1)', border: '1px solid rgba(20,184,207,.3)', borderRadius: '10px', padding: '10px 16px', fontSize: '14px', fontWeight: 700, color: '#14b8cf' }}>
+                        🎯 {p.goal}
+                      </div>
+                    )}
+
+                    <div style={{ marginTop: '28px' }}>
+                      <Link
+                        href="/#iletisim"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: p.id === 'baslangic' ? '#ff6a3d' : 'rgba(255,255,255,.07)', border: p.id === 'baslangic' ? 'none' : '1px solid rgba(255,255,255,.18)', color: '#fff', fontWeight: 800, padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '15px' }}
+                      >
+                        {p.cta} →
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Notes + CTA */}
-        <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(48px,6vw,80px) clamp(20px,5vw,72px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'flex-start' }}>
-            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '4px' }}>
-              Grup Modeli
+        {/* Included / notes strip */}
+        <section style={{ background: '#fbf6ec', padding: 'clamp(48px,6vw,80px) clamp(20px,5vw,72px)' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '20px' }}>
+              {[
+                { icon: '🪁', title: 'Ekipman Dahil', desc: 'Tüm eğitimlerde Slingshot kite, board, trapez, kask ve telsiz dahil. Sadece kişisel eşya + güneş gözlüğü getir.' },
+                { icon: '👥', title: 'Grup Modeli', desc: 'Arkadaşınla birlikte başlayabilirsin; seviyen açıldıkça ayrı ders almanı öneririz — herkesin gelişimi için en verimlisi.' },
+                { icon: '🏅', title: 'TYF Standardı', desc: 'Eğitimlerimiz TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli eğitmenlerle, federasyon standartlarında verilir.' },
+              ].map((n) => (
+                <div key={n.title} style={{ background: '#fff', border: '1px solid #ece1cc', borderRadius: '16px', padding: '26px' }}>
+                  <div style={{ fontSize: '30px', marginBottom: '12px' }}>{n.icon}</div>
+                  <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#07283b', marginBottom: '8px' }}>{n.title}</h3>
+                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#3a5563', margin: 0 }}>{n.desc}</p>
+                </div>
+              ))}
             </div>
-            <p style={{ color: '#9fc0cf', fontSize: '15px', lineHeight: 1.7, maxWidth: '680px', margin: 0 }}>
-              {t('price_note')}
-            </p>
-            <p style={{ color: '#9fc0cf', fontSize: '15px', lineHeight: 1.7, maxWidth: '680px', margin: 0 }}>
-              {t('group_note')}
-            </p>
-            <p style={{ color: '#bcd4de', fontSize: '15px', lineHeight: 1.7, maxWidth: '680px', margin: 0 }}>
-              Eğitimlerimiz TYF (Türkiye Yelken Federasyonu) Usta Öğretici belgeli eğitmenler tarafından, Yelken Federasyonu standartlarında verilir. Programın hedefi: güvenli ve bağımsız kiteboardcu seviyesi.
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section style={{ background: '#062131', color: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)', textAlign: 'center' }}>
+          <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+            <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(30px,4vw,54px)', lineHeight: 1, marginBottom: '18px' }}>
+              RÜZGÂR SENİ BEKLİYOR
+            </h2>
+            <p style={{ color: '#9fc0cf', fontSize: '17px', lineHeight: 1.6, marginBottom: '32px' }}>
+              Hangi programın sana uygun olduğundan emin değil misin? Asistanımıza yaz ya da bizi ara — rüzgâra göre en iyi tarihleri birlikte belirleyelim.
             </p>
             <Link
-              href="/#rezervasyon"
-              style={{ marginTop: '12px', display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#ff6a3d', color: '#fff', fontWeight: 800, padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '16px' }}
+              href="/#iletisim"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#ff6a3d', color: '#fff', fontWeight: 800, padding: '16px 34px', borderRadius: '12px', textDecoration: 'none', fontSize: '17px', boxShadow: '0 14px 34px -10px rgba(255,106,61,.7)' }}
             >
-              {t('cta')}
+              {t('cta')} →
             </Link>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

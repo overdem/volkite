@@ -18,7 +18,7 @@ export default function About() {
           <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#3a5563', marginBottom: '18px' }}>{t('body1')}</p>
           <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#3a5563', marginBottom: '30px' }}>{t('body2')}</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
-            <a href="#rezervasyon" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontWeight: 800, color: '#07283b', borderBottom: '3px solid #ff6a3d', paddingBottom: '4px', textDecoration: 'none' }}>
+            <a href="#iletisim" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontWeight: 800, color: '#07283b', borderBottom: '3px solid #ff6a3d', paddingBottom: '4px', textDecoration: 'none' }}>
               {t('link')} →
             </a>
             <Link

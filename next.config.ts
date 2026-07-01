@@ -40,10 +40,10 @@ const nextConfig: NextConfig = {
       { source: '/kitchen', destination: '/en/mutfak', permanent: true },
       { source: '/cafe-on-shore', destination: '/en/mutfak', permanent: true },
       // Contact / booking
-      { source: '/iletisim', destination: '/#rezervasyon', permanent: true },
-      { source: '/contact', destination: '/en#booking', permanent: true },
-      { source: '/rezervasyon', destination: '/#rezervasyon', permanent: true },
-      { source: '/booking', destination: '/en#booking', permanent: true },
+      { source: '/iletisim', destination: '/#iletisim', permanent: true },
+      { source: '/contact', destination: '/en#iletisim', permanent: true },
+      { source: '/rezervasyon', destination: '/#iletisim', permanent: true },
+      { source: '/booking', destination: '/en#iletisim', permanent: true },
     ];
   },
 };

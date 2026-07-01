@@ -181,7 +181,7 @@ export default function Hero({ wind }: HeroProps) {
           }}
         >
           <a
-            href="#rezervasyon"
+            href="#iletisim"
             style={{
               background: '#ff6a3d',
               color: '#fff',

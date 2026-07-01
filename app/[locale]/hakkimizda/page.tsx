@@ -233,7 +233,7 @@ export default async function HakkimizdaPage({
               {t('certifications')}
             </p>
             <Link
-              href="/#rezervasyon"
+              href="/#iletisim"
               style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#ff6a3d', color: '#fff', fontWeight: 800, padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '16px', whiteSpace: 'nowrap' }}
             >
               {t('read_more')}

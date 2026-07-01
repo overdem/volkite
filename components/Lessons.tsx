@@ -51,7 +51,7 @@ export default function Lessons({ packages }: Props) {
                   </div>
                 ))}
               </div>
-              <a href="#rezervasyon" style={{ marginTop: '6px', fontWeight: 800, color: '#ff8a64', textDecoration: 'none', fontSize: '15px' }}>
+              <a href="#iletisim" style={{ marginTop: '6px', fontWeight: 800, color: '#ff8a64', textDecoration: 'none', fontSize: '15px' }}>
                 {item.cta} →
               </a>
             </div>
