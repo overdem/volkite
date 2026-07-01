@@ -1,5 +1,6 @@
 import { createAdminClient, getUserRole } from '@/lib/supabase-server';
 import HocaToday from './_views/HocaToday';
+import TodaySchedule from './_views/TodaySchedule';
 
 async function getStats() {
   const db = createAdminClient();
@@ -16,6 +17,28 @@ async function getStats() {
     pendingBookings: provisional.count ?? 0,
     confirmedLast30: confirmed.count ?? 0,
   };
+}
+
+async function getInstructorLoad() {
+  const db = createAdminClient();
+  const from = new Date();
+  from.setHours(0, 0, 0, 0);
+  const [{ data: profs }, { data: sess }] = await Promise.all([
+    db.from('profiles').select('id, name').eq('active', true).in('role', ['admin', 'instructor']).order('name'),
+    db.from('sessions').select('instructor_id').eq('status', 'planned').gte('scheduled_at', from.toISOString()),
+  ]);
+  const counts = new Map<string, number>();
+  (sess ?? []).forEach((s) => {
+    if (s.instructor_id) {
+      const k = String(s.instructor_id);
+      counts.set(k, (counts.get(k) ?? 0) + 1);
+    }
+  });
+  return (profs ?? []).map((p) => ({
+    id: String(p.id),
+    name: String(p.name ?? '—'),
+    count: counts.get(String(p.id)) ?? 0,
+  }));
 }
 
 async function getRecentBookings() {
@@ -47,17 +70,33 @@ export default async function PanelHomePage() {
   }
 
   // admin → Dashboard
-  const [stats, recent] = await Promise.all([getStats(), getRecentBookings()]);
+  const [stats, recent, load] = await Promise.all([getStats(), getRecentBookings(), getInstructorLoad()]);
 
   return (
-    <div className="p-4 md:p-8">
-      <h1 className="text-2xl font-bold text-[#07283b] mb-6">Dashboard</h1>
+    <div className="p-4 md:p-8 space-y-6">
+      <h1 className="text-2xl font-bold text-[#07283b]">Dashboard</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard label="Aktif Öğrenci" value={stats.activeStudents} />
         <StatCard label="Bekleyen Ön Kayıt" value={stats.pendingBookings} highlight />
         <StatCard label="Son 30 Gün Onay" value={stats.confirmedLast30} />
       </div>
+
+      <TodaySchedule />
+
+      {load.length > 0 && (
+        <section className="bg-white rounded-2xl p-4 md:p-6 shadow-sm">
+          <h2 className="text-sm font-bold text-[#3a5563] uppercase tracking-wider mb-3">Hoca Yükü (bugünden itibaren planlı)</h2>
+          <div className="space-y-1.5">
+            {load.map((i) => (
+              <div key={i.id} className="flex items-center justify-between text-sm">
+                <span className="text-[#07283b]">{i.name}</span>
+                <span className="text-[#8497a1]">{i.count} planlı</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
         <div className="px-6 py-4 border-b border-[#e4e9ee]">
