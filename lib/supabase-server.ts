@@ -14,9 +14,17 @@ export async function createAuthClient() {
           return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
+          // Server Component render'ında çağrılırsa Next "cookies can only be
+          // modified in a Server Action/Route Handler" hatası atar → yut.
+          // Oturum yenileme zaten getUser() ile bu istekte geçerli; kalıcı
+          // yazma bir sonraki Server Action/Route Handler'da olur.
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            /* Server Component'ten çağrıldı — güvenle yok sayılır */
+          }
         },
       },
     }
