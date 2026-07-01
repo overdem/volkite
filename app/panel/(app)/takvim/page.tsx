@@ -50,8 +50,10 @@ export default async function TakvimPage() {
   const from = new Date();
   from.setHours(0, 0, 0, 0);
   const fromIso = from.toISOString();
+  // Forecast 14 gün; ancak manuel olarak çok daha ileri tarihe de ders atanabilir.
+  // Bu yüzden pencereyi geniş tutuyoruz ki ileri tarihli planlar da listelensin.
   const to = new Date();
-  to.setDate(to.getDate() + 14);
+  to.setDate(to.getDate() + 90);
 
   let sessQ = db
     .from('sessions')
