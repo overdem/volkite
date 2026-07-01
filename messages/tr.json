@@ -7,7 +7,10 @@
     "kitchen": "Mutfak",
     "faq": "SSS",
     "contact": "İletişim",
-    "cta": "Rezervasyon"
+    "cta": "Rezervasyon",
+    "about": "Biz Kimiz?",
+    "live_wind": "Anlık Rüzgar",
+    "blog": "Blog"
   },
   "hero": {
     "kicker": "GÖKÇEADA · KEFALOZ KOYU",
@@ -101,7 +104,7 @@
           },
           {
             "label": "2'li grup / kişi · saat",
-            "price": "70€"
+            "price": "Fiyat için sorun"
           },
           {
             "label": "Coaching",
@@ -302,7 +305,7 @@
   "booking": {
     "kicker": "REZERVASYON",
     "title": "RÜZGAR SENİ BEKLİYOR",
-    "sub": "Tarihini söyle, gerisini biz halledelim. Formu doldur ya da direkt ara; aynı gün dönüş yapıyoruz.",
+    "sub": "Rezervasyon ve bilgi için asistanımıza yazın ya da doğrudan arayın — aynı gün dönüş yapıyoruz.",
     "soon": "Online rezervasyon çok yakında — şimdilik form & telefon.",
     "phone": "TELEFON",
     "address": "ADRES",
@@ -312,7 +315,9 @@
     "fMsg": "Mesajın / tercih ettiğin tarih",
     "fSend": "Rezervasyon Talebi Gönder",
     "thanksTitle": "TEŞEKKÜRLER!",
-    "thanksBody": "Talebini aldık. En kısa sürede sana dönüş yapacağız. Rüzgarlı günler!"
+    "thanksBody": "Talebini aldık. En kısa sürede sana dönüş yapacağız. Rüzgarlı günler!",
+    "chat_cta": "Asistanımıza Yaz",
+    "wa_cta": "WhatsApp"
   },
   "footer": {
     "tag": "Rüzgar cenneti Gökçeada Kefaloz koyunda, Türkiye'nin en köklü kiteboard okulu.",
