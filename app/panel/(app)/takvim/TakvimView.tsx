@@ -54,10 +54,23 @@ export default function TakvimView({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [studentId, setStudentId] = useState<string>(students[0]?.id ?? '');
+  const [instructorId, setInstructorId] = useState<string>(
+    role === 'admin' ? (students[0]?.instructorId ?? instructors[0]?.id ?? '') : userId
+  );
   const [error, setError] = useState('');
 
   const selected = students.find((s) => s.id === studentId);
   const band = selected ? bandByLevel[selected.level] : undefined;
+
+  // Admin öğrenci seçince varsayılan hoca = öğrencinin atandığı hoca (override edilebilir)
+  function onStudentChange(id: string) {
+    setStudentId(id);
+    setError('');
+    if (role === 'admin') {
+      const st = students.find((s) => s.id === id);
+      if (st?.instructorId) setInstructorId(st.instructorId);
+    }
+  }
 
   // Saatleri güne grupla
   const byDay = useMemo(() => {
@@ -69,18 +82,29 @@ export default function TakvimView({
     return map;
   }, [hourly]);
 
+  const instructorName = useMemo(() => {
+    const m = new Map<string, string>();
+    instructors.forEach((i) => m.set(i.id, i.name));
+    return m;
+  }, [instructors]);
+
   const dates = useMemo(() => Array.from(byDay.keys()).sort(), [byDay]);
   const trustDates = dates.slice(0, 3);
   const trendDates = dates.slice(3);
 
   function planAt(iso: string) {
     if (!studentId) { setError('Önce öğrenci seç'); return; }
+    if (role === 'admin' && instructors.length > 0 && !instructorId) {
+      setError('Önce hoca seç');
+      return;
+    }
     setError('');
     startTransition(async () => {
       const res = await createSession({
         studentId,
         scheduledAt: istanbulToUtc(iso), // Istanbul yerel → UTC
         durationHours: 1.5,
+        instructorId: role === 'admin' ? (instructorId || undefined) : undefined,
       });
       if (res?.error) setError(res.error);
       router.refresh();
@@ -116,7 +140,7 @@ export default function TakvimView({
             <label className="block text-xs text-[#8497a1] mb-1">Öğrenci</label>
             <select
               value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
+              onChange={(e) => onStudentChange(e.target.value)}
               className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
             >
               <option value="">Seç…</option>
@@ -125,6 +149,21 @@ export default function TakvimView({
               ))}
             </select>
           </div>
+          {role === 'admin' && (
+            <div>
+              <label className="block text-xs text-[#8497a1] mb-1">Hoca</label>
+              <select
+                value={instructorId}
+                onChange={(e) => setInstructorId(e.target.value)}
+                className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
+              >
+                <option value="">Seç…</option>
+                {instructors.map((i) => (
+                  <option key={i.id} value={i.id}>{i.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
           {band && selected && (
             <div className="bg-[#eef1f4] rounded-lg p-3 text-xs text-[#3a5563]">
               <div className="flex items-center gap-2 font-bold text-[#07283b]">
@@ -153,6 +192,7 @@ export default function TakvimView({
           onCancel={cancel}
           pending={pending}
           studentSelected={!!studentId}
+          instructorName={role === 'admin' ? instructorName : null}
           trust
         />
       ))}
@@ -209,7 +249,7 @@ function WindChip({ wind }: { wind: WindData | null }) {
 }
 
 function DayBlock({
-  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected, trust,
+  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected, instructorName, trust,
 }: {
   date: string;
   hours: HourSlot[];
@@ -219,6 +259,7 @@ function DayBlock({
   onCancel: (id: string) => void;
   pending: boolean;
   studentSelected: boolean;
+  instructorName: Map<string, string> | null;
   trust: boolean;
 }) {
   const d = new Date(date + 'T12:00:00');
@@ -268,6 +309,11 @@ function DayBlock({
                     {session.studentName}
                     {session.status === 'done' && ' ✓'}
                   </span>
+                  {instructorName && session.instructorId && (
+                    <span className="text-[10px] text-[#8497a1]">
+                      → {instructorName.get(session.instructorId) ?? '—'}
+                    </span>
+                  )}
                   {session.status === 'planned' && (
                     <button
                       type="button"

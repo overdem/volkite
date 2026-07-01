@@ -22,9 +22,11 @@ export default async function TakvimPage() {
   if (role === 'instructor') studentsQ = studentsQ.eq('assigned_instructor', userId);
   const { data: students } = await studentsQ;
 
-  // Hocalar (admin için kim adına planlandığını gösterir)
+  // Hocalar (admin için kim adına planlandığını gösterir).
+  // Admin aynı zamanda hoca rolünde olabilir → kendine de atama yapabilsin diye
+  // admin profilleri de listeye dahil.
   const { data: instructors } = role === 'admin'
-    ? await db.from('profiles').select('id, name').eq('active', true).eq('role', 'instructor').order('name')
+    ? await db.from('profiles').select('id, name').eq('active', true).in('role', ['admin', 'instructor']).order('name')
     : { data: [] };
 
   // wind_bands
@@ -84,7 +86,10 @@ export default async function TakvimPage() {
         level: String(s.level ?? 'beginner'),
         instructorId: s.assigned_instructor ? String(s.assigned_instructor) : null,
       }))}
-      instructors={(instructors ?? []).map((i) => ({ id: String(i.id), name: String(i.name ?? '—') }))}
+      instructors={(instructors ?? []).map((i) => ({
+        id: String(i.id),
+        name: String(i.id) === userId ? `${String(i.name ?? '—')} (ben)` : String(i.name ?? '—'),
+      }))}
       bandByLevel={bandByLevel}
       sessions={sessions}
       currentWind={current}
