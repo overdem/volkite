@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { Link } from '@/i18n/navigation';
@@ -28,25 +29,47 @@ export default function GaleriPage() {
           </div>
         </section>
 
-        {/* Gallery grid placeholder */}
+        {/* Gallery grid */}
         <section style={{ background: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: '16px' }}>
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{ aspectRatio: '4/3', background: '#e4e9ee', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8497a1', fontSize: '13px', fontWeight: 600 }}
-                >
-                  Fotoğraf yakında
+          <div style={{ maxWidth: '1340px', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '14px', marginBottom: '40px' }}>
+              {[
+                ['/images/hero-beach.jpg',       'Kefaloz Koyundan drone'],
+                ['/images/egitim-kurs-1.jpg',    'Kitesurf dersi'],
+                ['/images/egitim-kurs-3.jpg',    'Gökçeada kitesurf'],
+                ['/images/egitim-kurs-4.jpg',    'Kiteboard okulu'],
+                ['/images/egitim-kurs-5.jpg',    'Volkite okul'],
+                ['/images/egitim-kurs-6.jpg',    'Volkite kiteboard school'],
+                ['/images/spot-kefaloz.jpg',     'Kefaloz koyu'],
+                ['/images/spot-egitim-alani.jpg','Eğitim alanı'],
+                ['/images/spot-plaj.jpg',        'Kitesurf plajı'],
+                ['/images/spot-aydincik.jpg',    'Aydıncık'],
+                ['/images/hizmet-wakeboard.jpg', 'Wakeboard'],
+                ['/images/hizmet-wakeboard2.jpg','Wakeboard 2'],
+                ['/images/hizmet-rescue.jpg',    'Kurtarma botu'],
+                ['/images/galeri-1.jpg',         'Volkite anı'],
+                ['/images/galeri-2.jpg',         'Volkite anı 2'],
+                ['/images/galeri-okul.jpg',      'Volkite okul hayatı'],
+              ].map(([src, alt]) => (
+                <div key={src} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden' }}>
+                  <Image
+                    src={src}
+                    alt={alt}
+                    fill
+                    style={{ objectFit: 'cover', transition: 'transform .35s ease' }}
+                    sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 300px"
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.06)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                  />
                 </div>
               ))}
             </div>
-            <p style={{ textAlign: 'center', color: '#8497a1', marginTop: '40px', fontSize: '15px' }}>
-              Galeri yakında tamamlanacak.{' '}
-              <a href="https://www.instagram.com/volkite/" target="_blank" rel="noopener noreferrer" style={{ color: '#14b8cf', fontWeight: 700, textDecoration: 'none' }}>Instagram &apos;da @volkite</a>
-              {' '}takip edin!
-            </p>
-            <div style={{ textAlign: 'center', marginTop: '24px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ color: '#8497a1', marginBottom: '20px', fontSize: '15px' }}>
+                Daha fazlası için{' '}
+                <a href="https://www.instagram.com/volkite/" target="_blank" rel="noopener noreferrer" style={{ color: '#14b8cf', fontWeight: 700, textDecoration: 'none' }}>@volkite</a>
+                &apos;yi takip edin!
+              </p>
               <Link href="/" style={{ color: '#07283b', fontWeight: 700, textDecoration: 'none', fontSize: '14px' }}>← Ana Sayfa</Link>
             </div>
           </div>

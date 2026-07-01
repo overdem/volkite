@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
@@ -118,8 +119,10 @@ export default async function EgitimlerPage({
       <Nav />
       <main style={{ fontFamily: 'Manrope, sans-serif', color: '#07283b' }}>
         {/* Hero */}
-        <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+        <section style={{ position: 'relative', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)', overflow: 'hidden' }}>
+          <Image src="/images/egitim-kurs-1.jpg" alt="Gökçeada kitesurf dersi — Volkite" fill style={{ objectFit: 'cover', objectPosition: 'center 50%' }} priority sizes="100vw" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.6) 0%,rgba(6,33,49,.88) 100%)' }} />
+          <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
               {t('kicker')}
             </div>

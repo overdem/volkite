@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
@@ -29,8 +30,15 @@ export default function About() {
           </div>
         </div>
 
-        {/* Photo placeholder */}
-        <div style={{ position: 'relative', aspectRatio: '4/5', borderRadius: '18px', overflow: 'hidden', background: 'linear-gradient(135deg,#cfdde2 0%,#9fc0cf 100%)', boxShadow: '0 30px 60px -28px rgba(7,40,59,.45)' }}>
+        {/* Photo */}
+        <div style={{ position: 'relative', aspectRatio: '4/5', borderRadius: '18px', overflow: 'hidden', boxShadow: '0 30px 60px -28px rgba(7,40,59,.45)' }}>
+          <Image
+            src="/images/egitim-kurs-5.jpg"
+            alt="Volkite Kiteboard Okulu — Gökçeada"
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width:768px) 100vw, 50vw"
+          />
           <div style={{ position: 'absolute', left: '18px', bottom: '18px', right: '18px', background: 'rgba(6,33,49,.78)', backdropFilter: 'blur(6px)', color: '#fbf6ec', borderRadius: '12px', padding: '16px 18px' }}>
             <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '22px', color: '#14b8cf' }}>
               21 {t('years')}

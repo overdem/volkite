@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import Nav from '@/components/Nav';
@@ -29,12 +30,12 @@ const historyItems = [
 ];
 
 const kiteTeam = [
-  { name: 'Volkan Günel', role: 'Kurucu & Baş Eğitmen', cert: 'KB5', langs: 'TR / EN' },
-  { name: 'Burçak Doğan', role: 'Kıdemli Eğitmen', cert: 'KB4', langs: 'TR / FR / EN' },
-  { name: 'Emin Ufuk', role: 'Eğitmen', cert: 'KB4', langs: 'TR / EN' },
-  { name: 'Soydan Cıgsar', role: 'Eğitmen', cert: 'KB4', langs: 'TR / EN' },
-  { name: 'Karapati', role: 'Okul Kedisi', cert: '', langs: 'Kedice' },
-  { name: 'Enes Günel', role: 'Okul Müdürü', cert: '', langs: 'TR / EN' },
+  { name: 'Volkan Günel', role: 'Kurucu & Baş Eğitmen', cert: 'KB5', langs: 'TR / EN', photo: null },
+  { name: 'Burçak Doğan', role: 'Kıdemli Eğitmen', cert: 'KB4', langs: 'TR / FR / EN', photo: '/images/ekip-burcak.jpg' },
+  { name: 'Emin Ufuk', role: 'Eğitmen', cert: 'KB4', langs: 'TR / EN', photo: null },
+  { name: 'Soydan Cıgsar', role: 'Eğitmen', cert: 'KB4', langs: 'TR / EN', photo: '/images/ekip-soydan.jpg' },
+  { name: 'Karapati', role: 'Okul Kedisi', cert: '', langs: 'Kedice', photo: '/images/ekip-karapati.jpg' },
+  { name: 'Enes Günel', role: 'Okul Müdürü', cert: '', langs: 'TR / EN', photo: null },
 ];
 
 const cafeTeam = [
@@ -56,8 +57,10 @@ export default async function HakkimizdaPage({
       <Nav />
       <main style={{ fontFamily: 'Manrope, sans-serif', color: '#07283b' }}>
         {/* Hero */}
-        <section style={{ background: '#07283b', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)' }}>
-          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+        <section style={{ position: 'relative', color: '#fbf6ec', padding: 'clamp(100px,12vw,140px) clamp(20px,5vw,72px) clamp(56px,8vw,112px)', overflow: 'hidden' }}>
+          <Image src="/images/egitim-kurs-6.jpg" alt="Volkite Kiteboard Okulu" fill style={{ objectFit: 'cover', objectPosition: 'center 40%' }} priority sizes="100vw" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(6,33,49,.72) 0%,rgba(6,33,49,.88) 100%)' }} />
+          <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
               {t('kicker')}
             </div>
@@ -185,7 +188,11 @@ export default async function HakkimizdaPage({
                   key={member.name}
                   style={{ background: '#fff', border: '1px solid #ece1cc', borderRadius: '16px', padding: '26px 22px', display: 'flex', flexDirection: 'column', gap: '6px' }}
                 >
-                  <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg,#cfdde2,#9fc0cf)', marginBottom: '6px' }} />
+                  <div style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', background: 'linear-gradient(135deg,#cfdde2,#9fc0cf)', marginBottom: '8px', position: 'relative', flexShrink: 0 }}>
+                    {member.photo && (
+                      <Image src={member.photo} alt={member.name} fill style={{ objectFit: 'cover' }} sizes="56px" />
+                    )}
+                  </div>
                   <div style={{ fontWeight: 800, fontSize: '16px', color: '#07283b' }}>{member.name}</div>
                   <div style={{ color: '#14b8cf', fontWeight: 700, fontSize: '13px' }}>{member.role}</div>
                   {member.cert ? (

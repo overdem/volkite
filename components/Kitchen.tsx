@@ -1,9 +1,16 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
+const CAFE_IMAGES = [
+  { src: '/images/cafe-burger1.jpg',  alt: 'Volkite burger' },
+  { src: '/images/cafe-pizza1.jpg',   alt: 'Volkite pizza' },
+  { src: '/images/cafe-trilece.jpg',  alt: 'Trileçe — Cafe On Shore' },
+  { src: '/images/cafe-tatli-wp.jpg', alt: 'Cafe On Shore tatlılar' },
+];
+
 export default function Kitchen() {
   const t = useTranslations('kitchen');
-  const items = t.raw('items') as string[];
 
   return (
     <section id="mutfak" style={{ background: '#fbf6ec', padding: 'clamp(64px,8vw,120px) clamp(20px,5vw,72px)' }}>
@@ -18,7 +25,7 @@ export default function Kitchen() {
             </h2>
             <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#3a5563', marginBottom: '30px' }}>{t('body')}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
-              <a href="#rezervasyon" style={{ display: 'inline-flex', fontWeight: 800, color: '#07283b', borderBottom: '3px solid #ff6a3d', paddingBottom: '4px', textDecoration: 'none' }}>
+              <a href="#iletisim" style={{ display: 'inline-flex', fontWeight: 800, color: '#07283b', borderBottom: '3px solid #ff6a3d', paddingBottom: '4px', textDecoration: 'none' }}>
                 {t('link')} →
               </a>
               <Link
@@ -30,11 +37,17 @@ export default function Kitchen() {
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-            {items.map((label) => (
-              <div key={label} style={{ position: 'relative', aspectRatio: '1', borderRadius: '14px', overflow: 'hidden', background: 'repeating-linear-gradient(135deg,#cfdde2 0 14px,#c4d4da 14px 28px)' }}>
-                <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.12em', color: '#5a7079', textTransform: 'uppercase', textAlign: 'center', padding: '8px' }}>
-                  {label}
-                </div>
+            {CAFE_IMAGES.map((img) => (
+              <div key={img.src} style={{ position: 'relative', aspectRatio: '1', borderRadius: '14px', overflow: 'hidden' }}>
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: 'cover', transition: 'transform .3s ease' }}
+                  sizes="(max-width:768px) 50vw, 200px"
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.07)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                />
               </div>
             ))}
           </div>
