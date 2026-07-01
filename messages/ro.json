@@ -7,7 +7,10 @@
     "kitchen": "Bucătărie",
     "faq": "Întrebări",
     "contact": "Contact",
-    "cta": "Rezervare"
+    "cta": "Rezervare",
+    "about": "Despre noi",
+    "live_wind": "Vânt live",
+    "blog": "Blog"
   },
   "hero": {
     "kicker": "GÖKÇEADA · GOLFUL KEFALOZ",
@@ -312,7 +315,9 @@
     "fMsg": "Mesajul tău / datele preferate",
     "fSend": "Trimite cererea",
     "thanksTitle": "MULȚUMIM!",
-    "thanksBody": "Am primit cererea ta. Te vom contacta în cel mai scurt timp. Zile cu vânt!"
+    "thanksBody": "Am primit cererea ta. Te vom contacta în cel mai scurt timp. Zile cu vânt!",
+    "chat_cta": "Scrie-ne",
+    "wa_cta": "WhatsApp"
   },
   "footer": {
     "tag": "Cea mai consacrată școală de kiteboard din Turcia, în paradisul vântului — golful Kefaloz, Gökçeada.",

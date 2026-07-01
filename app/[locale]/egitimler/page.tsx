@@ -194,7 +194,7 @@ export default async function EgitimlerPage({
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '36px', color: '#14b8cf' }}>700€</div>
-                  <div style={{ color: '#9fc0cf', fontSize: '13px' }}>veya 80€/saat · öğrenci 600€</div>
+                  <div style={{ color: '#9fc0cf', fontSize: '13px' }}>2 kişilik grup: kişi başı 600€</div>
                 </div>
               </div>
               <p style={{ color: '#bcd4de', fontSize: '16px', lineHeight: 1.7, marginBottom: '32px', maxWidth: '700px' }}>

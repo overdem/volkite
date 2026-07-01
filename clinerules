@@ -1,0 +1,41 @@
+# .clinerules — Volkite
+
+> Cline her task'ta bunu okur. Amaç: marka kimliğini KORU + jenerik/template
+> görünümü ENGELLE. Renk/font otoritesi DESIGN-TOKENS.md'dir; bu dosya onun
+> üstüne KALİTE katmanı ekler, marka değerlerini değiştirmez.
+
+## 1. MARKA — sabit, değiştirme
+- Otoriter kaynak: **DESIGN-TOKENS.md**. Renk/font çelişkisinde o esas.
+- Renkler: krem `#fbf6ec` · lacivert `#07283b` / `#062131` · cyan `#14b8cf` · CTA turuncu `#ff6a3d`.
+- Fontlar: **Anton** (başlık/büyük sayı) · **Manrope** (gövde/UI). Serif YOK, Space Mono YOK.
+- Bölüm ritmi: açık (krem) ↔ koyu (lacivert) alternatif. CTA hep turuncu, aksan hep cyan.
+- Logo: lacivert zeminde `/images/volkite-logo-white.svg`, krem zeminde `-dark`. Kompakt yerde `volkite-icon.svg`.
+- YENİ renk paleti / font şeması / stil ÖNERME. Marka bellidir; uygula, icat etme.
+
+## 2. KALİTE — jenerik/"template" görünme (bunlar zorunlu)
+- **Mobil önce ve ZORUNLU:** 375 / 768 / 1024 / 1440px'de düzgün çalış ve test et. Panellerde de mobil kusursuz (büyük dokunma alanı, tek el, alt-nav).
+- Tıklanabilir her öğede `cursor-pointer`. Hover state'ler yumuşak geçişli (150–300ms).
+- Kontrast min **4.5:1**. Klavye için görünür **focus** state. `prefers-reduced-motion`'a uy.
+- İkon = **SVG** (Lucide/Heroicons). Emoji'yi ikon olarak KULLANMA.
+- **AI-moru / pembe gradient YOK.** Bootstrap/şablon hissi veren jenerik kart-grid'lerden kaçın.
+- Görseller: `next/image`, boyut optimize, alt text dolu ve açıklayıcı (SEO).
+- Boşluk ritmi ve tipografik hiyerarşi belirgin olsun; her şey aynı ağırlıkta olmasın (Anton büyük başlık ↔ Manrope sakin gövde kontrastını kullan).
+
+## 3. KALİTE REFLEKSİ (teslimden önce kendine sor)
+- [ ] 375/768/1024/1440'da bozulma yok, taşma yok, menü/CTA/tablo/widget çalışıyor.
+- [ ] Marka renkleri + Anton/Manrope doğru; jenerik font/renk sızmadı.
+- [ ] Hover/focus/cursor tamam; geçişler yumuşak.
+- [ ] Emoji-ikon yok, AI-moru gradient yok, template hissi yok.
+- [ ] Landing kalitesinde bitti mi? (boşluk, hiyerarşi, mikro-etkileşim)
+
+## 4. TEKNİK
+- Stack: Next.js 15 (App Router) + TypeScript + Tailwind + next-intl + Supabase + Vercel.
+- Artefact/UI'da localStorage/sessionStorage YOK. State React ile.
+- Cline DEPLOY ETMEZ; Vercel GitHub push'ta otomatik. PR aç, main'e merge.
+- İş türü: mekanik/CRUD/içerik = Sonnet; estetik/güvenlik/bug kök nedeni = Opus.
+
+## 5. İÇERİK DOĞRULUĞU (Volkite'a özel)
+- Telefon her yerde **+90 533 241 10 15** (532 YANLIŞ).
+- Sertifika **TYF (Yelken Federasyonu) Usta Öğretici** — IKO DEĞİL.
+- Fiyatlar geçerli set: başlangıç 700€, 2 kişi 600€, saatlik 80€, kiralama 80€/gün, depolama 5€/gün, kamp 25/15€ (öğrencilik %50). Eski site fiyatları (Keşif 280 vb.) GEÇERSİZ.
+- Uydurma yok: fiyat/tarih/müsaitlik/sertifika kesin bilgiden gelir.

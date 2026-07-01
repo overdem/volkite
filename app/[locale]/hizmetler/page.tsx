@@ -29,12 +29,24 @@ const massageTable = [
 ];
 
 const serviceDescriptions: Record<string, string> = {
-  '01': 'Tam donanımlı profesyonel kitesurf ekipmanı kiralamak isteyenler için günlük 80€ ile tüm malzeme yanınızda. Kite (9m²–14m²), bar, güvenlik sistemi, board ve trapez dahildir. Ekipman seçiminde eğitmenlerimiz yardımcı olur.',
-  '02': 'Kendi ekipmanınızı Gökçeada\'ya taşımak zorunda değilsiniz. Güvenli, kilitli depolarımızda ekipmanınızı sezonu boyunca veya günlük olarak saklayabilirsiniz. Depolama ücreti günlük 5€, sezonluk özel fiyatlar için bize ulaşın.',
-  '03': 'Uçurtmanızı veya tahtanızı onarmak mı gerekiyor? Sahada küçük onarımlardan büyük trampolin yamalarına kadar profesyonel tamir hizmeti sunuyoruz. Fiyat için malzemeyi yerinde değerlendiriyoruz.',
-  '04': 'Eğitmenlerimiz veya uzman rehberler eşliğinde Gökçeada\'nın farklı koylarına kite ile yolculuk. Downwinder turları, adayı çevreleyen rüzgar turu, gün batımı session\'ları. Fiyatlar güzergah ve grup büyüklüğüne göre değişir.',
-  '05': 'Kamp, karavan veya küçük çadır alanında geceleme imkanı. Sabah kahvaltısı opsiyonlu. Çadır/karavan: 25€/gece, kahvaltısız çadır: 15€/gece. Konaklama öncesi rezervasyon önerilir.',
-  '06': 'Sporcu yorgunluğunu gidermek, sakatlıkları önlemek ve performansı artırmak için uzman masör ekibimizden profesyonel masaj. Klasik, spor, Thai, iç organ ve daha birçok seçenek. Aşağıdaki tabloya bakın.',
+  '01': 'Eğitim biterken kendinize yeni ya da kullanılmış Slingshot ekipmanlardan almayı unutmayın. Yetkili Slingshot bayi olarak size en uygun ekipmanı seçmenizde yardımcı oluyoruz.',
+  '02': 'Tam donanımlı profesyonel kitesurf ekipmanı kiralamak isteyenler için tüm malzeme yanınızda — kite, board ve harness dahil. Günlük 80€. Ekipman seçiminde eğitmenlerimiz yardımcı olur.',
+  '03': 'Kendi ekipmanınızı Gökçeada\'ya taşımak zorunda değilsiniz. Güvenli, kilitli depolarımızda ekipmanınızı sezonu boyunca veya günlük olarak saklayabilirsiniz. Depolama ücreti günlük 5€.',
+  '04': 'Uçurtmanızı veya tahtanızı onarmak mı gerekiyor? Sahada küçük onarımlardan büyük trampolin yamalarına kadar profesyonel tamir hizmeti sunuyoruz. Fiyat için malzemeyi yerinde değerlendiriyoruz.',
+  '05': '2 saatlik downwinder maceraya hazır olun! Eğitmenlerimiz eşliğinde Gökçeada\'nın farklı koylarına kite ile yolculuk. Fiyatlar güzergah ve grup büyüklüğüne göre değişir.',
+  '06': 'Sporcu yorgunluğunu gidermek, sakatlıkları önlemek ve performansı artırmak için uzman masör ekibimizden profesyonel masaj. Klasik, spor, Thai, iç organ ve daha birçok seçenek.',
+  '07': 'Rüzgar yoksa da suya gir! Tekne arkasında wakeboard ile hem eğlenceli hem de güvenli bir su sporu deneyimi yaşayın.',
+};
+
+// Service no -> anchor ID mapping
+const serviceAnchors: Record<string, string> = {
+  '01': 'satis',
+  '02': 'kiralama',
+  '03': 'depolama',
+  '04': 'tamir',
+  '05': 'safari',
+  '06': 'masaj',
+  '07': 'wakeboard',
 };
 
 export default async function HizmetlerPage({
@@ -85,7 +97,8 @@ export default async function HizmetlerPage({
               {items.map((item) => (
                 <div
                   key={item.no}
-                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: '30px', display: 'flex', flexDirection: 'column', gap: '14px' }}
+                  id={serviceAnchors[item.no] ?? undefined}
+                  style={{ background: '#0c3346', border: '1px solid rgba(255,255,255,.08)', borderRadius: '18px', padding: '30px', display: 'flex', flexDirection: 'column', gap: '14px', scrollMarginTop: '80px' }}
                 >
                   <span style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '20px', color: '#14b8cf' }}>{item.no}</span>
                   <h3 style={{ fontSize: '20px', fontWeight: 800, margin: 0 }}>{item.name}</h3>
@@ -164,11 +177,52 @@ export default async function HizmetlerPage({
             </div>
             <div style={{ marginTop: '40px' }}>
               <Link
-                href="/#rezervasyon"
+                href="/#iletisim"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#ff6a3d', color: '#fff', fontWeight: 800, padding: '14px 28px', borderRadius: '12px', textDecoration: 'none', fontSize: '16px' }}
               >
                 {t('cta')}
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Konaklama */}
+        <section id="konaklama" style={{ background: '#fbf6ec', padding: 'clamp(56px,7vw,96px) clamp(20px,5vw,72px)', scrollMarginTop: '80px' }}>
+          <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+            <div style={{ color: '#14b8cf', fontWeight: 800, fontSize: '13px', letterSpacing: '.22em', textTransform: 'uppercase', marginBottom: '16px' }}>
+              08 — Konaklama
+            </div>
+            <h2 style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: 'clamp(26px,3.5vw,44px)', lineHeight: 0.98, color: '#07283b', marginBottom: '16px' }}>
+              Nerede Kalınır?
+            </h2>
+            <p style={{ fontSize: '17px', lineHeight: 1.7, color: '#3a5563', maxWidth: '680px', marginBottom: '40px' }}>
+              Okul yanımızdaki kamp alanında ya da adanın anlaşmalı pansiyon ve otelllerinde konaklamak mümkün. Rezervasyonda en uygun seçeneği birlikte belirleriz.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '20px', marginBottom: '32px' }}>
+              {/* Kamp */}
+              <div style={{ background: '#fff', border: '1px solid #ece1cc', borderRadius: '18px', padding: '28px' }}>
+                <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '20px', color: '#07283b', marginBottom: '10px' }}>Kamp Alanı</div>
+                <p style={{ color: '#3a5563', fontSize: '14px', lineHeight: 1.65, marginBottom: '16px' }}>Okulun hemen yanında, koya sıfır. Çadır ve karavan alanı. Sabah kahvaltısı dahil ya da hariç seçenek.</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '14px', color: '#5a7079' }}>Kahvaltılı</span>
+                    <span style={{ fontWeight: 800, fontSize: '18px', color: '#ff6a3d' }}>25€/gece</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '14px', color: '#5a7079' }}>Kahvaltısız</span>
+                    <span style={{ fontWeight: 800, fontSize: '18px', color: '#ff6a3d' }}>15€/gece</span>
+                  </div>
+                  <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(20,184,207,.08)', borderRadius: '8px', fontSize: '13px', color: '#14b8cf', fontWeight: 700 }}>
+                    Öğrencilik günlerinde %50 indirim
+                  </div>
+                </div>
+              </div>
+              {/* Anlaşmalı */}
+              <div style={{ background: '#fff', border: '1px solid #ece1cc', borderRadius: '18px', padding: '28px' }}>
+                <div style={{ fontFamily: 'Anton, Impact, sans-serif', fontSize: '20px', color: '#07283b', marginBottom: '10px' }}>Anlaşmalı Konaklama</div>
+                <p style={{ color: '#3a5563', fontSize: '14px', lineHeight: 1.65, marginBottom: '16px' }}>Ada genelinde anlaşmalı pansiyon ve otellerimizden yararlanabilirsiniz. Liste ve fiyatlar için bize ulaşın — sizi en uygun seçeneğe yönlendirelim.</p>
+                <p style={{ color: '#8497a1', fontSize: '13px', fontStyle: 'italic' }}>Liste yakında güncelleniyor — şimdilik bize sorun.</p>
+              </div>
             </div>
           </div>
         </section>

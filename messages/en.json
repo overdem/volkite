@@ -7,7 +7,10 @@
     "kitchen": "Kitchen",
     "faq": "FAQ",
     "contact": "Contact",
-    "cta": "Book Now"
+    "cta": "Book Now",
+    "about": "About Us",
+    "live_wind": "Live Wind",
+    "blog": "Blog"
   },
   "hero": {
     "kicker": "GÖKÇEADA · KEFALOZ BAY",
@@ -312,7 +315,9 @@
     "fMsg": "Your message / preferred dates",
     "fSend": "Send Booking Request",
     "thanksTitle": "THANK YOU!",
-    "thanksBody": "We received your request and will get back to you shortly. Windy days ahead!"
+    "thanksBody": "We received your request and will get back to you shortly. Windy days ahead!",
+    "chat_cta": "Chat with us",
+    "wa_cta": "WhatsApp"
   },
   "footer": {
     "tag": "Türkiye's most established kiteboard school, in the wind paradise of Kefaloz bay, Gökçeada.",

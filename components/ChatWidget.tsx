@@ -41,6 +41,13 @@ export default function ChatWidget() {
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Listen for external open requests (nav CTA, Rezervasyon button)
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener('volkite:open-chat', handler);
+    return () => window.removeEventListener('volkite:open-chat', handler);
+  }, []);
+
   // Persist thread
   useEffect(() => {
     if (messages.length === 0) return;
