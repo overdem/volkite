@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase-server';
 import { levelShort, levelColor } from '@/lib/level';
+import TodaySchedule from './TodaySchedule';
 
 export default async function HocaToday({ instructorId }: { instructorId: string }) {
   const db = createAdminClient();
@@ -39,6 +40,8 @@ export default async function HocaToday({ instructorId }: { instructorId: string
         <p className="text-xs uppercase tracking-wider text-[#14b8cf] font-bold">Bugün</p>
         <h1 className="text-2xl font-bold text-[#07283b]">Öğrencilerim</h1>
       </header>
+
+      <TodaySchedule instructorId={instructorId} />
 
       {(!students || students.length === 0) && (
         <div className="bg-white rounded-2xl p-6 text-center text-[#8497a1] text-sm">
