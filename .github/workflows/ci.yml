@@ -14,9 +14,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
       SUPABASE_SERVICE_ROLE_KEY: placeholder_service_role_key
       ANTHROPIC_API_KEY: placeholder_anthropic_key
-      CHATWOOT_BASE_URL: https://app.chatwoot.com
-      CHATWOOT_BOT_TOKEN: placeholder_bot_token
-      AGENT_SHARED_SECRET: placeholder_secret
+      AGENT_MODEL: claude-sonnet-4-6
 
     steps:
       - uses: actions/checkout@v4

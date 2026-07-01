@@ -32,7 +32,7 @@ export default async function OnKayitlarPage() {
   const bookings = await getBookings();
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#07283b]">Ön Kayıtlar</h1>
         <span className="text-sm text-[#8497a1]">

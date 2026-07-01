@@ -50,7 +50,7 @@ export default async function PanelHomePage() {
   const [stats, recent] = await Promise.all([getStats(), getRecentBookings()]);
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <h1 className="text-2xl font-bold text-[#07283b] mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -59,7 +59,7 @@ export default async function PanelHomePage() {
         <StatCard label="Son 30 Gün Onay" value={stats.confirmedLast30} />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
         <div className="px-6 py-4 border-b border-[#e4e9ee]">
           <h2 className="font-semibold text-[#07283b]">Son Ön Kayıtlar</h2>
         </div>
