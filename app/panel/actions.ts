@@ -268,6 +268,28 @@ export async function createSession(input: {
   const instructor_id = role === 'admin' ? (input.instructorId ?? userId) : userId;
 
   const db = createAdminClient();
+
+  // Aynı saatte çakışma + kapasite kontrolü (slot sayısı = aktif hoca sayısı).
+  const { data: sameHour } = await db
+    .from('sessions')
+    .select('instructor_id')
+    .eq('scheduled_at', input.scheduledAt)
+    .in('status', ['planned', 'done']);
+  if (sameHour && sameHour.length > 0) {
+    if (sameHour.some((e) => e.instructor_id === instructor_id)) {
+      return { error: 'Bu hoca o saatte dolu' };
+    }
+    const { count } = await db
+      .from('profiles')
+      .select('id', { count: 'exact', head: true })
+      .eq('active', true)
+      .in('role', ['admin', 'instructor']);
+    const capacity = Math.max(1, count ?? 1);
+    if (sameHour.length >= capacity) {
+      return { error: 'Bu saat dolu (tüm hocalar dolu)' };
+    }
+  }
+
   const { data, error } = await db
     .from('sessions')
     .insert({

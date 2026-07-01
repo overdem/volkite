@@ -48,6 +48,7 @@ const BUCKET_LABEL: Record<HourBucket, string> = {
   red:    'Uygun değil',
 };
 
+
 export default function TakvimView({
   role, userId, students, instructors, bandByLevel, sessions, currentWind, hourly,
 }: Props) {
@@ -90,6 +91,11 @@ export default function TakvimView({
     instructors.forEach((i) => m.set(i.id, i.name));
     return m;
   }, [instructors]);
+
+  // Saat başına slot = hoca sayısı (ileride 5+ olabilir). En az 1.
+  const capacity = Math.max(1, instructors.length);
+  // Plan butonunun atayacağı hoca: admin dropdown'dan seçer, hoca kendisidir.
+  const planInstructorId = role === 'admin' ? instructorId : userId;
 
   const dates = useMemo(() => Array.from(byDay.keys()).sort(), [byDay]);
   const trustDates = dates.slice(0, 3);
@@ -276,13 +282,13 @@ export default function TakvimView({
                     {levelShort(s.studentLevel)}
                   </span>
                   <span className="text-[#07283b] truncate">{s.studentName}</span>
-                  {role === 'admin' && s.instructorId && (
+                  {s.instructorId && (
                     <span className="text-[10px] text-[#8497a1] whitespace-nowrap">
                       → {instructorName.get(s.instructorId) ?? '—'}
                     </span>
                   )}
                 </div>
-                {s.status === 'planned' && (
+                {(role === 'admin' || s.instructorId === userId) && s.status === 'planned' && (
                   <button
                     type="button"
                     onClick={() => cancel(s.id)}
@@ -310,7 +316,11 @@ export default function TakvimView({
           onCancel={cancel}
           pending={pending}
           studentSelected={!!studentId}
-          instructorName={role === 'admin' ? instructorName : null}
+          instructorName={instructorName}
+          role={role}
+          userId={userId}
+          selectedInstructorId={planInstructorId}
+          capacity={capacity}
           trust
         />
       ))}
@@ -330,7 +340,11 @@ export default function TakvimView({
               onCancel={cancel}
               pending={pending}
               studentSelected={!!studentId}
-              instructorName={role === 'admin' ? instructorName : null}
+              instructorName={instructorName}
+              role={role}
+              userId={userId}
+              selectedInstructorId={planInstructorId}
+              capacity={capacity}
             />
           ))}
         </section>
@@ -373,7 +387,8 @@ function WindChip({ wind }: { wind: WindData | null }) {
 }
 
 function DayBlock({
-  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected, instructorName, trust,
+  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected,
+  instructorName, role, userId, selectedInstructorId, capacity, trust,
 }: {
   date: string;
   hours: HourSlot[];
@@ -383,7 +398,11 @@ function DayBlock({
   onCancel: (id: string) => void;
   pending: boolean;
   studentSelected: boolean;
-  instructorName: Map<string, string> | null;
+  instructorName: Map<string, string>;
+  role: 'admin' | 'instructor';
+  userId: string;
+  selectedInstructorId: string;
+  capacity: number;
   trust: boolean;
 }) {
   const d = new Date(date + 'T12:00:00');
@@ -411,15 +430,20 @@ function DayBlock({
         pending={pending}
         studentSelected={studentSelected}
         instructorName={instructorName}
+        role={role}
+        userId={userId}
+        selectedInstructorId={selectedInstructorId}
+        capacity={capacity}
       />
     </section>
   );
 }
 
-// Bir günün saatlik satırları — plan/iptal butonlu. DayBlock ve genişletilmiş
-// TrendDay tarafından paylaşılır.
+// Bir günün saatlik satırları — saat başına 3 slot (paralel hoca). DayBlock ve
+// genişletilmiş TrendDay tarafından paylaşılır.
 function HourRows({
-  hours, band, sessions, onPlan, onCancel, pending, studentSelected, instructorName,
+  hours, band, sessions, onPlan, onCancel, pending, studentSelected,
+  instructorName, role, userId, selectedInstructorId, capacity,
 }: {
   hours: HourSlot[];
   band: WindBand | undefined;
@@ -428,72 +452,100 @@ function HourRows({
   onCancel: (id: string) => void;
   pending: boolean;
   studentSelected: boolean;
-  instructorName: Map<string, string> | null;
+  instructorName: Map<string, string>;
+  role: 'admin' | 'instructor';
+  userId: string;
+  selectedInstructorId: string;
+  capacity: number;
 }) {
   return (
     <div className="grid grid-cols-1 gap-1.5">
       {hours.map((h) => {
         const bucket: HourBucket = band ? scoreHour(h, band) : 'red';
         const color = BUCKET_COLOR[bucket];
-        const session = sessions.find((s) => utcToIstanbulHourKey(s.scheduledAt) === h.iso.slice(0, 13));
+        const hourSessions = sessions.filter(
+          (s) => utcToIstanbulHourKey(s.scheduledAt) === h.iso.slice(0, 13)
+        );
+        const used = hourSessions.length;
+        const full = used >= capacity;
+        const selBusy = !!selectedInstructorId && hourSessions.some((s) => s.instructorId === selectedInstructorId);
+        const canPlan = studentSelected && !full && !selBusy;
+
         return (
-          <div
-            key={h.iso}
-            className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 ${color.bg}`}
-          >
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <span className="font-mono text-sm font-bold text-[#07283b] w-12">
-                {String(h.hour).padStart(2, '0')}:00
-              </span>
-              <span className={`text-sm font-bold ${color.text}`}>{h.speed_kn} kn</span>
-              <span className="text-xs text-[#3a5563]">
-                ↗{h.gust_kn} · {h.dir}
-              </span>
-              <span className={`text-xs font-bold ${color.text} hidden sm:inline`}>
-                {BUCKET_LABEL[bucket]}
-              </span>
-            </div>
-            {session ? (
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#062131] bg-white border border-[#14b8cf]/40 px-2 py-1 rounded-full flex items-center gap-1.5">
-                  <span className={`text-[9px] font-bold px-1 py-0 rounded ${levelColor(session.studentLevel)}`}>
-                    {levelShort(session.studentLevel)}
-                  </span>
-                  {session.studentName}
-                  {session.status === 'done' && ' ✓'}
+          <div key={h.iso} className={`rounded-lg px-3 py-2 ${color.bg}`}>
+            {/* Üst satır: saat + rüzgâr + slot durumu / Planla */}
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <span className="font-mono text-sm font-bold text-[#07283b] w-12">
+                  {String(h.hour).padStart(2, '0')}:00
                 </span>
-                {instructorName && session.instructorId && (
-                  <span className="text-[10px] text-[#8497a1]">
-                    → {instructorName.get(session.instructorId) ?? '—'}
-                  </span>
-                )}
-                {session.status === 'planned' && (
+                <span className={`text-sm font-bold ${color.text}`}>{h.speed_kn} kn</span>
+                <span className="text-xs text-[#3a5563]">↗{h.gust_kn} · {h.dir}</span>
+                <span className={`text-xs font-bold ${color.text} hidden sm:inline`}>
+                  {BUCKET_LABEL[bucket]}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className={`text-[10px] font-bold ${used ? 'text-[#3a5563]' : 'text-[#8497a1]'}`}>
+                  {used}/{capacity}
+                </span>
+                {canPlan && (
                   <button
                     type="button"
-                    onClick={() => onCancel(session.id)}
+                    onClick={() => onPlan(h.iso)}
                     disabled={pending}
-                    className="text-xs text-red-700 hover:text-red-900"
+                    className={`text-xs font-bold px-3 py-1 rounded-full disabled:opacity-60 ${
+                      bucket === 'red'
+                        ? 'bg-white text-[#062131] border border-[#14b8cf]/50 hover:bg-[#eef1f4]'
+                        : 'bg-[#14b8cf] text-[#062131] hover:bg-[#0fa3b8]'
+                    }`}
                   >
-                    İptal
+                    + Planla
                   </button>
                 )}
+                {studentSelected && !full && selBusy && role === 'admin' && (
+                  <span className="text-[10px] text-[#8497a1]">seçili hoca dolu</span>
+                )}
+                {full && <span className="text-[10px] text-[#8497a1]">dolu</span>}
               </div>
-            ) : (
-              // Rüzgâr sadece bilgi amaçlı — her saate atama yapılabilir (kırmızı dahil)
-              studentSelected && (
-                <button
-                  type="button"
-                  onClick={() => onPlan(h.iso)}
-                  disabled={pending}
-                  className={`text-xs font-bold px-3 py-1 rounded-full disabled:opacity-60 ${
-                    bucket === 'red'
-                      ? 'bg-white text-[#062131] border border-[#14b8cf]/50 hover:bg-[#eef1f4]'
-                      : 'bg-[#14b8cf] text-[#062131] hover:bg-[#0fa3b8]'
-                  }`}
-                >
-                  Planla
-                </button>
-              )
+            </div>
+
+            {/* Alt satır: o saatteki dersler (çoklu) */}
+            {hourSessions.length > 0 && (
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {hourSessions.map((session) => {
+                  const canCancel =
+                    session.status === 'planned' && (role === 'admin' || session.instructorId === userId);
+                  return (
+                    <span
+                      key={session.id}
+                      className="text-xs font-bold text-[#062131] bg-white border border-[#14b8cf]/40 px-2 py-1 rounded-full flex items-center gap-1.5"
+                    >
+                      <span className={`text-[9px] font-bold px-1 py-0 rounded ${levelColor(session.studentLevel)}`}>
+                        {levelShort(session.studentLevel)}
+                      </span>
+                      {session.studentName}
+                      {session.status === 'done' && ' ✓'}
+                      {session.instructorId && (
+                        <span className="text-[10px] text-[#8497a1] font-normal">
+                          · {instructorName.get(session.instructorId) ?? '—'}
+                        </span>
+                      )}
+                      {canCancel && (
+                        <button
+                          type="button"
+                          onClick={() => onCancel(session.id)}
+                          disabled={pending}
+                          className="text-red-700 hover:text-red-900 ml-0.5"
+                          aria-label="İptal"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </span>
+                  );
+                })}
+              </div>
             )}
           </div>
         );
@@ -506,7 +558,8 @@ function HourRows({
 }
 
 function TrendDay({
-  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected, instructorName,
+  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected,
+  instructorName, role, userId, selectedInstructorId, capacity,
 }: {
   date: string;
   hours: HourSlot[];
@@ -516,7 +569,11 @@ function TrendDay({
   onCancel: (id: string) => void;
   pending: boolean;
   studentSelected: boolean;
-  instructorName: Map<string, string> | null;
+  instructorName: Map<string, string>;
+  role: 'admin' | 'instructor';
+  userId: string;
+  selectedInstructorId: string;
+  capacity: number;
 }) {
   const [expanded, setExpanded] = useState(sessions.length > 0);
   const d = new Date(date + 'T12:00:00');
@@ -577,6 +634,10 @@ function TrendDay({
           pending={pending}
           studentSelected={studentSelected}
           instructorName={instructorName}
+          role={role}
+          userId={userId}
+          selectedInstructorId={selectedInstructorId}
+          capacity={capacity}
         />
       )}
     </div>
