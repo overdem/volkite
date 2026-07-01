@@ -58,6 +58,9 @@ export default function TakvimView({
     role === 'admin' ? (students[0]?.instructorId ?? instructors[0]?.id ?? '') : userId
   );
   const [error, setError] = useState('');
+  const [manualDate, setManualDate] = useState('');
+  const [manualTime, setManualTime] = useState('11:00');
+  const [manualMsg, setManualMsg] = useState('');
 
   const selected = students.find((s) => s.id === studentId);
   const band = selected ? bandByLevel[selected.level] : undefined;
@@ -92,6 +95,16 @@ export default function TakvimView({
   const trustDates = dates.slice(0, 3);
   const trendDates = dates.slice(3);
 
+  // Forecast dışındaki (ileri tarihli, manuel eklenmiş) planlı dersler
+  const forecastDateSet = useMemo(() => new Set(dates), [dates]);
+  const futureSessions = useMemo(
+    () =>
+      sessions
+        .filter((s) => !forecastDateSet.has(utcToIstanbulHourKey(s.scheduledAt).slice(0, 10)))
+        .sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt)),
+    [sessions, forecastDateSet]
+  );
+
   function planAt(iso: string) {
     if (!studentId) { setError('Önce öğrenci seç'); return; }
     if (role === 'admin' && instructors.length > 0 && !instructorId) {
@@ -107,6 +120,32 @@ export default function TakvimView({
         instructorId: role === 'admin' ? (instructorId || undefined) : undefined,
       });
       if (res?.error) setError(res.error);
+      router.refresh();
+    });
+  }
+
+  function planManual() {
+    setManualMsg('');
+    if (!studentId) { setError('Önce öğrenci seç'); return; }
+    if (role === 'admin' && instructors.length > 0 && !instructorId) {
+      setError('Önce hoca seç');
+      return;
+    }
+    if (!manualDate || !manualTime) { setError('Tarih ve saat seç'); return; }
+    setError('');
+    const iso = `${manualDate}T${manualTime}`; // İstanbul yerel
+    startTransition(async () => {
+      const res = await createSession({
+        studentId,
+        scheduledAt: istanbulToUtc(iso),
+        durationHours: 1.5,
+        instructorId: role === 'admin' ? (instructorId || undefined) : undefined,
+      });
+      if (res?.error) { setError(res.error); return; }
+      const d = new Date(iso);
+      setManualMsg(
+        `Ders eklendi: ${d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })} ${manualTime}`
+      );
       router.refresh();
     });
   }
@@ -180,6 +219,85 @@ export default function TakvimView({
         {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
 
+      {/* Manuel tarih ile ata — forecast dışı ileri tarihler (ör. bir ay sonrası) */}
+      <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-[#14b8cf] font-bold">İleri Tarih</p>
+          <h2 className="text-sm font-bold text-[#07283b]">Tarih seçerek ata (rüzgârdan bağımsız)</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label className="block text-xs text-[#8497a1] mb-1">Tarih</label>
+            <input
+              type="date"
+              value={manualDate}
+              min={new Date().toISOString().slice(0, 10)}
+              onChange={(e) => setManualDate(e.target.value)}
+              className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-[#8497a1] mb-1">Saat</label>
+            <input
+              type="time"
+              value={manualTime}
+              onChange={(e) => setManualTime(e.target.value)}
+              className="w-full border border-[#e4e9ee] rounded-lg px-3 py-2 text-sm bg-white"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              type="button"
+              onClick={planManual}
+              disabled={pending}
+              className="w-full bg-[#14b8cf] text-[#062131] font-bold text-sm px-4 py-2 rounded-lg hover:bg-[#0fa3b8] disabled:opacity-60"
+            >
+              Ata
+            </button>
+          </div>
+        </div>
+        {manualMsg && <p className="text-sm text-green-700">{manualMsg}</p>}
+      </div>
+
+      {/* İleri tarihli (forecast dışı) planlı dersler */}
+      {futureSessions.length > 0 && (
+        <section className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+          <h2 className="text-sm font-bold text-[#3a5563] uppercase tracking-wider">İleri Tarihli Dersler</h2>
+          {futureSessions.map((s) => {
+            const key = utcToIstanbulHourKey(s.scheduledAt);
+            const dt = new Date(key + ':00:00');
+            return (
+              <div key={s.id} className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 bg-[#eef1f4]">
+                <div className="flex items-center gap-2 flex-1 min-w-0 text-sm">
+                  <span className="font-mono font-bold text-[#07283b] whitespace-nowrap">
+                    {dt.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })} {key.slice(11)}:00
+                  </span>
+                  <span className={`text-[9px] font-bold px-1 py-0 rounded ${levelColor(s.studentLevel)}`}>
+                    {levelShort(s.studentLevel)}
+                  </span>
+                  <span className="text-[#07283b] truncate">{s.studentName}</span>
+                  {role === 'admin' && s.instructorId && (
+                    <span className="text-[10px] text-[#8497a1] whitespace-nowrap">
+                      → {instructorName.get(s.instructorId) ?? '—'}
+                    </span>
+                  )}
+                </div>
+                {s.status === 'planned' && (
+                  <button
+                    type="button"
+                    onClick={() => cancel(s.id)}
+                    disabled={pending}
+                    className="text-xs text-red-700 hover:text-red-900"
+                  >
+                    İptal
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </section>
+      )}
+
       {/* 3 gün — saatlik kesin */}
       {trustDates.map((date) => (
         <DayBlock
@@ -207,6 +325,12 @@ export default function TakvimView({
               date={date}
               hours={byDay.get(date) ?? []}
               band={band}
+              sessions={sessions.filter((s) => utcToIstanbulHourKey(s.scheduledAt).startsWith(date))}
+              onPlan={planAt}
+              onCancel={cancel}
+              pending={pending}
+              studentSelected={!!studentId}
+              instructorName={role === 'admin' ? instructorName : null}
             />
           ))}
         </section>
@@ -278,82 +402,123 @@ function DayBlock({
         </div>
         {trust && <span className="text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full font-bold">Kesin</span>}
       </header>
-      <div className="grid grid-cols-1 gap-1.5">
-        {hours.map((h) => {
-          const bucket: HourBucket = band ? scoreHour(h, band) : 'red';
-          const color = BUCKET_COLOR[bucket];
-          const session = sessions.find((s) => utcToIstanbulHourKey(s.scheduledAt) === h.iso.slice(0, 13));
-          return (
-            <div
-              key={h.iso}
-              className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 ${color.bg}`}
-            >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <span className="font-mono text-sm font-bold text-[#07283b] w-12">
-                  {String(h.hour).padStart(2, '0')}:00
-                </span>
-                <span className={`text-sm font-bold ${color.text}`}>{h.speed_kn} kn</span>
-                <span className="text-xs text-[#3a5563]">
-                  ↗{h.gust_kn} · {h.dir}
-                </span>
-                <span className={`text-xs font-bold ${color.text} hidden sm:inline`}>
-                  {BUCKET_LABEL[bucket]}
-                </span>
-              </div>
-              {session ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#062131] bg-white border border-[#14b8cf]/40 px-2 py-1 rounded-full flex items-center gap-1.5">
-                    <span className={`text-[9px] font-bold px-1 py-0 rounded ${levelColor(session.studentLevel)}`}>
-                      {levelShort(session.studentLevel)}
-                    </span>
-                    {session.studentName}
-                    {session.status === 'done' && ' ✓'}
-                  </span>
-                  {instructorName && session.instructorId && (
-                    <span className="text-[10px] text-[#8497a1]">
-                      → {instructorName.get(session.instructorId) ?? '—'}
-                    </span>
-                  )}
-                  {session.status === 'planned' && (
-                    <button
-                      type="button"
-                      onClick={() => onCancel(session.id)}
-                      disabled={pending}
-                      className="text-xs text-red-700 hover:text-red-900"
-                    >
-                      İptal
-                    </button>
-                  )}
-                </div>
-              ) : (
-                // Rüzgâr sadece bilgi amaçlı — her saate atama yapılabilir (kırmızı dahil)
-                studentSelected && (
-                  <button
-                    type="button"
-                    onClick={() => onPlan(h.iso)}
-                    disabled={pending}
-                    className={`text-xs font-bold px-3 py-1 rounded-full disabled:opacity-60 ${
-                      bucket === 'red'
-                        ? 'bg-white text-[#062131] border border-[#14b8cf]/50 hover:bg-[#eef1f4]'
-                        : 'bg-[#14b8cf] text-[#062131] hover:bg-[#0fa3b8]'
-                    }`}
-                  >
-                    Planla
-                  </button>
-                )
-              )}
-            </div>
-          );
-        })}
-        {hours.length === 0 && (
-          <div className="text-center text-xs text-[#8497a1] py-4">Veri yok</div>
-        )}
-      </div>
+      <HourRows
+        hours={hours}
+        band={band}
+        sessions={sessions}
+        onPlan={onPlan}
+        onCancel={onCancel}
+        pending={pending}
+        studentSelected={studentSelected}
+        instructorName={instructorName}
+      />
     </section>
   );
 }
 
-function TrendDay({ date, hours, band }: { date: string; hours: HourSlot[]; band: WindBand | undefined }) {
+// Bir günün saatlik satırları — plan/iptal butonlu. DayBlock ve genişletilmiş
+// TrendDay tarafından paylaşılır.
+function HourRows({
+  hours, band, sessions, onPlan, onCancel, pending, studentSelected, instructorName,
+}: {
+  hours: HourSlot[];
+  band: WindBand | undefined;
+  sessions: SessionItem[];
+  onPlan: (iso: string) => void;
+  onCancel: (id: string) => void;
+  pending: boolean;
+  studentSelected: boolean;
+  instructorName: Map<string, string> | null;
+}) {
+  return (
+    <div className="grid grid-cols-1 gap-1.5">
+      {hours.map((h) => {
+        const bucket: HourBucket = band ? scoreHour(h, band) : 'red';
+        const color = BUCKET_COLOR[bucket];
+        const session = sessions.find((s) => utcToIstanbulHourKey(s.scheduledAt) === h.iso.slice(0, 13));
+        return (
+          <div
+            key={h.iso}
+            className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 ${color.bg}`}
+          >
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <span className="font-mono text-sm font-bold text-[#07283b] w-12">
+                {String(h.hour).padStart(2, '0')}:00
+              </span>
+              <span className={`text-sm font-bold ${color.text}`}>{h.speed_kn} kn</span>
+              <span className="text-xs text-[#3a5563]">
+                ↗{h.gust_kn} · {h.dir}
+              </span>
+              <span className={`text-xs font-bold ${color.text} hidden sm:inline`}>
+                {BUCKET_LABEL[bucket]}
+              </span>
+            </div>
+            {session ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#062131] bg-white border border-[#14b8cf]/40 px-2 py-1 rounded-full flex items-center gap-1.5">
+                  <span className={`text-[9px] font-bold px-1 py-0 rounded ${levelColor(session.studentLevel)}`}>
+                    {levelShort(session.studentLevel)}
+                  </span>
+                  {session.studentName}
+                  {session.status === 'done' && ' ✓'}
+                </span>
+                {instructorName && session.instructorId && (
+                  <span className="text-[10px] text-[#8497a1]">
+                    → {instructorName.get(session.instructorId) ?? '—'}
+                  </span>
+                )}
+                {session.status === 'planned' && (
+                  <button
+                    type="button"
+                    onClick={() => onCancel(session.id)}
+                    disabled={pending}
+                    className="text-xs text-red-700 hover:text-red-900"
+                  >
+                    İptal
+                  </button>
+                )}
+              </div>
+            ) : (
+              // Rüzgâr sadece bilgi amaçlı — her saate atama yapılabilir (kırmızı dahil)
+              studentSelected && (
+                <button
+                  type="button"
+                  onClick={() => onPlan(h.iso)}
+                  disabled={pending}
+                  className={`text-xs font-bold px-3 py-1 rounded-full disabled:opacity-60 ${
+                    bucket === 'red'
+                      ? 'bg-white text-[#062131] border border-[#14b8cf]/50 hover:bg-[#eef1f4]'
+                      : 'bg-[#14b8cf] text-[#062131] hover:bg-[#0fa3b8]'
+                  }`}
+                >
+                  Planla
+                </button>
+              )
+            )}
+          </div>
+        );
+      })}
+      {hours.length === 0 && (
+        <div className="text-center text-xs text-[#8497a1] py-4">Veri yok</div>
+      )}
+    </div>
+  );
+}
+
+function TrendDay({
+  date, hours, band, sessions, onPlan, onCancel, pending, studentSelected, instructorName,
+}: {
+  date: string;
+  hours: HourSlot[];
+  band: WindBand | undefined;
+  sessions: SessionItem[];
+  onPlan: (iso: string) => void;
+  onCancel: (id: string) => void;
+  pending: boolean;
+  studentSelected: boolean;
+  instructorName: Map<string, string> | null;
+}) {
+  const [expanded, setExpanded] = useState(sessions.length > 0);
   const d = new Date(date + 'T12:00:00');
   const morning = hours.filter((h) => h.hour < 12);
   const afternoon = hours.filter((h) => h.hour >= 12 && h.hour < 17);
@@ -370,29 +535,50 @@ function TrendDay({ date, hours, band }: { date: string; hours: HourSlot[]; band
   };
 
   return (
-    <div className="bg-white rounded-xl p-3 shadow-sm flex items-center justify-between gap-3">
-      <div>
-        <div className="text-sm font-bold text-[#07283b]">
-          {DAY_LABELS[d.getDay()]} {d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
+    <div className="bg-white rounded-xl p-3 shadow-sm space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="text-sm font-bold text-[#07283b]">
+            {DAY_LABELS[d.getDay()]} {d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
+          </div>
+          <div className="text-xs text-[#8497a1]">Tahmini eğilim</div>
         </div>
-        <div className="text-xs text-[#8497a1]">Tahmini eğilim</div>
+        <div className="flex items-center gap-2 text-xs">
+          {[
+            { label: 'Sabah', avg: avg(morning) },
+            { label: 'Öğlen', avg: avg(afternoon) },
+            { label: 'Akşam', avg: avg(evening) },
+          ].map(({ label, avg: a }) => {
+            const b = bucket(a);
+            const color = BUCKET_COLOR[b];
+            return (
+              <div key={label} className={`text-center px-2 py-1 rounded ${color.bg}`}>
+                <div className={`text-[10px] font-bold uppercase tracking-wider ${color.text}`}>{label}</div>
+                <div className={`text-xs font-bold ${color.text}`}>{a} kn</div>
+              </div>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="ml-1 text-xs font-bold text-[#14b8cf] hover:text-[#0fa3b8] whitespace-nowrap"
+          >
+            {expanded ? 'Gizle' : 'Saatler / ders ata'}
+          </button>
+        </div>
       </div>
-      <div className="flex gap-2 text-xs">
-        {[
-          { label: 'Sabah', avg: avg(morning) },
-          { label: 'Öğlen', avg: avg(afternoon) },
-          { label: 'Akşam', avg: avg(evening) },
-        ].map(({ label, avg: a }) => {
-          const b = bucket(a);
-          const color = BUCKET_COLOR[b];
-          return (
-            <div key={label} className={`text-center px-2 py-1 rounded ${color.bg}`}>
-              <div className={`text-[10px] font-bold uppercase tracking-wider ${color.text}`}>{label}</div>
-              <div className={`text-xs font-bold ${color.text}`}>{a} kn</div>
-            </div>
-          );
-        })}
-      </div>
+      {expanded && (
+        <HourRows
+          hours={hours}
+          band={band}
+          sessions={sessions}
+          onPlan={onPlan}
+          onCancel={onCancel}
+          pending={pending}
+          studentSelected={studentSelected}
+          instructorName={instructorName}
+        />
+      )}
     </div>
   );
 }
